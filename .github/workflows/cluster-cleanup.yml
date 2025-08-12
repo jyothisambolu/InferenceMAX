@@ -1,0 +1,61 @@
+name: Cluster Cleanup
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  slurm:
+    timeout-minutes: 2
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - 'h100-cw_0'
+          - 'h100-cw_1'
+          - 'h100-cw_2'
+          - 'h100-cw_3'
+          - 'h200-cw_0'
+          - 'h200-cw_1'
+          - 'h200-cw_2'
+          - 'h200-cw_3'
+          - 'h200-nb_0'
+          - 'h200-nb_1'
+          - 'h200-nb_2'
+          - 'h200-nb_3'
+          - 'b200-nv_0'
+          - 'b200-nv_1'
+          - 'h200-nv_0'
+          - 'h200-nv_1'
+          - 'h200-nv_2'
+          - 'h200-nv_3'
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Cancel all jobs
+        run: |
+          scancel -u $USER
+          while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
+            squeue -u $USER
+            sleep 5
+          done
+
+  docker:
+    timeout-minutes: 2
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - 'h100-cr_0'
+          - 'h100-cr_1'
+          - 'mi300x-cr_0'
+          - 'mi300x-amd_0'
+          - 'mi325x-amd_0'
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Stop all Docker containers
+        run: |
+          docker ps -aq | xargs -r docker rm -f
+          docker network prune -f
+          while [ -n "$(docker ps -aq)" ]; do
+            sleep 5
+          done
