@@ -7,29 +7,34 @@ JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
+echo "SLURM_JOB_ID=\${SLURM_JOB_ID}"
+
+SERVER_LOG=\$(mktemp /workspace/server-XXXXXX.log)
+
 hf download $MODEL
 PORT=$(( 8888 + $PORT_OFFSET ))
 set -x
-vllm serve $MODEL --port \$PORT \
---tensor-parallel-size $TP --distributed-executor-backend mp \
---dtype bfloat16 --quantization modelopt \
---max-num-seqs $CONC --max-model-len $MAX_MODEL_LEN --max-seq-len-to-capture $MAX_MODEL_LEN \
---disable-log-requests > /workspace/server_\${SLURM_JOB_ID}.log 2>&1 &
+vllm serve $MODEL --host 0.0.0.0 --port \$PORT \
+--trust-remote-code --quantization modelopt --gpu-memory-utilization 0.9 \
+--pipeline-parallel-size 1 --tensor-parallel-size $TP --max-num-seqs $CONC --max-num-batched-tokens 8192 --max-model-len $MAX_MODEL_LEN \
+--enable-chunked-prefill --async-scheduling --no-enable-prefix-caching \
+--compilation-config '{"pass_config": {"enable_fi_allreduce_fusion": true}, "custom_ops": ["+rms_norm"], "level": 3}' \
+--disable-log-requests > \$SERVER_LOG 2>&1 &
 
 set +x
-while ! grep -q "Application startup complete\." /workspace/server_\${SLURM_JOB_ID}.log; do
-    if grep -iq "error" /workspace/server_\${SLURM_JOB_ID}.log; then
-        grep -iC5 "error" /workspace/server_\${SLURM_JOB_ID}.log
+while ! grep -q "Application startup complete\." \$SERVER_LOG; do
+    if grep -iq "error" \$SERVER_LOG; then
+        grep -iC5 "error" \$SERVER_LOG
         exit 1
     fi
-    tail -n10 /workspace/server_\${SLURM_JOB_ID}.log
+    tail -n10 \$SERVER_LOG
     sleep 5
 done
-tail -n10 /workspace/server_\${SLURM_JOB_ID}.log
+tail -n10 \$SERVER_LOG
 
-git clone -b v0.7.3 https://github.com/vllm-project/vllm.git
+git clone https://github.com/kimbochen/bench_serving.git 
 set -x
-python3 vllm/benchmarks/benchmark_serving.py \
+python3 benchmark_serving.py \
 --model $MODEL --backend vllm \
 --base-url http://0.0.0.0:\$PORT \
 --dataset-name random \
