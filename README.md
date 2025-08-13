@@ -1,5 +1,6 @@
 # InferenceMAX
 
+
 ## Configurations
 
 | GPU | Model | Image | Server Launch Command |
@@ -25,9 +26,11 @@ vllm serve $MODEL --host 0.0.0.0 --port $PORT \
 #### H200 Scout
 
 ```bash
-vllm serve $MODEL --port $port \
---tensor-parallel-size $TP --distributed-executor-backend mp \
---dtype auto --max-num-seqs $CONC --max-model-len $MAX_MODEL_LEN --max-seq-len-to-capture $MAX_MODEL_LEN
+vllm serve $MODEL --host 0.0.0.0 --port $PORT \
+--trust-remote-code --quantization modelopt --gpu-memory-utilization 0.9 \
+--pipeline-parallel-size 1 --tensor-parallel-size $TP --max-num-seqs $CONC --max-num-batched-tokens 8192 --max-model-len $MAX_MODEL_LEN \
+--enable-chunked-prefill --async-scheduling --no-enable-prefix-caching \
+--compilation-config '{"pass_config": {"enable_fi_allreduce_fusion": true}, "custom_ops": ["+rms_norm"], "level": 3}'
 ```
 
 #### H200 DSR1
@@ -53,7 +56,7 @@ vllm serve $MODEL --host 0.0.0.0 --port $PORT \
 ```bash
 vllm serve $MODEL --host 0.0.0.0 --port $PORT \
 --trust-remote-code --quantization modelopt --kv-cache-dtype fp8 --gpu-memory-utilization 0.9 \
---pipeline-parallel-size 1 --tensor-parallel-size 1 \
+--pipeline-parallel-size 1 --tensor-parallel-size $TP \
 --max-num-seqs $CONC --max-num-batched-tokens 8192 --max-model-len $MAX_MODEL_LEN \
 --enable-chunked-prefill --async-scheduling --no-enable-prefix-caching \
 --compilation-config '{"pass_config": {"enable_fi_allreduce_fusion": true}, "custom_ops": ["+rms_norm"], "level": 3}'
