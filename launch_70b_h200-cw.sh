@@ -3,7 +3,7 @@
 set -euo pipefail
 set -x
 
-GHA_CACHE_DIR="/mnt/home/gha_cache/"
+GHA_CACHE_DIR="/mnt/vast/"
 digits="${USER//[^0-9]/}"
 export PORT_OFFSET=$(( ${digits:0:1} * (${digits: -1} + 1) ))
 

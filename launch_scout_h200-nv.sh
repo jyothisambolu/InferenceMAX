@@ -44,7 +44,7 @@ EOF
 set -x
 srun --partition=dgx-h200 --gres=gpu:$TP --exclusive \
 --container-image=$IMAGE \
---container-mounts=$GITHUB_WORKSPACE:/workspace/,$GHA_CACHE_DIR:/mnt/ \
+--container-mounts=$GITHUB_WORKSPACE:/workspace/,$GHA_CACHE_DIR/hf_hub_cache/:$HF_HUB_CACHE \
 --container-mount-home \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \

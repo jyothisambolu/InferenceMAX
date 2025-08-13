@@ -3,7 +3,7 @@
 set -euo pipefail
 set -x
 
-GHA_CACHE_DIR="/mnt/home/gha_cache/"
+GHA_CACHE_DIR="/mnt/vast/"
 digits="${USER//[^0-9]/}"
 export PORT_OFFSET=$(( ${digits:0:1} * (${digits: -1} + 1) ))
 
@@ -11,12 +11,10 @@ JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
-port=$(( 8888 + $PORT_OFFSET ))
-
-pip install -q --break-system-packages huggingface_hub[cli]
 huggingface-cli download $MODEL
 
 set -x
+port=$(( 8888 + $PORT_OFFSET ))
 export SGL_ENABLE_JIT_DEEPGEMM=1
 python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port \$port --trust-remote-code \
 --tp $TP --cuda-graph-max-bs $CONC \
