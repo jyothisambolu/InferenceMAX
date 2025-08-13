@@ -97,8 +97,8 @@ python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $PORT 
 ## Sponsors
 
 - NVIDIA
-- AMD
-- Nebius
-- TogetherAI
 - Crusoe
+- Nebius
 - CoreWeave
+- AMD
+- TogetherAI
