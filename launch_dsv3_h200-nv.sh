@@ -8,12 +8,13 @@ cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
 huggingface-cli download $MODEL
+pip3 install --user sentencepiece
 
 set -x
 port=$(( 8888 + $PORT_OFFSET ))
-export SGL_ENABLE_JIT_DEEPGEMM=1
 python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port \$port --trust-remote-code \
---tp $TP --cuda-graph-max-bs $CONC \
+--tensor-parallel-size=$TP --data-parallel-size=1 \
+--disable-radix-cache --decode-log-interval 1 --cuda-graph-bs 4 8 16 32 64 128 256 --cuda-graph-max-bs 256 --max-running-requests 512 \
 > /workspace/server_\${SLURM_JOB_ID}.log 2>&1 &
 
 set +x
