@@ -34,7 +34,7 @@ tail -n10 \$SERVER_LOG
 
 git clone https://github.com/kimbochen/bench_serving.git 
 set -x
-python3 benchmark_serving.py \
+python3 bench_serving/benchmark_serving.py \
 --model $MODEL --backend vllm \
 --base-url http://0.0.0.0:\$PORT \
 --dataset-name random \
