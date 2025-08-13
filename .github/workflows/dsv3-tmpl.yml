@@ -41,7 +41,7 @@ jobs:
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
       runner: h200
-      image: 'lmsysorg/sglang:v0.4.9.post1-cu126'
+      image: 'lmsysorg/sglang:v0.4.9.post6-cu126'
       model: 'deepseek-ai/DeepSeek-R1-0528'
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
