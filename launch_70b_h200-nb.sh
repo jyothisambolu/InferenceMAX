@@ -3,7 +3,7 @@
 set -euo pipefail
 set -x
 
-GHA_CACHE_DIR="/mnt/"
+GHA_CACHE_DIR="/home/"
 export PORT_OFFSET="${USER//[^0-9]/}"
 
 JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
