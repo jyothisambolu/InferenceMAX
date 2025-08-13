@@ -71,7 +71,7 @@ jobs:
       runner: h200
       image: ${{ needs.find-latest-image.outputs.NV_IMAGE }}
       model: 'nvidia/Llama-3.1-70B-Instruct-FP8'
-      tp-list: '[2]'
+      tp-list: '[2, 4]'
       timeout: ${{ inputs.timeout }}
 
   bmk-b200:
@@ -87,7 +87,7 @@ jobs:
       runner: b200
       image: ${{ needs.find-latest-image.outputs.NV_IMAGE }}
       model: 'nvidia/Llama-3.1-70B-Instruct-FP8'
-      tp-list: '[2]'  # '[1, 2, 4, 8]'
+      tp-list: '[2, 4]'  # '[1, 2, 4, 8]'
       timeout: ${{ inputs.timeout }}
 
   # bmk-mi300x:
