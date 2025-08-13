@@ -1,7 +1,27 @@
 # InferenceMAX
 
 
-## Configurations
+## Benchmark Client Configuration
+
+| Parameter | Values |
+| :-: | :- |
+| (`ISL`, `OSL`) | (1024, 1024), (1024, 8192), (8192, 1024) |
+| `CONC` | 4, 8, 16, 32, 64 |
+| `RANDOM_RANGE_RATIO` | 0.8 |
+
+```bash
+python3 bench_serving/benchmark_serving.py \
+--model $MODEL --backend vllm \
+--base-url http://0.0.0.0:\$PORT \
+--dataset-name random \
+--random-input-len $ISL --random-output-len $OSL --random-range-ratio $RANDOM_RANGE_RATIO \
+--num-prompts $(( $CONC * 10 )) --max-concurrency $CONC \
+--request-rate inf --ignore-eos \
+--save-result --percentile-metrics 'ttft,tpot,itl,e2el'
+```
+
+
+## Server Configurations
 
 | GPU | Model | Image | Server Launch Command |
 | :-: | :- | :- | :-: |
