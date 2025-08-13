@@ -32,8 +32,8 @@ done
 tail -n10 /results/server_\${SLURM_JOB_ID}.log
 
 set -x
-git clone -b v0.7.3 https://github.com/vllm-project/vllm.git
-python3 vllm/benchmarks/benchmark_serving.py \
+git clone https://github.com/kimbochen/bench_serving.git 
+python3 bench_serving/benchmark_serving.py \
 --model $MODEL --backend vllm \
 --base-url http://0.0.0.0:\$port \
 --dataset-name random \
@@ -47,6 +47,7 @@ EOF
 
 srun --partition=main --gres=gpu:8 \
 --container-image=$IMAGE \
+--container-name=dsv3-$USER \
 --container-mounts=$GHA_CACHE_DIR:/mnt/,$GITHUB_WORKSPACE:/results/ \
 --no-container-entrypoint \
 --export=ALL \
