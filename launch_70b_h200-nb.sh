@@ -30,9 +30,9 @@ while ! grep -q "Application startup complete\." /results/server_${SLURM_JOB_ID}
     sleep 5
 done
 
-git clone -b v0.7.3 https://github.com/vllm-project/vllm.git
+git clone https://github.com/kimbochen/bench_serving.git 
 set -x
-python3 vllm/benchmarks/benchmark_serving.py \
+python3 bench_serving/benchmark_serving.py \
 --model $MODEL --backend vllm \
 --base-url http://0.0.0.0:$port \
 --dataset-name random \
