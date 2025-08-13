@@ -7,15 +7,16 @@ JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
-port=$(( 8888 + $PORT_OFFSET ))
-
-pip install -q --break-system-packages huggingface_hub[cli]
 huggingface-cli download $MODEL
 
 set -x
-export SGL_ENABLE_JIT_DEEPGEMM=1
+port=$(( 8888 + $PORT_OFFSET ))
+export SGL_ENABLE_JIT_DEEPGEMM=0
 python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port \$port --trust-remote-code \
---tp $TP --cuda-graph-max-bs $CONC \
+--tp $TP --dp 1 \
+--max-running-requests $CONC --cuda-graph-max-bs $CONC \
+--disable-radix-cache --chunked-prefill-size 32768 --mem-fraction-static 0.89 --max-prefill-tokens 32768 \
+--attention-backend trtllm_mla --disable-shared-experts-fusion --enable-flashinfer-trtllm-moe \
 > /workspace/server_\${SLURM_JOB_ID}.log 2>&1 &
 
 set +x

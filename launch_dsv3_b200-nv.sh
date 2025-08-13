@@ -7,9 +7,10 @@ JOB_SCRIPT=$(mktemp $PWD/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
-hf download $MODEL
-PORT=$(( 8888 + $PORT_OFFSET ))
+huggingface-cli download $MODEL
+
 set -x
+PORT=$(( 8888 + $PORT_OFFSET ))
 export SGL_ENABLE_JIT_DEEPGEMM=0
 python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port \$PORT --trust-remote-code \
 --tp $TP --dp 1 \
