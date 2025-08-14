@@ -46,7 +46,7 @@ EOF
 cat $JOB_SCRIPT
 
 set -x
-srun --partition=dgx-b200 --gres=gpu:$TP --exclusive \
+srun --partition=dgx-b200 --nodelist=dgx05-b200 --gres=gpu:$TP --exclusive \
 --container-image=$IMAGE \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$GHA_CACHE_DIR/hf_hub_cache/:$HF_HUB_CACHE \
 --container-mount-home \
