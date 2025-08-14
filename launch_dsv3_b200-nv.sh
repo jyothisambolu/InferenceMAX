@@ -7,16 +7,14 @@ JOB_SCRIPT=$(mktemp $PWD/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
+echo "JOB \$SLURM_JOB_ID running on \$SLURMD_NODENAME"
+
 huggingface-cli download $MODEL
 
 set -x
 PORT=$(( 8888 + $PORT_OFFSET ))
-export SGL_ENABLE_JIT_DEEPGEMM=0
 python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port \$PORT --trust-remote-code \
---tp $TP --dp 1 \
---max-running-requests $CONC --cuda-graph-max-bs $CONC \
---disable-radix-cache --chunked-prefill-size 32768 --mem-fraction-static 0.89 --max-prefill-tokens 32768 \
---attention-backend trtllm_mla --disable-shared-experts-fusion --enable-flashinfer-trtllm-moe \
+--tp $TP --cuda-graph-max-bs $CONC \
 > /workspace/server_\${SLURM_JOB_ID}.log 2>&1 &
 
 set +x
@@ -45,7 +43,7 @@ python3 vllm/benchmarks/benchmark_serving.py \
 EOF
 
 set -x
-srun --partition=dgx-b200 --gres=gpu:$TP --exclusive \
+srun --partition=dgx-b200 --nodelist=dgx06-b200 --gres=gpu:$TP --exclusive \
 --container-image=$IMAGE \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$GHA_CACHE_DIR/hf_hub_cache/:$HF_HUB_CACHE \
 --container-mount-home \

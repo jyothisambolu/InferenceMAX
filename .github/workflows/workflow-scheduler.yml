@@ -24,6 +24,17 @@ jobs:
   #     max-model-len: 2048
   #     random-range-ratio: 0.8
 
+  dsv3-1k1k:
+    needs: cleanup
+    uses: ./.github/workflows/dsv3-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: 'dsv3_1k1k'
+      isl: 1024
+      osl: 1024
+      max-model-len: 2048
+      random-range-ratio: 0.8
+
   # _70b-8k1k:
   #   needs: cleanup
   #   uses: ./.github/workflows/70b-tmpl.yml
@@ -46,17 +57,6 @@ jobs:
   #     max-model-len: 9216
   #     random-range-ratio: 0.8
   #     timeout: 240
-
-  dsv3-1k1k:
-    needs: cleanup
-    uses: ./.github/workflows/dsv3-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: 'dsv3_1k1k'
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
 
   # dsv3-8k1k:
   #   needs: cleanup

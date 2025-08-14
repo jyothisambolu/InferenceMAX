@@ -7,6 +7,8 @@ JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
+echo "JOB \$SLURM_JOB_ID running on \$SLURMD_NODENAME"
+
 huggingface-cli download $MODEL
 pip3 install --user sentencepiece
 
@@ -43,7 +45,7 @@ python3 bench_serving/benchmark_serving.py \
 EOF
 
 set -x
-srun --partition=dgx-h200 --gres=gpu:$TP --exclusive \
+srun --partition=dgx-h200 --nodelist=dgx01-h200,dgx02-h200,dgx04-h200 --gres=gpu:$TP --exclusive \
 --container-image=$IMAGE \
 --container-name=dsv3-$USER \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$GHA_CACHE_DIR/hf_hub_cache/:$HF_HUB_CACHE \
