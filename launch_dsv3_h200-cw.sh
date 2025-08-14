@@ -11,7 +11,7 @@ JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
-echo "JOB \$SLURM_JOB_ID running on \$SLURMD_NODENAME"
+echo "JOB \$SLURM_JOB_ID running on NODE \$SLURMD_NODENAME"
 
 huggingface-cli download $MODEL
 pip3 install --user sentencepiece

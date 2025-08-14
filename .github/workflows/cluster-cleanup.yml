@@ -25,8 +25,8 @@ jobs:
           # - 'h200-nv_1'
           # - 'h200-nv_2'
           # - 'h200-nv_3'
-          - 'b200-nv_0'
-          - 'b200-nv_1'
+          # - 'b200-nv_0'
+          # - 'b200-nv_1'
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Cancel all jobs

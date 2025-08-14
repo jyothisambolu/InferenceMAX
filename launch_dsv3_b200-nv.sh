@@ -7,7 +7,7 @@ JOB_SCRIPT=$(mktemp $PWD/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
-echo "JOB \$SLURM_JOB_ID running on \$SLURMD_NODENAME"
+echo "JOB \$SLURM_JOB_ID running on NODE \$SLURMD_NODENAME"
 
 huggingface-cli download $MODEL
 
@@ -43,7 +43,7 @@ python3 vllm/benchmarks/benchmark_serving.py \
 EOF
 
 set -x
-srun --partition=dgx-b200 --nodelist=dgx06-b200 --gres=gpu:$TP --exclusive \
+srun --partition=dgx-b200 --nodelist=dgx05-b200 --gres=gpu:$TP --exclusive \
 --container-image=$IMAGE \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$GHA_CACHE_DIR/hf_hub_cache/:$HF_HUB_CACHE \
 --container-mount-home \
