@@ -37,23 +37,23 @@ jobs:
             sleep 5
           done
 
-  # docker:
-  #   timeout-minutes: 2
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       runner:
-  #         - 'h100-cr_0'
-  #         - 'h100-cr_1'
-  #         - 'mi300x-cr_0'
-  #         - 'mi300x-amd_0'
-  #         - 'mi325x-amd_0'
-  #   runs-on: ${{ matrix.runner }}
-  #   steps:
-  #     - name: Stop all Docker containers
-  #       run: |
-  #         docker ps -aq | xargs -r docker rm -f
-  #         docker network prune -f
-  #         while [ -n "$(docker ps -aq)" ]; do
-  #           sleep 5
-  #         done
+  docker:
+    timeout-minutes: 2
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          # - 'h100-cr_0'
+          # - 'h100-cr_1'
+          - 'mi300x-cr_0'
+          - 'mi300x-amd_0'
+          - 'mi325x-amd_0'
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Stop all Docker containers
+        run: |
+          docker ps -aq | xargs -r docker rm -f
+          docker network prune -f
+          while [ -n "$(docker ps -aq)" ]; do
+            sleep 5
+          done

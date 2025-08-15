@@ -5,7 +5,7 @@ while [ -n "$(docker ps -aq)" ]; do
   sleep 5
 done
 
-GHA_CACHE_DIR=/mnt/vdb/gha_cache/
+GHA_CACHE_DIR="/mnt/vdb/gha_cache/"
 
 network_name="bmk-net"
 server_name="bmk-server-$RANDOM"
@@ -34,14 +34,16 @@ while ! docker logs $server_name 2>&1 | grep -Fq "Application startup complete."
     docker logs --tail 10 $server_name
     sleep 5
 done
+docker logs --tail 10 $server_name
 
+set -x
 docker run --rm --network $network_name --name $client_name \
 --privileged --cap-add=CAP_SYS_ADMIN --device=/dev/kfd --device=/dev/dri --device=/dev/mem \
 --group-add render --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
 -v $GITHUB_WORKSPACE:/results/ -e HF_TOKEN=$HF_TOKEN \
 --entrypoint=/bin/bash $IMAGE -c \
-"git clone -b v0.7.3 https://github.com/vllm-project/vllm.git && \
-python3 vllm/benchmarks/benchmark_serving.py \
+"git clone https://github.com/kimbochen/bench_serving.git && \
+python3 bench_serving/benchmark_serving.py \
 --model $MODEL  --backend vllm --base-url http://$server_name:$port \
 --dataset-name random \
 --random-input-len $ISL --random-output-len $OSL --random-range-ratio $RANDOM_RANGE_RATIO \
