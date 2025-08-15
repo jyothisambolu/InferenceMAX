@@ -33,14 +33,15 @@ while ! docker logs $server_name 2>&1 | grep -q "The server is fired up and read
 done
 docker logs --tail 10 $server_name
 
+git clone https://github.com/kimbochen/bench_serving.git 
+
 set -x
 docker run --rm --network $network_name --name $client_name \
 --privileged --cap-add=CAP_SYS_ADMIN --device=/dev/kfd --device=/dev/dri --device=/dev/mem \
 --group-add render --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
--v $GITHUB_WORKSPACE:/results/ -e HF_TOKEN=$HF_TOKEN \
+-v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ -e HF_TOKEN=$HF_TOKEN \
 --entrypoint=/bin/bash $IMAGE -c \
-"git clone https://github.com/kimbochen/bench_serving.git && \
-python3 bench_serving/benchmark_serving.py \
+"python3 bench_serving/benchmark_serving.py \
 --model $MODEL  --backend vllm --base-url http://$server_name:$port \
 --dataset-name random \
 --random-input-len $ISL --random-output-len $OSL --random-range-ratio $RANDOM_RANGE_RATIO \
@@ -48,7 +49,7 @@ python3 bench_serving/benchmark_serving.py \
 --max-concurrency $CONC \
 --request-rate inf --ignore-eos \
 --save-result --percentile-metrics 'ttft,tpot,itl,e2el' \
---result-dir /results/ --result-filename $RESULT_FILENAME.json"
+--result-dir /workspace/ --result-filename $RESULT_FILENAME.json"
 
 docker stop $server_name
 docker network rm $network_name
