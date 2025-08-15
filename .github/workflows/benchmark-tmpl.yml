@@ -72,7 +72,6 @@ jobs:
           echo "RESULT_FILENAME=${RESULT_FILENAME}" >> $GITHUB_ENV
 
       - name: Launch job script
-        continue-on-error: true
         run: |
           RUNNER_NAME=${{ runner.name }}
           bash ./launch_${EXP_NAME%%_*}_${RUNNER_NAME%%_*}.sh

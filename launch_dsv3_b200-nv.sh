@@ -16,9 +16,9 @@ PORT=$(( 8888 + $PORT_OFFSET ))
 export SGL_ENABLE_JIT_DEEPGEMM=0
 python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port \$PORT --trust-remote-code \
 --tensor-parallel-size=$TP --data-parallel-size=1 \
---disable-radix-cache --max-running-requests $CONC --chunked-prefill-size 32768 --mem-fraction-static 0.89 \
---cuda-graph-max-bs 256 --max-prefill-tokens 32768 --attention-backend trtllm_mla \
---disable-shared-experts-fusion --enable-flashinfer-trtllm-moe \
+--cuda-graph-max-bs 256 --max-running-requests 512 --mem-fraction-static 0.89 \
+--chunked-prefill-size 32768 --max-prefill-tokens 32768 \
+--disable-radix-cache --attention-backend trtllm_mla --disable-shared-experts-fusion --enable-flashinfer-trtllm-moe \
 > /workspace/server_\${SLURM_JOB_ID}.log 2>&1 &
 
 set +x
