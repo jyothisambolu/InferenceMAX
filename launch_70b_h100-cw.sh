@@ -6,12 +6,13 @@ set -x
 GHA_CACHE_DIR="/mnt/vast/"
 digits="${USER//[^0-9]/}"
 export PORT_OFFSET=$(( ${digits:0:1} * (${digits: -1} + 1) ))
+export HF_HUB_CACHE="/mnt/h1${digits: -1}_hf_hub_cache/"  # 70B weird override
 
 JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT << 'EOF'
 #!/usr/bin/env bash
 
-echo "JOB \$SLURM_JOB_ID running on NODE \$SLURMD_NODENAME"
+echo "JOB $SLURM_JOB_ID running on NODE $SLURMD_NODENAME"
 
 port=$(( 8888 + $PORT_OFFSET ))
 
@@ -26,6 +27,7 @@ set +x
 while ! grep -q "Application startup complete\." /results/server_${SLURM_JOB_ID}.log; do
     if grep -iq "error" /results/server_${SLURM_JOB_ID}.log; then
         grep -iC5 "error" /results/server_${SLURM_JOB_ID}.log
+        echo "JOB $SLURM_JOB_ID ran on NODE $SLURMD_NODENAME"
         exit 1
     fi
     tail -n10 /results/server_${SLURM_JOB_ID}.log
