@@ -23,6 +23,7 @@ set +x
 while ! grep -q "The server is fired up and ready to roll!" /workspace/server_\${SLURM_JOB_ID}.log; do
     if grep -iq "error" /workspace/server_\${SLURM_JOB_ID}.log; then
         grep -iC5 "error" /workspace/server_\${SLURM_JOB_ID}.log
+        echo "JOB \$SLURM_JOB_ID ran on \$SLURMD_NODENAME"
         exit 1
     fi
     tail -n10 /workspace/server_\${SLURM_JOB_ID}.log
@@ -45,7 +46,7 @@ python3 bench_serving/benchmark_serving.py \
 EOF
 
 set -x
-srun --partition=dgx-h200 --nodelist=dgx01-h200,dgx02-h200,dgx04-h200 --nodes=1 --exclusive --gres=gpu:$TP \
+srun --partition=dgx-h200 --nodelist=dgx02-h200 --exclusive --gres=gpu:$TP \
 --container-image=$IMAGE \
 --container-name=dsv3-$USER \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$GHA_CACHE_DIR/hf_hub_cache/:$HF_HUB_CACHE \
