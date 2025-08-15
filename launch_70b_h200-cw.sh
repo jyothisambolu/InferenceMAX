@@ -49,9 +49,9 @@ python3 bench_serving/benchmark_serving.py \
 --result-filename $RESULT_FILENAME.json
 EOF
 
-# srun --partition=h200 --gres=gpu:$TP \
-# --container-image=$IMAGE \
-# --container-mounts=$GHA_CACHE_DIR:/mnt/,$GITHUB_WORKSPACE:/results/ \
-# --no-container-entrypoint \
-# --export=ALL \
-# bash < $JOB_SCRIPT
+srun --partition=h200 --gres=gpu:$TP \
+--container-image=$IMAGE \
+--container-mounts=$GHA_CACHE_DIR:/mnt/,$GITHUB_WORKSPACE:/results/ \
+--no-container-entrypoint \
+--export=ALL \
+bash < $JOB_SCRIPT
