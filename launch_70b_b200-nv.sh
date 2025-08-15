@@ -7,7 +7,7 @@ JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT <<-EOF
 #!/usr/bin/env bash
 
-echo "SLURM_JOB_ID=\${SLURM_JOB_ID}"
+echo "JOB \$SLURM_JOB_ID running on NODE \$SLURMD_NODENAME"
 
 SERVER_LOG=\$(mktemp /workspace/server-XXXXXX.log)
 
@@ -25,6 +25,7 @@ set +x
 while ! grep -q "Application startup complete\." \$SERVER_LOG; do
     if grep -iq "error" \$SERVER_LOG; then
         grep -iC5 "error" \$SERVER_LOG
+        echo "JOB \$SLURM_JOB_ID ran on NODE \$SLURMD_NODENAME"
         exit 1
     fi
     tail -n10 \$SERVER_LOG
@@ -47,7 +48,7 @@ python3 bench_serving/benchmark_serving.py \
 EOF
 
 set -x
-srun --partition=dgx-b200 --nodelist=dgx05-b200 --gres=gpu:$TP --exclusive \
+srun --partition=dgx-b200 --gres=gpu:$TP --exclusive \
 --container-image=$IMAGE \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$GHA_CACHE_DIR/hf_hub_cache/:$HF_HUB_CACHE \
 --container-mount-home \
