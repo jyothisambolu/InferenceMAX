@@ -74,7 +74,7 @@ jobs:
       random-range-ratio: ${{ inputs.random-range-ratio }}
       runner: mi300x
       image: 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
-      model: 'deepseek-ai/DeepSeek-V3'
+      model: 'deepseek-ai/DeepSeek-R1-0528'
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
 
@@ -90,7 +90,7 @@ jobs:
       random-range-ratio: ${{ inputs.random-range-ratio }}
       runner: mi325x
       image: 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
-      model: 'deepseek-ai/DeepSeek-V3'
+      model: 'deepseek-ai/DeepSeek-R1-0528'
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
 
