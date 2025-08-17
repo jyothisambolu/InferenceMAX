@@ -103,7 +103,7 @@ jobs:
       runner: mi300x
       image: ${{ needs.find-latest-image.outputs.AMD_IMAGE }}
       model: 'amd/Llama-3.1-70B-Instruct-FP8-KV'
-      tp-list: '[1, 2, 4]'
+      tp-list: '[1, 2, 4, 8]'
       timeout: ${{ inputs.timeout }}
 
   bmk-mi325x:
