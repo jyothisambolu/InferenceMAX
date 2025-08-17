@@ -46,7 +46,7 @@ git clone https://github.com/kimbochen/bench_serving.git
 
 set -x
 docker run --rm --network $network_name --name $client_name \
--v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ -e HF_TOKEN=$HF_TOKEN \
+-v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ -e HF_TOKEN=$HF_TOKEN -e PYTHONPYCACHEPREFIX=/tmp/pycache/ \
 --entrypoint=python3 \
 $IMAGE \
 bench_serving/benchmark_serving.py \

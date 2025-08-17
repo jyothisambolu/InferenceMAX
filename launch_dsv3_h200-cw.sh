@@ -24,15 +24,16 @@ python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port \$port
 > /results/server_\${SLURM_JOB_ID}.log 2>&1 &
 
 set +x
-while ! grep -q "The server is fired up and ready to roll!" /results/server_\${SLURM_JOB_ID}.log; do
-    if grep -iq "error" /results/server_\${SLURM_JOB_ID}.log; then
-        grep -iC5 "error" /results/server_\${SLURM_JOB_ID}.log
+while IFS= read -r line; do
+    printf '%s\n' "\$line"
+    if [[ "\$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
+        echo "JOB \$SLURM_JOB_ID ran on NODE \$SLURMD_NODENAME"
         exit 1
     fi
-    tail -n10 /results/server_\${SLURM_JOB_ID}.log
-    sleep 5
-done
-tail -n10 /results/server_\${SLURM_JOB_ID}.log
+    if [[ "\$line" == *"The server is fired up and ready to roll"* ]]; then
+        break
+    fi
+done < <(tail -F -n0 "/results/server_\${SLURM_JOB_ID}.log")
 
 set -x
 git clone https://github.com/kimbochen/bench_serving.git 

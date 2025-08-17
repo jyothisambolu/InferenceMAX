@@ -21,14 +21,16 @@ vllm serve $MODEL --host 0.0.0.0 --port $port \
 --disable-log-requests > /results/server_${SLURM_JOB_ID}.log 2>&1 &
 
 set +x
-while ! grep -q "Application startup complete\." /results/server_${SLURM_JOB_ID}.log; do
-    if grep -iq "error" /results/server_${SLURM_JOB_ID}.log; then
-        grep -iC5 "error" /results/server_${SLURM_JOB_ID}.log
+while IFS= read -r line; do
+    printf '%s\n' "$line"
+    if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
+        echo "JOB $SLURM_JOB_ID ran on NODE $SLURMD_NODENAME"
         exit 1
     fi
-    tail -n10 /results/server_${SLURM_JOB_ID}.log
-    sleep 5
-done
+    if [[ "$line" == *"Application startup complete"* ]]; then
+        break
+    fi
+done < <(tail -F -n0 "/results/server_$SLURM_JOB_ID.log")
 
 git clone https://github.com/kimbochen/bench_serving.git 
 set -x
