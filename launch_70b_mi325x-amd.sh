@@ -45,7 +45,7 @@ set -x
 docker run --rm --network $network_name --name $client_name \
 --privileged --cap-add=CAP_SYS_ADMIN --device=/dev/kfd --device=/dev/dri --device=/dev/mem \
 --group-add render --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
--v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ -e HF_TOKEN=$HF_TOKEN \
+-v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ -e HF_TOKEN=$HF_TOKEN -e PYTHONPYCACHEPREFIX=/tmp/pycache/ \
 --entrypoint=python3 \
 $IMAGE \
 bench_serving/benchmark_serving.py \
