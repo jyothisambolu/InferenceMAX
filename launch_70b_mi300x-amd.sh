@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+ls -la /mnt/hf_hub_cache
+find /mnt/hf_hub_cache -maxdepth 2 -type d -name 'models--deepseek-ai--DeepSeek-R1-0528' -print
+echo $HF_HUB_CACHE
+
 while [ -n "$(docker ps -aq)" ]; do
   sleep 1
 done
