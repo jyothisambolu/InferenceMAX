@@ -18,7 +18,7 @@ docker run --rm -d --ipc host --shm-size=16g --network $network_name --name $ser
 --privileged --cap-add=CAP_SYS_ADMIN --device=/dev/kfd --device=/dev/dri --device=/dev/mem \
 --group-add render --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
 -v $HF_HOME_DIR/hf_hub_cache/:$HF_HUB_CACHE \
--e HF_TOKEN=$HF_TOKEN -e HF_HUB_CACHE=$HF_HUB_CACHE -e VLLM_USE_TRITON_FLASH_ATTN=0 -e HF_HUB_OFFLINE=1 \
+-e HF_TOKEN=$HF_TOKEN -e HF_HUB_CACHE=$HF_HUB_CACHE -e VLLM_USE_TRITON_FLASH_ATTN=0 \
 --entrypoint=python3 \
 $IMAGE \
 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $port --trust-remote-code \
