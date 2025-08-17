@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sudo sh -c 'echo 0 > /proc/sys/kernel/numa_balancing'
+
 while [ -n "$(docker ps -aq)" ]; do
   sleep 1
 done
