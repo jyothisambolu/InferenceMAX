@@ -49,7 +49,7 @@ jobs:
           - 'mi300x-amd_0'
           - 'mi300x-amd_1'
           - 'mi300x-amd_2'
-          - 'mi300x-amd_3'
+          # - 'mi300x-amd_3'
           # - 'mi300x-amd_4'
           # - 'mi325x-amd_0'
     runs-on: ${{ matrix.runner }}
