@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 while [ -n "$(docker ps -aq)" ]; do
-  sleep 1
+    docker rm -f $(docker ps -aq)
+    docker network prune -f
+    sleep 5
 done
 
 HF_HOME_DIR="/dev/shm/"
@@ -57,5 +59,8 @@ bench_serving/benchmark_serving.py \
 --save-result --percentile-metrics "ttft,tpot,itl,e2el" \
 --result-dir /workspace/ --result-filename $RESULT_FILENAME.json
 
-docker stop $server_name
-docker network rm $network_name
+while [ -n "$(docker ps -aq)" ]; do
+    docker stop $server_name
+    docker network rm $network_name
+    sleep 5
+done
