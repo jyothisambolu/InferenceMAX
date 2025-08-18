@@ -21,10 +21,10 @@ jobs:
           - 'h200-nb_1'
           - 'h200-nb_2'
           - 'h200-nb_3'
-          # - 'h200-nv_0'
-          # - 'h200-nv_1'
-          # - 'h200-nv_2'
-          # - 'h200-nv_3'
+          - 'h200-nv_0'
+          - 'h200-nv_1'
+          - 'h200-nv_2'
+          - 'h200-nv_3'
           - 'b200-nv_0'
           - 'b200-nv_1'
     runs-on: ${{ matrix.runner }}
@@ -50,8 +50,8 @@ jobs:
           - 'mi300x-amd_0'
           - 'mi300x-amd_1'
           - 'mi300x-amd_2'
-          # - 'mi300x-amd_3'
-          # - 'mi300x-amd_4'
+          - 'mi300x-amd_3'
+          - 'mi300x-amd_4'
           - 'mi325x-amd_0'
     runs-on: ${{ matrix.runner }}
     steps:

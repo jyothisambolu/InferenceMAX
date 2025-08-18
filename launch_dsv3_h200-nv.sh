@@ -47,7 +47,7 @@ python3 bench_serving/benchmark_serving.py \
 EOF
 
 set -x
-srun --partition=dgx-h200 --nodelist=dgx02-h200 --exclusive --gres=gpu:$TP \
+srun --partition=dgx-h200 --exclusive --gres=gpu:$TP \
 --container-image=$IMAGE \
 --container-name=dsv3-$USER \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$GHA_CACHE_DIR/hf_hub_cache/:$HF_HUB_CACHE \
