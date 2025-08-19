@@ -43,8 +43,8 @@ jobs:
       fail-fast: false
       matrix:
         runner:
-          # - 'h100-cr_0'
-          # - 'h100-cr_1'
+          - 'h100-cr_0'
+          - 'h100-cr_1'
           - 'b200-tg_0'
           - 'mi300x-cr_0'
           - 'mi300x-amd_0'

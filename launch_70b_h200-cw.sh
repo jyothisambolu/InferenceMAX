@@ -12,7 +12,7 @@ JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
 cat > $JOB_SCRIPT << 'EOF'
 #!/usr/bin/env bash
 
-echo "JOB $SLURM_JOB_ID running on NODE $SLURMD_NODENAME"
+echo "JOB ${SLURM_JOB_ID} running on NODE $SLURMD_NODENAME"
 
 port=$(( 8888 + $PORT_OFFSET ))
 
@@ -28,13 +28,13 @@ set +x
 while IFS= read -r line; do
     printf '%s\n' "$line"
     if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
-        echo "JOB $SLURM_JOB_ID ran on NODE $SLURMD_NODENAME"
+        echo "JOB ${SLURM_JOB_ID} ran on NODE $SLURMD_NODENAME"
         exit 1
     fi
     if [[ "$line" == *"Application startup complete"* ]]; then
         break
     fi
-done < <(tail -F -n0 "/results/server_$SLURM_JOB_ID.log")
+done < <(tail -F -n0 "/results/server_${SLURM_JOB_ID}.log")
 
 git clone https://github.com/kimbochen/bench_serving.git 
 set -x

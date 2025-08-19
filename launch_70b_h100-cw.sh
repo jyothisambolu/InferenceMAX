@@ -4,39 +4,46 @@ set -euo pipefail
 set -x
 
 GHA_CACHE_DIR="/mnt/vast/"
+
 digits="${USER//[^0-9]/}"
-export PORT_OFFSET=$(( ${digits:0:1} * (${digits: -1} + 1) ))
-export HF_HUB_CACHE="/mnt/h1${digits: -1}_hf_hub_cache/"  # 70B weird override
-
-JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
-cat > $JOB_SCRIPT << 'EOF'
-#!/usr/bin/env bash
-
-echo "JOB $SLURM_JOB_ID running on NODE $SLURMD_NODENAME"
-
+PORT_OFFSET=$(( ${digits:0:1} * (${digits: -1} + 1) ))
 port=$(( 8888 + $PORT_OFFSET ))
 
+export TORCH_CUDA_ARCH_LIST="9.0"
+export CUDA_DEVICE_ORDER=PCI_BUS_ID
+export CUDA_VISIBLE_DEVICES=$(seq -s, 0 $(( $TP - 1 )))
+
+JOB_SCRIPT=$(mktemp $GITHUB_WORKSPACE/slurm-XXXXXX.sh)
+cat > $JOB_SCRIPT <<-EOF
+#!/usr/bin/env bash
+
+echo "JOB \$SLURM_JOB_ID running on NODE \$SLURMD_NODENAME"
+
 set -x
-vllm serve $MODEL --port $port \
---tensor-parallel-size $TP --distributed-executor-backend mp \
---dtype bfloat16 --quantization modelopt \
---max-num-seqs $CONC --max-model-len $MAX_MODEL_LEN --max-seq-len-to-capture $MAX_MODEL_LEN \
---disable-log-requests > /results/server_${SLURM_JOB_ID}.log 2>&1 &
+vllm serve $MODEL --host 0.0.0.0 --port $port \
+--trust-remote-code --quantization modelopt --gpu-memory-utilization 0.9 \
+--pipeline-parallel-size 1 --tensor-parallel-size $TP --max-num-seqs $CONC --max-num-batched-tokens 8192 --max-model-len $MAX_MODEL_LEN \
+--enable-chunked-prefill --async-scheduling --no-enable-prefix-caching \
+--compilation-config '{"pass_config": {"enable_fi_allreduce_fusion": true}, "custom_ops": ["+rms_norm"], "level": 3}' \
+--disable-log-requests > /results/server_\${SLURM_JOB_ID}.log 2>&1 &
 
 set +x
-while ! grep -q "Application startup complete\." /results/server_${SLURM_JOB_ID}.log; do
-    if grep -iq "error" /results/server_${SLURM_JOB_ID}.log; then
-        grep -iC5 "error" /results/server_${SLURM_JOB_ID}.log
-        echo "JOB $SLURM_JOB_ID ran on NODE $SLURMD_NODENAME"
+while IFS= read -r line; do
+    printf '%s\n' "\$line"
+    if [[ "\$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
+        sleep 3
+        tail -n100 /results/server_\${SLURM_JOB_ID}.log
+        echo "JOB \${SLURM_JOB_ID} ran on NODE \$SLURMD_NODENAME"
         exit 1
     fi
-    tail -n10 /results/server_${SLURM_JOB_ID}.log
-    sleep 5
-done
+    if [[ "\$line" == *"Application startup complete"* ]]; then
+        break
+    fi
+done < <(tail -F -n0 "/results/server_\${SLURM_JOB_ID}.log")
 
-git clone -b v0.7.3 https://github.com/vllm-project/vllm.git
+git clone https://github.com/kimbochen/bench_serving.git
 set -x
-python3 vllm/benchmarks/benchmark_serving.py \
+python3 bench_serving/benchmark_serving.py \
 --model $MODEL --backend vllm \
 --base-url http://0.0.0.0:$port \
 --dataset-name random \
