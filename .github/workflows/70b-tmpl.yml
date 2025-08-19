@@ -26,21 +26,9 @@ on:
 jobs:
   find-latest-image:
     runs-on: ubuntu-latest
-    outputs:
-      NV_IMAGE: ${{ steps.set-var.outputs.NV_IMAGE }}
-      AMD_IMAGE: ${{ steps.set-var.outputs.AMD_IMAGE }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.REPO_PAT }}
-          fetch-depth: 0
       - name: Find the latest Docker image
-        id: set-var
-        run: |
-          echo "NV_IMAGE=kedarpotdar147/vllm0.1:latest" >> $GITHUB_OUTPUT
-          echo "AMD_IMAGE=rocm/vllm-dev:nightly_official_0729_rc1_20250718" >> $GITHUB_OUTPUT
-          # echo "NV_IMAGE=$(python3 scrape_image_tag.py 'vllm/vllm-openai' 'v')" >> $GITHUB_OUTPUT
-          # echo "AMD_IMAGE=$(python3 scrape_image_tag.py 'rocm/vllm' 'rocm')" >> $GITHUB_OUTPUT
+        run: echo "Hardcoding image tags for now."
 
   bmk-h100:
     needs: find-latest-image
@@ -53,77 +41,77 @@ jobs:
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
       runner: h100
-      image: ${{ needs.find-latest-image.outputs.NV_IMAGE }}
+      image: 'kedarpotdar147/vllm0.1:latest'
       model: 'nvidia/Llama-3.1-70B-Instruct-FP8'
       tp-list: '[2, 4, 8]'
       timeout: ${{ inputs.timeout }}
 
-  # bmk-h200:
-  #   needs: find-latest-image
-  #   uses: ./.github/workflows/benchmark-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: ${{ inputs.exp-name }}
-  #     isl: ${{ inputs.isl }}
-  #     osl: ${{ inputs.osl }}
-  #     max-model-len: ${{ inputs.max-model-len }}
-  #     random-range-ratio: ${{ inputs.random-range-ratio }}
-  #     runner: h200
-  #     image: ${{ needs.find-latest-image.outputs.NV_IMAGE }}
-  #     model: 'nvidia/Llama-3.1-70B-Instruct-FP8'
-  #     tp-list: '[1, 2, 4, 8]'
-  #     timeout: ${{ inputs.timeout }}
+  bmk-h200:
+    needs: find-latest-image
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      runner: h200
+      image: ${{ needs.find-latest-image.outputs.NV_IMAGE }}
+      model: 'nvidia/Llama-3.1-70B-Instruct-FP8'
+      tp-list: '[1, 2, 4, 8]'
+      timeout: ${{ inputs.timeout }}
 
-  # bmk-b200:
-  #   needs: find-latest-image
-  #   uses: ./.github/workflows/benchmark-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: ${{ inputs.exp-name }}
-  #     isl: ${{ inputs.isl }}
-  #     osl: ${{ inputs.osl }}
-  #     max-model-len: ${{ inputs.max-model-len }}
-  #     random-range-ratio: ${{ inputs.random-range-ratio }}
-  #     runner: b200
-  #     image: ${{ needs.find-latest-image.outputs.NV_IMAGE }}
-  #     model: 'nvidia/Llama-3.1-70B-Instruct-FP8'
-  #     tp-list: '[1, 2, 4, 8]'
-  #     timeout: ${{ inputs.timeout }}
+  bmk-b200:
+    needs: find-latest-image
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      runner: b200
+      image: 'kedarpotdar147/vllm0.1:latest'
+      model: 'nvidia/Llama-3.1-70B-Instruct-FP8'
+      tp-list: '[1, 2, 4, 8]'
+      timeout: ${{ inputs.timeout }}
 
-  # bmk-mi300x:
-  #   needs: find-latest-image
-  #   uses: ./.github/workflows/benchmark-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: ${{ inputs.exp-name }}
-  #     isl: ${{ inputs.isl }}
-  #     osl: ${{ inputs.osl }}
-  #     max-model-len: ${{ inputs.max-model-len }}
-  #     random-range-ratio: ${{ inputs.random-range-ratio }}
-  #     runner: mi300x
-  #     image: ${{ needs.find-latest-image.outputs.AMD_IMAGE }}
-  #     model: 'amd/Llama-3.1-70B-Instruct-FP8-KV'
-  #     tp-list: '[1, 2, 4, 8]'
-  #     timeout: ${{ inputs.timeout }}
+  bmk-mi300x:
+    needs: find-latest-image
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      runner: mi300x
+      image: rocm/vllm-dev:nightly_official_0729_rc1_20250718
+      model: 'amd/Llama-3.1-70B-Instruct-FP8-KV'
+      tp-list: '[1, 2, 4, 8]'
+      timeout: ${{ inputs.timeout }}
 
-  # bmk-mi325x:
-  #   needs: find-latest-image
-  #   uses: ./.github/workflows/benchmark-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: ${{ inputs.exp-name }}
-  #     isl: ${{ inputs.isl }}
-  #     osl: ${{ inputs.osl }}
-  #     max-model-len: ${{ inputs.max-model-len }}
-  #     random-range-ratio: ${{ inputs.random-range-ratio }}
-  #     runner: mi325x
-  #     image: ${{ needs.find-latest-image.outputs.AMD_IMAGE }}
-  #     model: 'amd/Llama-3.1-70B-Instruct-FP8-KV'
-  #     tp-list: '[1, 2, 4]'
-  #     timeout: ${{ inputs.timeout }}
+  bmk-mi325x:
+    needs: find-latest-image
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      runner: mi325x
+      image: 'rocm/vllm-dev:nightly_official_0729_rc1_20250718'
+      model: 'amd/Llama-3.1-70B-Instruct-FP8-KV'
+      tp-list: '[1, 2, 4]'
+      timeout: ${{ inputs.timeout }}
 
   collect-results:
-    needs: bmk-h100  # [bmk-h100, bmk-h200, bmk-b200, bmk-mi300x, bmk-mi325x]
+    needs: [bmk-h100, bmk-h200, bmk-b200, bmk-mi300x, bmk-mi325x]
     if: always()
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit

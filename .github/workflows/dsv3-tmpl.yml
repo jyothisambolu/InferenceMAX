@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Find the latest Docker image
-        run: echo "SGLang image tags are NP complete, hardcoding the tags for now."
+        run: echo "Hardcoding image tags for now."
 
   bmk-h200:
     needs: find-latest-image
