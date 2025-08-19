@@ -24,7 +24,7 @@ docker run --rm -d --ipc host --shm-size=16g --network $network_name --name $ser
 --entrypoint=python3 \
 $IMAGE \
 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $port --trust-remote-code \
---tp $TP --cuda-graph-max-bs $CONC
+--tp $TP --cuda-graph-max-bs $CONC --disable-radix-cache
 
 set +x
 while IFS= read -r line; do

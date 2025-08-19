@@ -21,7 +21,7 @@ docker run --rm -d --ipc host --shm-size=16g --network $network_name --name $ser
 --group-add render --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
 -v $GHA_CACHE_DIR:/mnt/ -e HF_TOKEN=$HF_TOKEN -e HF_HUB_CACHE=$HF_HUB_CACHE -e SGLANG_AITER_MOE=1 $IMAGE \
 python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $port --trust-remote-code \
---tp $TP --cuda-graph-max-bs $CONC
+--tp $TP --cuda-graph-max-bs $CONC --disable-radix-cache
 
 set +x
 while ! docker logs $server_name 2>&1 | grep -q "The server is fired up and ready to roll!"; do
