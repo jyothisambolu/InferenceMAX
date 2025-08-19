@@ -10,6 +10,7 @@
 | `RANDOM_RANGE_RATIO` | 0.8 |
 
 ```bash
+git clone https://github.com/kimbochen/bench_serving.git 
 python3 bench_serving/benchmark_serving.py \
 --model $MODEL --backend vllm \
 --base-url http://0.0.0.0:\$PORT \
@@ -29,6 +30,11 @@ python3 bench_serving/benchmark_serving.py \
 | H200 | `deepseek-ai/DeepSeek-R1-0528` | `lmsysorg/sglang:v0.4.9.post1-cu126` | [Link](#h200-dsr1) |
 | B200 | `nvidia/Llama-3.1-70B-Instruct-FP8` | `kedarpotdar147/vllm0.1:latest` | [Link](#b200-70b) |
 | B200 | `deepseek-ai/DeepSeek-R1-0528` | `lmsysorg/sglang:v0.4.10.post1-cu128-b200` | [Link](#b200-dsr1) |
+| MI300X | `amd/Llama-3.1-70B-Instruct-FP8-KV` | `rocm/vllm-dev:nightly_official_0729_rc1_20250718` | [Link](#mi300x-70b) |
+| MI300X | `deepseek-ai/DeepSeek-R1-0528` | `lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x` | [Link](#mi300x-dsr1) |
+| MI325X | `amd/Llama-3.1-70B-Instruct-FP8-KV` | `rocm/vllm-dev:nightly_official_0729_rc1_20250718` | [Link](#mi325x-70b) |
+| MI325X | `deepseek-ai/DeepSeek-R1-0528` | `lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x` | [Link](#mi325x-dsr1) |
+| MI355X | `amd/Llama-3.1-70B-Instruct-FP8-KV` | `rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.9.1_mi35x_alpha` | [Link](#mi355x-70b) |
 
 
 #### H200 70B
@@ -70,6 +76,49 @@ python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $PORT 
 --disable-radix-cache --attention-backend trtllm_mla --disable-shared-experts-fusion --enable-flashinfer-trtllm-moe
 ```
 
+#### MI300X 70B
+
+```bash
+export VLLM_USE_TRITON_FLASH_ATTN=0
+vllm serve $MODEL --port $PORT \
+--tensor-parallel-size $TP --distributed-executor-backend mp \
+--dtype bfloat16 --quantization fp8 \
+--max-num-seqs $CONC --max-model-len $MAX_MODEL_LEN --max-seq-len-to-capture $MAX_MODEL_LEN
+```
+
+#### MI300X DSR1
+
+```bash
+python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $PORT --trust-remote-code \
+--tp $TP --cuda-graph-max-bs $CONC
+```
+
+#### MI325X 70B
+
+```bash
+export VLLM_USE_TRITON_FLASH_ATTN=0
+vllm serve $MODEL --port $PORT \
+--tensor-parallel-size $TP --distributed-executor-backend mp \
+--dtype bfloat16 --quantization fp8 \
+--max-num-seqs $CONC --max-model-len $MAX_MODEL_LEN --max-seq-len-to-capture $MAX_MODEL_LEN
+```
+
+#### MI325X DSR1
+
+```bash
+python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $PORT --trust-remote-code \
+--tp $TP --cuda-graph-max-bs $CONC
+```
+
+#### MI355X 70B
+
+```bash
+export VLLM_USE_TRITON_FLASH_ATTN=0
+vllm serve $MODEL --port $PORT \
+--tensor-parallel-size $TP --distributed-executor-backend mp \
+--dtype bfloat16 --quantization fp8 \
+--max-num-seqs $CONC --max-model-len $MAX_MODEL_LEN --max-seq-len-to-capture $MAX_MODEL_LEN
+```
 
 ## Sponsors
 
