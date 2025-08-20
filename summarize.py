@@ -1,0 +1,27 @@
+import sys
+import json
+from pathlib import Path
+
+
+summary_header = f'''\
+## Benchmark Results
+
+| Hardware | TP | Conc | TTFT (ms) | TPOT (ms) | E2EL (s) | TPUT per GPU |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: |\
+'''
+print(summary_header)
+
+results_dir = Path(sys.argv[1])
+for result_path in results_dir.rglob(f'{sys.argv[2]}_*.json'):
+    with open(result_path) as f:
+        result = json.load(f)
+    entry = (
+        f"| {result['hw']} "
+        f"| {result['tp']} "
+        f"| {result['conc']} "
+        f"| {(result['median_ttft'] * 1000):.4f} "
+        f"| {(result['median_tpot'] * 1000):.4f} "
+        f"| {result['median_e2el']:.4f} "
+        f"| {result['tput_per_gpu']:.4f} |"
+    )
+    print(entry)

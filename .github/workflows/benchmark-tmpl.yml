@@ -84,4 +84,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.RESULT_FILENAME }}
-          path: ${{ env.RESULT_FILENAME }}.json
+          path: agg_${{ env.RESULT_FILENAME }}.json
