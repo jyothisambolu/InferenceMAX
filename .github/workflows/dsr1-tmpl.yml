@@ -96,7 +96,7 @@ jobs:
 
   collect-results:
     needs: [bmk-h200, bmk-b200, bmk-mi300x, bmk-mi325x]
-    if: always()
+    if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
     with:
