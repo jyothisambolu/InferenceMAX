@@ -12,8 +12,6 @@ summary_header = f'''\
 print(summary_header)
 
 results_dir = Path(sys.argv[1])
-print(results_dir.rglob('*.json'))
-
 for result_path in results_dir.rglob(f'agg_{sys.argv[2]}_*.json'):
     with open(result_path) as f:
         result = json.load(f)
