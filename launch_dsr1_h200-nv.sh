@@ -30,7 +30,7 @@ while IFS= read -r line; do
     if [[ "\$line" == *"The server is fired up and ready to roll"* ]]; then
         break
     fi
-done < <(tail -F -n0 "/results/server_\${SLURM_JOB_ID}.log")
+done < <(tail -F -n0 "/workspace/server_\${SLURM_JOB_ID}.log")
 
 set -x
 git clone https://github.com/kimbochen/bench_serving.git 
