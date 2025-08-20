@@ -24,7 +24,7 @@ def plot_tput_vs_e2el():
         with open(result_path) as f:
             result = json.load(f)
         x, y = result['median_e2el'], result['tput_per_gpu']
-        ax.scatter(x, y, label=upper(result['hw']), color=hw_color[result['hw']])
+        ax.scatter(x, y, label=result['hw'].upper(), color=hw_color[result['hw']])
         ax.annotate(str(result['tp']), (x, y), textcoords='offset points', xytext=(3, 3), ha='left', fontsize=8)
 
     ax.set_xlabel('End-to-end Latency (s)')
@@ -44,7 +44,7 @@ def plot_tput_vs_intvty():
         with open(result_path) as f:
             result = json.load(f)
         x, y = result['median_intvty'], result['tput_per_gpu']
-        ax.scatter(x, y, label=upper(result['hw']), color=hw_color[result['hw']])
+        ax.scatter(x, y, label=result['hw'].upper(), color=hw_color[result['hw']])
         ax.annotate(str(result['tp']), (x, y), textcoords='offset points', xytext=(3, 3), ha='left', fontsize=8)
 
     ax.set_xlabel('Interactivity (tok/s/user)')

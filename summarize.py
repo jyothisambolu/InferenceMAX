@@ -16,7 +16,7 @@ for result_path in results_dir.rglob(f'agg_{sys.argv[2]}_*.json'):
     with open(result_path) as f:
         result = json.load(f)
     entry = (
-        f"| {upper(result['hw'])} "
+        f"| {result['hw'].upper()} "
         f"| {result['tp']} "
         f"| {result['conc']} "
         f"| {(result['median_ttft'] * 1000):.4f} "
