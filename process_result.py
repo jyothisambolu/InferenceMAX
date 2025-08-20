@@ -26,5 +26,5 @@ for key, value in bmk_result.items():
 
 print(json.dumps(data, indent=2))
 
-with open(f'{result_filename}.json', 'w') as f:
+with open(f'agg_{result_filename}.json', 'w') as f:
     json.dump(data, f, indent=2)
