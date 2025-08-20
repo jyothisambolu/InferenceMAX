@@ -24,7 +24,10 @@ jobs:
           fetch-depth: 0
 
       - name: Print summary
-        run: python3 summarize.py results/ ${{ inputs.exp-name }} >> $GITHUB_STEP_SUMMARY
+        run: |
+          ls
+          ls results/
+          python3 summarize.py results/ ${{ inputs.exp-name }} >> $GITHUB_STEP_SUMMARY
 
       - name: Install missing packages
         run: pip install -q matplotlib
