@@ -24,7 +24,7 @@ vllm serve $MODEL --port $port \
 --tensor-parallel-size $TP --distributed-executor-backend mp \
 --dtype bfloat16 --quantization fp8 \
 --max-num-seqs $CONC --max-model-len $MAX_MODEL_LEN --max-seq-len-to-capture $MAX_MODEL_LEN \
---no-enable-prefixcaching \
+--no-enable-prefix-caching \
 --disable-log-requests
 
 set +x
