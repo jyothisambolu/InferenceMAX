@@ -54,3 +54,7 @@ def plot_tput_vs_intvty():
 
     fig.savefig(f'tput_vs_intvty_{exp_name}.png', bbox_inches='tight')
     plt.close(fig)
+
+
+plot_tput_vs_e2el()
+plot_tput_vs_intvty()
