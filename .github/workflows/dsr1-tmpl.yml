@@ -1,4 +1,4 @@
-name: DeepSeek V3 Template
+name: DeepSeek R1 Template
 
 on:
   workflow_call:
