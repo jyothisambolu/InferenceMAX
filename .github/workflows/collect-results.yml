@@ -26,20 +26,20 @@ jobs:
       - name: Print summary
         run: python3 summarize.py results/ ${{ inputs.exp-name }} >> $GITHUB_STEP_SUMMARY
 
-      # - name: Install missing packages
-      #   run: pip install -q matplotlib
+      - name: Install missing packages
+        run: pip install -q matplotlib
 
-      # - name: Run collect results script
-      #   run: python3 collect_results.py results/ ${{ inputs.exp-name }}
+      - name: Run collect results script
+        run: python3 plot_perf.py results/ ${{ inputs.exp-name }}
 
-      # - name: Upload throughput vs. interactivity graph
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: tput_vs_intvty_${{ inputs.exp-name }}
-      #     path: tput_vs_intvty_${{ inputs.exp-name }}.png
+      - name: Upload throughput vs. interactivity graph
+        uses: actions/upload-artifact@v4
+        with:
+          name: tput_vs_intvty_${{ inputs.exp-name }}
+          path: tput_vs_intvty_${{ inputs.exp-name }}.png
 
-      # - name: Upload throughput vs. end-to-end latency graph
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: tput_vs_e2el_${{ inputs.exp-name }}
-      #     path: tput_vs_e2el_${{ inputs.exp-name }}.png
+      - name: Upload throughput vs. end-to-end latency graph
+        uses: actions/upload-artifact@v4
+        with:
+          name: tput_vs_e2el_${{ inputs.exp-name }}
+          path: tput_vs_e2el_${{ inputs.exp-name }}.png
