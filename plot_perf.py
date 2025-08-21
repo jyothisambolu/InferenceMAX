@@ -4,7 +4,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 
-results_dir_name = sys.argv[1]
+results_dir = Path(sys.argv[1])
 exp_name = sys.argv[2]
 hw_color = {
     'h100': 'lightgreen',
@@ -15,16 +15,24 @@ hw_color = {
     'mi355x': 'purple'
 }
 
+results = []
+for result_path in results_dir.rglob(f'*.json'):
+    with open(result_path) as f:
+        result = json.load(f)
+    results.append(result)
+
 
 def plot_tput_vs_e2el():
     fig, ax = plt.subplots()
-    results_dir = Path(results_dir_name)
 
-    for result_path in results_dir.rglob(f'agg_{exp_name}_*.json'):
-        with open(result_path) as f:
-            result = json.load(f)
+    for hw, color in hw_color.items():
+        xs = [result['median_e2el'] for result in results if result['hw'] == hw]
+        ys = [result['tput_per_gpu'] for result in results if result['hw'] == hw]
+        if xs and ys:
+            ax.scatter(xs, ys, label=hw.upper(), color=color)
+
+    for result in results:
         x, y = result['median_e2el'], result['tput_per_gpu']
-        ax.scatter(x, y, label=result['hw'].upper(), color=hw_color[result['hw']])
         ax.annotate(str(result['tp']), (x, y), textcoords='offset points', xytext=(3, 3), ha='left', fontsize=8)
 
     ax.set_xlabel('End-to-end Latency (s)')
@@ -38,13 +46,15 @@ def plot_tput_vs_e2el():
 
 def plot_tput_vs_intvty():
     fig, ax = plt.subplots()
-    results_dir = Path(results_dir_name)
 
-    for result_path in results_dir.rglob(f'agg_{exp_name}_*.json'):
-        with open(result_path) as f:
-            result = json.load(f)
+    for hw, color in hw_color.items():
+        xs = [result['median_intvty'] for result in results if result['hw'] == hw]
+        ys = [result['tput_per_gpu'] for result in results if result['hw'] == hw]
+        if xs and ys:
+            ax.scatter(xs, ys, label=hw.upper(), color=color)
+
+    for result in results:
         x, y = result['median_intvty'], result['tput_per_gpu']
-        ax.scatter(x, y, label=result['hw'].upper(), color=hw_color[result['hw']])
         ax.annotate(str(result['tp']), (x, y), textcoords='offset points', xytext=(3, 3), ha='left', fontsize=8)
 
     ax.set_xlabel('Interactivity (tok/s/user)')
