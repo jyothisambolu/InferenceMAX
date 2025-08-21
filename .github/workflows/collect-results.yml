@@ -37,11 +37,11 @@ jobs:
       - name: Upload throughput vs. interactivity graph
         uses: actions/upload-artifact@v4
         with:
-          name: tput_vs_intvty_${{ inputs.exp-name }}
+          name: Graph - ${{ inputs.exp-name }} throughput vs. interactivity
           path: tput_vs_intvty_${{ inputs.exp-name }}.png
 
       - name: Upload throughput vs. end-to-end latency graph
         uses: actions/upload-artifact@v4
         with:
-          name: tput_vs_e2el_${{ inputs.exp-name }}
+          name: Graph - ${{ inputs.exp-name }} throughput vs. latency
           path: tput_vs_e2el_${{ inputs.exp-name }}.png
