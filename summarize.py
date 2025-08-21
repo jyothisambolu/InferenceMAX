@@ -25,6 +25,6 @@ for result_path in results_dir.rglob(f'agg_{sys.argv[2]}_*.json'):
     )
     entries.append(entry)
 
-entries.sort(key=lambda result: (result['hw'], result['tp'], result['conc']))
+entries.sort(key=lambda entry: (entry['hw'], entry['tp'], entry['conc']))
 for entry in entries:
     print(entry)

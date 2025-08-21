@@ -26,7 +26,6 @@ jobs:
 
       - name: Print summary
         run: |
-          ls results/
           python3 summarize.py results/ ${{ inputs.exp-name }} >> $GITHUB_STEP_SUMMARY
 
       - name: Install missing packages
