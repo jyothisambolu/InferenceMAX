@@ -9,6 +9,7 @@ cat > $JOB_SCRIPT <<-EOF
 
 echo "JOB \$SLURM_JOB_ID running on NODE \$SLURMD_NODENAME"
 
+export TORCH_CUDA_ARCH_LIST="10.0"
 SERVER_LOG=\$(mktemp /workspace/server-XXXXXX.log)
 
 hf download $MODEL
