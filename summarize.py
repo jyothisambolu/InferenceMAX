@@ -9,12 +9,16 @@ summary_header = f'''\
 '''
 print(summary_header)
 
-entries = []
+results = []
 results_dir = Path(sys.argv[1])
 for result_path in results_dir.rglob(f'agg_{sys.argv[2]}_*.json'):
     with open(result_path) as f:
         result = json.load(f)
-    entry = (
+    results.append(result)
+
+results.sort(key=lambda r: (r['hw'], r['tp'], r['conc']))
+for result in results:
+    print(
         f"| {result['hw'].upper()} "
         f"| {result['tp']} "
         f"| {result['conc']} "
@@ -23,8 +27,3 @@ for result_path in results_dir.rglob(f'agg_{sys.argv[2]}_*.json'):
         f"| {result['median_e2el']:.4f} "
         f"| {result['tput_per_gpu']:.4f} |"
     )
-    entries.append(entry)
-
-entries.sort(key=lambda entry: (entry['hw'], entry['tp'], entry['conc']))
-for entry in entries:
-    print(entry)
