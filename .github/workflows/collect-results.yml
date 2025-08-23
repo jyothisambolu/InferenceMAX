@@ -33,7 +33,7 @@ jobs:
       - name: Upload aggregated results
         uses: actions/upload-artifact@v4
         with:
-          name: Results - ${{ inputs.exp-name }}
+          name: results_${{ inputs.exp-name }}
           path: agg_${{ inputs.exp-name }}.json
 
       - name: Plot performance
@@ -44,7 +44,7 @@ jobs:
       - name: Upload performance graphs
         uses: actions/upload-artifact@v4
         with:
-          name: Graphs - ${{ inputs.exp-name }}
+          name: graphs_${{ inputs.exp-name }}
           path: |
             tput_vs_intvty_${{ inputs.exp-name }}.png
             tput_vs_e2el_${{ inputs.exp-name }}.png
