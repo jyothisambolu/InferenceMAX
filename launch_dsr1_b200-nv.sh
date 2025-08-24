@@ -9,6 +9,7 @@ cat > $JOB_SCRIPT <<-EOF
 
 echo "JOB \$SLURM_JOB_ID running on NODE \$SLURMD_NODENAME"
 
+rm -rf $HF_HUB_CACHE/.locks/
 huggingface-cli download $MODEL
 
 set -x
@@ -32,6 +33,7 @@ while IFS= read -r line; do
         break
     fi
 done < <(tail -F -n0 "/workspace/server_\${SLURM_JOB_ID}.log")
+rm -rf $HF_HUB_CACHE/.locks/
 
 git clone -b v0.7.3 https://github.com/vllm-project/vllm.git
 set -x

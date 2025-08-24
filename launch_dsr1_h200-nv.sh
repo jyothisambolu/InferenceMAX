@@ -9,6 +9,7 @@ cat > $JOB_SCRIPT <<-EOF
 
 echo "JOB \$SLURM_JOB_ID running on \$SLURMD_NODENAME"
 
+rm -rf $HF_HUB_CACHE/.locks/
 huggingface-cli download $MODEL
 pip3 install --user sentencepiece
 
@@ -31,6 +32,7 @@ while IFS= read -r line; do
         break
     fi
 done < <(tail -F -n0 "/workspace/server_\${SLURM_JOB_ID}.log")
+rm -rf $HF_HUB_CACHE/.locks/
 
 set -x
 git clone https://github.com/kimbochen/bench_serving.git 

@@ -11,6 +11,7 @@ echo "JOB \$SLURM_JOB_ID running on \$SLURMD_NODENAME"
 
 SERVER_LOG=\$(mktemp /workspace/server-XXXXXX.log)
 
+rm -rf $HF_HUB_CACHE/.locks/
 hf download $MODEL
 PORT=$(( 8888 + $PORT_OFFSET ))
 set -x
@@ -22,16 +23,19 @@ vllm serve $MODEL --host 0.0.0.0 --port \$PORT \
 --disable-log-requests > \$SERVER_LOG 2>&1 &
 
 set +x
-while ! grep -q "Application startup complete\." \$SERVER_LOG; do
-    if grep -iq "error" \$SERVER_LOG; then
-        grep -iC5 "error" \$SERVER_LOG
-        echo "JOB \$SLURM_JOB_ID ran on \$SLURMD_NODENAME"
+while IFS= read -r line; do
+    printf '%s\n' "\$line"
+    if [[ "\$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
+        sleep 5
+        tail -n100 \$SERVER_LOG
+        echo "JOB \$SLURM_JOB_ID ran on NODE \$SLURMD_NODENAME"
         exit 1
     fi
-    tail -n10 \$SERVER_LOG
-    sleep 5
-done
-tail -n10 \$SERVER_LOG
+    if [[ "\$line" == *"Application startup complete"* ]]; then
+        break
+    fi
+done < <(tail -F -n0 "\$SERVER_LOG")
+rm -rf $HF_HUB_CACHE/.locks/
 
 git clone https://github.com/kimbochen/bench_serving.git 
 set -x

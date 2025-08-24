@@ -12,8 +12,10 @@ echo "JOB \$SLURM_JOB_ID running on NODE \$SLURMD_NODENAME"
 export TORCH_CUDA_ARCH_LIST="10.0"
 SERVER_LOG=\$(mktemp /workspace/server-XXXXXX.log)
 
+rm -rf $HF_HUB_CACHE/.locks/
 hf download $MODEL
 PORT=$(( 8888 + $PORT_OFFSET ))
+
 set -x
 vllm serve $MODEL --host 0.0.0.0 --port \$PORT \
 --trust-remote-code --quantization modelopt --kv-cache-dtype fp8 --gpu-memory-utilization 0.9 \
@@ -33,6 +35,7 @@ while IFS= read -r line; do
         break
     fi
 done < <(tail -F -n0 "\$SERVER_LOG")
+rm -rf $HF_HUB_CACHE/.locks/
 
 git clone https://github.com/kimbochen/bench_serving.git 
 set -x
