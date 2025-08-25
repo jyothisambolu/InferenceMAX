@@ -1,12 +1,26 @@
 #!/usr/bin/env bash
 
+# === Required Env Vars === 
+# HF_TOKEN
+# HF_HUB_CACHE
+# IMAGE
+# MODEL
+# ISL
+# OSL
+# MAX_MODEL_LEN
+# RANDOM_RANGE_RATIO
+# TP
+# CONC
+# RESULT_FILENAME
+# PORT_OFFSET
+# HF_HUB_CACHE_MOUNT
+# GITHUB_WORKSPACE
+
 sudo sh -c 'echo 0 > /proc/sys/kernel/numa_balancing'
 
 while [ -n "$(docker ps -aq)" ]; do
   sleep 1
 done
-
-HF_HOME_DIR="/dev/shm/"
 
 network_name="bmk-net"
 server_name="bmk-server"
@@ -19,7 +33,7 @@ set -x
 docker run --rm -d --ipc host --shm-size=16g --network $network_name --name $server_name \
 --privileged --cap-add=CAP_SYS_ADMIN --device=/dev/kfd --device=/dev/dri --device=/dev/mem \
 --group-add render --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
--v $HF_HOME_DIR/hf_hub_cache/:$HF_HUB_CACHE \
+-v $HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
 -e HF_TOKEN=$HF_TOKEN -e HF_HUB_CACHE=$HF_HUB_CACHE -e VLLM_USE_TRITON_FLASH_ATTN=0 \
 --entrypoint=vllm \
 $IMAGE \
