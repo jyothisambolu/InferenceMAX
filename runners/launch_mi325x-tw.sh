@@ -11,7 +11,7 @@ salloc --partition=$PARTITION --gres=gpu:$TP --no-shell
 JOB_ID=$(squeue -u $USER -h -o %A)
 
 set -x
-srun --jobid=$JOB_ID --pty bash -c "enroot import -o $SQUASH_FILE docker://$IMAGE"
+srun --jobid=$JOB_ID bash -c "enroot import -o $SQUASH_FILE docker://$IMAGE"
 srun --jobid=$JOB_ID \
 --container-image=$(realpath $SQUASH_FILE) \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
