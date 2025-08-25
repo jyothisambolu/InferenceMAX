@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-MODEL="${1%%_*}"
+MODEL_CODE="${1%%_*}"
 export HF_HUB_CACHE_MOUNT="/mnt/vast/hf_hub_cache/"
 export PORT_OFFSET=${USER: -1}
 
 PARTITION="h200"
-SQUASH_FILE="/mnt/vast/squash/image_${MODEL}_h200.sqsh"
+SQUASH_FILE="/mnt/vast/squash/image_${MODEL_CODE}_h200.sqsh"
 
 salloc --partition=$PARTITION --gres=gpu:$TP --exclusive --no-shell
 JOB_ID=$(squeue -u $USER -h -o %A)
@@ -18,6 +18,6 @@ srun --jobid=$JOB_ID \
 --container-mount-home \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \
-bash benchmarks/${MODEL}_h200_slurm.sh
+bash benchmarks/${MODEL_CODE}_h200_slurm.sh
 
 scancel $JOB_ID

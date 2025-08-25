@@ -3,9 +3,9 @@
 export HF_HUB_CACHE_MOUNT="/raid/hf_hub_cache/"
 export PORT_OFFSET=${USER: -1}
 
-MODEL="${1%%_*}"
+MODEL_CODE="${1%%_*}"
 PARTITION="dgx-b200"
-SQUASH_FILE="/raid/image_${MODEL}_b200.sqsh"
+SQUASH_FILE="/raid/image_${MODEL_CODE}_b200.sqsh"
 
 salloc --partition=$PARTITION --gres=gpu:$TP --exclusive --no-shell
 JOB_ID=$(squeue -u $USER -h -o %A)
@@ -18,6 +18,6 @@ srun --jobid=$JOB_ID \
 --container-mount-home \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \
-bash benchmarks/${MODEL}_b200_slurm.sh
+bash benchmarks/${MODEL_CODE}_b200_slurm.sh
 
 scancel $JOB_ID
