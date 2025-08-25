@@ -19,7 +19,7 @@ set -euo pipefail
 echo "JOB $SLURM_JOB_ID running on $SLURMD_NODENAME"
 
 set -x
-hf download $MODEL
+huggingface-cli download $MODEL
 SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 PORT=$(( 8888 + $PORT_OFFSET ))
 
