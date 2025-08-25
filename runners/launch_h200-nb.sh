@@ -7,7 +7,7 @@ export PORT_OFFSET=${USER: -1}
 PARTITION="main"
 SQUASH_FILE="/home/squash/image_${MODEL_CODE}_h200.sqsh"
 
-salloc --partition=$PARTITION --gres=gpu:$TP --exclusive --no-shell
+salloc --partition=$PARTITION --gres=gpu:$TP --exclusive --time=180 --no-shell
 JOB_ID=$(squeue -u $USER -h -o %A)
 
 set -x
