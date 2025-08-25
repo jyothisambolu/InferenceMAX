@@ -27,7 +27,6 @@ python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $PORT 
 --disable-radix-cache --decode-log-interval 1 --max-running-requests 512 \
 --cuda-graph-bs 4 8 16 32 64 128 256 --cuda-graph-max-bs 256 \
 > $SERVER_LOG 2>&1 &
-rm -rf $HF_HUB_CACHE/.locks/
 
 set +x
 while IFS= read -r line; do
@@ -42,7 +41,6 @@ while IFS= read -r line; do
         break
     fi
 done < <(tail -F -n0 "$SERVER_LOG")
-rm -rf $HF_HUB_CACHE/.locks/
 
 set -x
 git clone https://github.com/kimbochen/bench_serving.git 

@@ -42,7 +42,6 @@ while IFS= read -r line; do
         break
     fi
 done < <(tail -F -n0 "$SERVER_LOG")
-rm -rf $HF_HUB_CACHE/.locks/
 
 set -x
 git clone https://github.com/kimbochen/bench_serving.git
