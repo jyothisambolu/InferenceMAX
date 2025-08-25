@@ -14,8 +14,6 @@
 # RESULT_FILENAME
 # PORT_OFFSET
 
-set -euo pipefail
-
 echo "JOB $SLURM_JOB_ID running on $SLURMD_NODENAME"
 
 set -x
