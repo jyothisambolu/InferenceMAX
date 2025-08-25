@@ -7,13 +7,13 @@ export PORT_OFFSET=${USER: -1}
 PARTITION="gpuworker"
 SQUASH_FILE="/home/.tw/slinky/.cache/squash/image_${MODEL_CODE}_mi325x.sqsh"
 
+set -x
 salloc --partition=$PARTITION --gres=gpu:$TP --no-shell
 JOB_ID=$(squeue -u $USER -h -o %A)
 
-set -x
-srun --jobid=$JOB_ID bash -c "enroot import -o $SQUASH_FILE docker://$IMAGE"
+srun --jobid=$JOB_ID -c 128 bash -c "enroot import -o $SQUASH_FILE docker://$IMAGE"
 srun --jobid=$JOB_ID \
---container-image=$(realpath $SQUASH_FILE) \
+--container-image=$SQUASH_FILE \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
 --container-mount-home \
 --container-workdir=/workspace/ \
