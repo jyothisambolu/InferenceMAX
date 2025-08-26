@@ -13,15 +13,10 @@ A runner loads code from this repo and executes them.
 - `runners/`: Scripts that launches the runners
 
 The flow of operations is as follows:
-1. GitHub Action workflow assigns a runner a config to benchmark, specified by the workflow YAML file. Config includes:
-  - GPU type
-  - Model
-  - ISL / OSL
-  - TP
-1. The runner pulls the repo code and launchs the respective GPU node script in `runner/`, specifying the benchmark config:
-  - Model
-  - ISL / OSL
-  - TP
+1. GitHub Action workflow assigns a runner a config to benchmark, specified by the workflow YAML file.  
+   Config includes: GPU type, Model, ISL / OSL, TP
+1. The runner pulls the repo code and launchs the respective GPU node script in `runner/`,
+   specifying the benchmark config: Model, ISL / OSL, TP
 1. The script executes the corresponding script in `benchmarks/`, configuring it with the benchmark config
 
 
