@@ -55,6 +55,9 @@ python3 bench_serving/benchmark_serving.py \
 | MI325X | `deepseek-ai/DeepSeek-R1-0528` | `lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x` | [Link](#mi325x-dsr1) |
 | MI355X | `amd/Llama-3.1-70B-Instruct-FP8-KV` | `rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.9.1_mi35x_alpha` | [Link](#mi355x-70b) |
 
+Note: We are using nightly and tip-of-tree built images for the sake of development stability.  
+We will use official Docker images upon public release.
+
 
 #### H200 70B
 
