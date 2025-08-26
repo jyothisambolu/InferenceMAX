@@ -1,6 +1,30 @@
 # InferenceMAX
 
 
+## System Design
+
+We hook GPU nodes into the GitHub Action of this repo as **runners**, and a GitHub Action **workflow** assigns work to the runners.
+- Workflow scheduler: The workflow that launches the full benchmark run sweep
+- LLaMA 70B template and DSR1 template: The logic for declaring GPUs and their benchmark run configs
+- Benchmark template: The core logic of launching a single benchmark run
+
+A runner loads code from this repo and executes them.
+- `benchmarks/`: Scripts of benchmark configs, including the benchmark server and the benchmark client setup
+- `runners/`: Scripts that launches the runners
+
+The flow of operations is as follows:
+1. GitHub Action workflow assigns a runner a config to benchmark, specified by the workflow YAML file. Config includes:
+  - GPU type
+  - Model
+  - ISL / OSL
+  - TP
+1. The runner pulls the repo code and launchs the respective GPU node script in `runner/`, specifying the benchmark config:
+  - Model
+  - ISL / OSL
+  - TP
+1. The script executes the corresponding script in `benchmarks/`, configuring it with the benchmark config
+
+
 ## Benchmark Client Configuration
 
 | Parameter | Values |
