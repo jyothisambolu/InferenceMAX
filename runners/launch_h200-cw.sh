@@ -8,7 +8,7 @@ PARTITION="h200"
 SQUASH_FILE="/mnt/vast/squash/image_${MODEL_CODE}_h200.sqsh"
 
 salloc --partition=$PARTITION --gres=gpu:$TP --exclusive --time=180 --no-shell
-JOB_ID=$(squeue -u $USER -h -o %A)
+JOB_ID=$(squeue -u $USER -h -o %A | head -n1)
 
 set -x
 srun --jobid=$JOB_ID bash -c "enroot import -o $SQUASH_FILE docker://$IMAGE"
