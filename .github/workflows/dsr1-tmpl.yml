@@ -111,7 +111,7 @@ jobs:
       timeout: ${{ inputs.timeout }}
 
   collect-results:
-    needs: [bmk-h200, bmk-b200, bmk-mi300x, bmk-mi325x, bmk-mi355x]
+    needs: [bmk-h200, bmk-b200, bmk-mi300x, bmk-mi355x  # , bmk-mi325x, bmk-mi355x]
     if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
