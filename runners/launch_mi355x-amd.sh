@@ -26,12 +26,12 @@ JOB_ID=$(squeue -u $USER -h -o %A | head -n1)
 
 srun --jobid=$JOB_ID bash -c "enroot import -o $SQUASH_FILE docker://$IMAGE"
 srun --jobid=$JOB_ID \
---container-image=$IMAGE \
+--container-image=$SQUASH_FILE \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
 --container-mount-home \
 --container-writable \
 --container-remap-root \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \
-bash ${MODEL_CODE}_mi355x_slurm.sh
+bash benchmarks/${MODEL_CODE}_mi355x_slurm.sh
 scancel $JOB_ID
