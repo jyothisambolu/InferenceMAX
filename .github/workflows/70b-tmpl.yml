@@ -107,7 +107,7 @@ jobs:
       runner: mi325x
       image: 'rocm/vllm-dev:nightly_official_0729_rc1_20250718'
       model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
-      tp-list: '[1, 2]'
+      tp-list: '[1, 2, 4, 8]'
       timeout: ${{ inputs.timeout }}
 
   bmk-mi355x:
