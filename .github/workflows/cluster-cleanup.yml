@@ -29,6 +29,7 @@ jobs:
           # - 'mi325x-tw_1'
           # - 'mi325x-tw_2'
           # - 'mi325x-tw_3'
+          - 'mi355x-amd_0'
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Cancel all jobs
