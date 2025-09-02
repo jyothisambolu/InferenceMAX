@@ -78,21 +78,21 @@ jobs:
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
 
-  bmk-mi325x:
-    needs: find-latest-image
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: ${{ inputs.exp-name }}
-      isl: ${{ inputs.isl }}
-      osl: ${{ inputs.osl }}
-      max-model-len: ${{ inputs.max-model-len }}
-      random-range-ratio: ${{ inputs.random-range-ratio }}
-      runner: mi325x
-      image: 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
-      model: 'deepseek-ai/DeepSeek-R1-0528'
-      tp-list: '[8]'
-      timeout: ${{ inputs.timeout }}
+  # bmk-mi325x:
+  #   needs: find-latest-image
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: ${{ inputs.isl }}
+  #     osl: ${{ inputs.osl }}
+  #     max-model-len: ${{ inputs.max-model-len }}
+  #     random-range-ratio: ${{ inputs.random-range-ratio }}
+  #     runner: mi325x
+  #     image: 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
+  #     model: 'deepseek-ai/DeepSeek-R1-0528'
+  #     tp-list: '[8]'
+  #     timeout: ${{ inputs.timeout }}
 
   bmk-mi355x:
     needs: find-latest-image
