@@ -35,8 +35,6 @@ export VLLM_FLASHINFER_ALLREDUCE_FUSION_THRESHOLDS_MB='{"2":32,"4":32,"8":8}'
 
 FUSION_FLAG='{"pass_config":{"enable_fi_allreduce_fusion":true,"enable_attn_fusion":true,"enable_noop":true},"custom_ops":["+quant_fp8","+rms_norm"],"cudagraph_mode":"FULL_DECODE_ONLY","splitting_ops":[]}'
 
-NO_PREFIX_CACHING_FLAG="--no-enable-prefix-caching"
-
 
 export TORCH_CUDA_ARCH_LIST="10.0"
 vllm serve $MODEL --host 0.0.0.0 --port $PORT \
