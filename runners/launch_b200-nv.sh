@@ -7,7 +7,7 @@ MODEL_CODE="${1%%_*}"
 PARTITION="dgx-b200"
 SQUASH_FILE="/raid/image_${MODEL_CODE}_b200.sqsh"
 
-salloc --partition=$PARTITION --gres=gpu:$TP --exclusive --time=180 --no-shell
+salloc --partition=$PARTITION --nodelist=dgx06-b200 --gres=gpu:$TP --exclusive --time=180 --no-shell
 JOB_ID=$(squeue -u $USER -h -o %A | head -n1)
 
 set -x
