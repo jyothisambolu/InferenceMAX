@@ -39,7 +39,7 @@ vllm serve $MODEL --host 0.0.0.0 --port $PORT \
 --pipeline-parallel-size 1 --tensor-parallel-size $TP \
 --max-num-batched-tokens 8192 --max-num-seqs 512 --max-model-len $MAX_MODEL_LEN \
 --enable-chunked-prefill --async-scheduling --no-enable-prefix-caching \
---compilation-config ${FUSION_FLAG} \
+--compilation-config "$FUSION_FLAG" \
 --disable-log-requests > $SERVER_LOG 2>&1 &
 
 set +x
