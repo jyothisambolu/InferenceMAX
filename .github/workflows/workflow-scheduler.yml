@@ -35,47 +35,47 @@ jobs:
       max-model-len: 2048
       random-range-ratio: 0.8
 
-  # _70b-8k1k:
-  #   needs: cleanup
-  #   uses: ./.github/workflows/70b-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: '70b_8k1k'
-  #     isl: 8192
-  #     osl: 1024
-  #     max-model-len: 9216
-  #     random-range-ratio: 0.8
-  # 
-  # dsr1-8k1k:
-  #   needs: cleanup
-  #   uses: ./.github/workflows/dsr1-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: 'dsr1_8k1k'
-  #     isl: 8192
-  #     osl: 1024
-  #     max-model-len: 9216
-  #     random-range-ratio: 0.8
+  _70b-8k1k:
+    needs: cleanup
+    uses: ./.github/workflows/70b-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: '70b_8k1k'
+      isl: 8192
+      osl: 1024
+      max-model-len: 9216
+      random-range-ratio: 0.8
+  
+  dsr1-8k1k:
+    needs: cleanup
+    uses: ./.github/workflows/dsr1-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: 'dsr1_8k1k'
+      isl: 8192
+      osl: 1024
+      max-model-len: 9216
+      random-range-ratio: 0.8
 
-  # _70b-1k8k:
-  #   needs: cleanup
-  #   uses: ./.github/workflows/70b-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: '70b_1k8k'
-  #     isl: 1024
-  #     osl: 8192
-  #     max-model-len: 9216
-  #     random-range-ratio: 0.8
-  #     timeout: 240
+  _70b-1k8k:
+    needs: cleanup
+    uses: ./.github/workflows/70b-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: '70b_1k8k'
+      isl: 1024
+      osl: 8192
+      max-model-len: 9216
+      random-range-ratio: 0.8
+      timeout: 240
 
-  # dsr1-1k8k:
-  #   needs: cleanup
-  #   uses: ./.github/workflows/dsr1-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: 'dsr1_1k8k'
-  #     isl: 1024
-  #     osl: 8192
-  #     max-model-len: 9216
-  #     random-range-ratio: 0.8
+  dsr1-1k8k:
+    needs: cleanup
+    uses: ./.github/workflows/dsr1-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: 'dsr1_1k8k'
+      isl: 1024
+      osl: 8192
+      max-model-len: 9216
+      random-range-ratio: 0.8

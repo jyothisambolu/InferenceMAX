@@ -9,7 +9,6 @@
 # CONC
 # MAX_MODEL_LEN
 
-set -x
 pip install "git+https://github.com/flashinfer-ai/flashinfer.git@9720182476ede910698f8d783c29b2ec91cec023#egg=flashinfer-python"
 pip install --upgrade --no-deps nvidia-nccl-cu12==2.26.2.post1
 
@@ -22,6 +21,7 @@ FUSION_FLAG='{'\
 '"splitting_ops": []'\
 '}'
 
+set -x
 vllm serve $MODEL --host 0.0.0.0 --port $PORT --trust-remote-code \
 --kv-cache-dtype fp8 --gpu-memory-utilization 0.9 \
 --pipeline-parallel-size 1 --tensor-parallel-size $TP --max-num-batched-tokens 8192 --max-num-seqs 512 --max-model-len $MAX_MODEL_LEN \

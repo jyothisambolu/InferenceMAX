@@ -16,7 +16,6 @@
 
 echo "JOB $SLURM_JOB_ID running on $SLURMD_NODENAME"
 
-set -x
 hf download $MODEL
 SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 PORT=$(( 8888 + $PORT_OFFSET ))
@@ -34,6 +33,7 @@ FUSION_FLAG='{'\
 '"splitting_ops": []'\
 '}'
 
+set -x
 vllm serve $MODEL --host 0.0.0.0 --port $PORT \
 --trust-remote-code --kv-cache-dtype fp8 --gpu-memory-utilization 0.9 \
 --pipeline-parallel-size 1 --tensor-parallel-size $TP \
