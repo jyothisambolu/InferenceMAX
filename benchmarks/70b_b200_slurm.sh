@@ -21,12 +21,27 @@ hf download $MODEL
 SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 PORT=$(( 8888 + $PORT_OFFSET ))
 
+#nccl update
+pip uninstall -y nvidia-nccl-cu12
+pip install nvidia-nccl-cu12==2.26.2.post1
+
+pip uninstall -y flashinfer-python
+git clone --recursive https://github.com/flashinfer-ai/flashinfer.git
+git checkout 9720182476ede910698f8d783c29b2ec91cec023
+cd flashinfer
+pip install .
+
+export VLLM_FLASHINFER_ALLREDUCE_FUSION_THRESHOLDS_MB='{"2":32,"4":32,"8":8}'
+
+FUSION_FLAG='{"pass_config":{"enable_fi_allreduce_fusion":true,"enable_attn_fusion":true,"enable_noop":true},"custom_ops":["+quant_fp8","+rms_norm"],"cudagraph_mode":"FULL_DECODE_ONLY","splitting_ops":[]}'
+
+
 export TORCH_CUDA_ARCH_LIST="10.0"
 vllm serve $MODEL --host 0.0.0.0 --port $PORT \
---trust-remote-code --quantization modelopt --kv-cache-dtype fp8 --gpu-memory-utilization 0.9 \
---pipeline-parallel-size 1 --tensor-parallel-size $TP --max-num-seqs $CONC --max-num-batched-tokens 8192 --max-model-len $MAX_MODEL_LEN \
+--trust-remote-code --kv-cache-dtype fp8 --gpu-memory-utilization 0.9 \
+--pipeline-parallel-size 1 --tensor-parallel-size $TP --max-num-seqs $CONC --max-num-batched-tokens 8192 --max-num-seqs 512 --max-model-len $MAX_MODEL_LEN \
 --enable-chunked-prefill --async-scheduling --no-enable-prefix-caching \
---compilation-config '{"pass_config": {"enable_fi_allreduce_fusion": true}, "custom_ops": ["+rms_norm"], "level": 3}' \
+--compilation-config ${FUSION_FLAG} \
 --disable-log-requests > $SERVER_LOG 2>&1 &
 
 set +x
