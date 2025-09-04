@@ -55,7 +55,7 @@ jobs:
           - 'mi300x-amd_2'
           - 'mi300x-amd_3'
           - 'mi300x-amd_4'
-          # - 'mi325x-amd_0'
+          - 'mi325x-amd_0'
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Stop all Docker containers
