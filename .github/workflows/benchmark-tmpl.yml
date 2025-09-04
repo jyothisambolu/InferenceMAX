@@ -32,6 +32,12 @@ on:
       timeout:
         required: true
         type: number
+      framework:
+        required: true
+        type: string
+      precision:
+        required: true
+        type: string
 
 env:
   HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -43,6 +49,8 @@ env:
   MAX_MODEL_LEN: ${{ inputs.max-model-len }}
   RANDOM_RANGE_RATIO: ${{ inputs.random-range-ratio }}
   IMAGE: ${{ inputs.image }}
+  FRAMEWORK: ${{ inputs.framework }}
+  PRECISION: ${{ inputs.precision }}
 
 jobs:
   benchmark:
@@ -54,11 +62,13 @@ jobs:
       matrix:
         tp: ${{ fromJson(inputs.tp-list) }}
         conc: [1]
-    name: '${{ inputs.runner }} (tp${{ matrix.tp }} , conc${{ matrix.conc }})'
+    name: '${{ inputs.runner }}-${{ inputs.framework }} (tp${{ matrix.tp }} , conc${{ matrix.conc }})'
 
     env:
       TP: ${{ matrix.tp }}
       CONC: ${{ matrix.conc }}
+      FRAMEWORK: ${{ inputs.framework }}
+      PRECISION: ${{ inputs.precision }}
 
     steps:
       - uses: actions/checkout@v3
@@ -68,16 +78,31 @@ jobs:
 
       - name: Set result filename
         run: |
-          RESULT_FILENAME=${{ env.EXP_NAME }}_tp${{ env.TP }}_conc${{ env.CONC }}_${{ runner.name }}
+          if [ "${{ env.PRECISION }}" = "" ]; then
+            PRECISION_SUFFIX="fp8"
+          else
+            PRECISION_SUFFIX="${{ env.PRECISION }}"
+          fi
+          RESULT_FILENAME=${{ env.EXP_NAME }}_${{ env.FRAMEWORK }}_${PRECISION_SUFFIX}_tp${{ env.TP }}_conc${{ env.CONC }}_${{ runner.name }}
           echo "RESULT_FILENAME=${RESULT_FILENAME}" >> $GITHUB_ENV
 
       - name: Launch job script
         run: |
           RUNNER_NAME=${{ runner.name }}
-          bash ./runners/launch_${RUNNER_NAME%%_*}.sh ${{ inputs.exp-name }}
+          if [ "${{ env.PRECISION }}" = "" ]; then
+            PRECISION_SUFFIX="fp8"
+          else
+            PRECISION_SUFFIX="${{ env.PRECISION }}"
+          fi
+          # Use existing runner scripts, fallback to framework-specific if not found
+          if [ -f "./runners/launch_${RUNNER_NAME%%_*}-${{ env.FRAMEWORK }}.sh" ]; then
+            bash ./runners/launch_${RUNNER_NAME%%_*}-${{ env.FRAMEWORK }}.sh ${{ inputs.exp-name }}
+          else
+            bash ./runners/launch_${RUNNER_NAME%%_*}-nv.sh ${{ inputs.exp-name }}
+          fi
 
       - name: Process result
-        run: python3 utils/process_result.py ${{ inputs.runner }} ${{ env.TP }} ${{ env.RESULT_FILENAME }}
+        run: python3 utils/process_result.py ${{ inputs.runner }} ${{ env.TP }} ${{ env.RESULT_FILENAME }} ${{ env.FRAMEWORK }} ${{ env.PRECISION }}
 
       - name: Upload result
         uses: actions/upload-artifact@v4
