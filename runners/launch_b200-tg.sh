@@ -25,6 +25,9 @@ $IMAGE \
 set +x
 while IFS= read -r line; do
     printf '%s\n' "$line"
+    if [[ "$line" == *"Ignore import error when loading sglang"* ]]; then
+        continue
+    fi
     if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
         sleep 5
         docker logs --tail=100 $server_name
