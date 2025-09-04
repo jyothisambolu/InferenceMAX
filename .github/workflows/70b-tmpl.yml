@@ -75,7 +75,7 @@ jobs:
       runner: b200
       image: 'kedarpotdar147/vllm:05'
       model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
-      tp-list: '[1, 2, 4, 8]'
+      tp-list: '[1,2]'
       timeout: ${{ inputs.timeout }}
 
   bmk-mi300x:
@@ -127,7 +127,7 @@ jobs:
       timeout: ${{ inputs.timeout }}
 
   collect-results:
-    needs: [bmk-h100, bmk-h200, bmk-b200, bmk-mi300x, bmk-mi325x, bmk-mi355x]
+    needs: [bmk-h100,bmk-h200,bmk-b200, bmk-mi300x, bmk-mi325x, bmk-mi355x]
     if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
