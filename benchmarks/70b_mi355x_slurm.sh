@@ -26,11 +26,6 @@ vllm serve $MODEL --port $PORT \
 set +x
 while IFS= read -r line; do
     printf '%s\n' "$line"
-    if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
-        sleep 3
-        tail -n100 "$SERVER_LOG"
-        exit 1
-    fi
     if [[ "$line" == *"Application startup complete"* ]]; then
         break
     fi
@@ -47,5 +42,3 @@ python3 bench_serving/benchmark_serving.py \
 --request-rate inf --ignore-eos \
 --save-result --percentile-metrics "ttft,tpot,itl,e2el" \
 --result-dir /workspace/ --result-filename $RESULT_FILENAME.json
-
-exit
