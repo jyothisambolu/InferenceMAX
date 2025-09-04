@@ -25,10 +25,10 @@ jobs:
           - 'h200-nv_3'
           - 'b200-nv_0'
           - 'b200-nv_1'
-          - 'mi325x-tw_0'
-          - 'mi325x-tw_1'
-          - 'mi325x-tw_2'
-          - 'mi325x-tw_3'
+          # - 'mi325x-tw_0'
+          # - 'mi325x-tw_1'
+          # - 'mi325x-tw_2'
+          # - 'mi325x-tw_3'
           - 'mi355x-amd_0'
     runs-on: ${{ matrix.runner }}
     steps:
