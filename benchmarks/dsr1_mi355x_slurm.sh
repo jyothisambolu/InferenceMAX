@@ -26,11 +26,6 @@ python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $PORT 
 set +x
 while IFS= read -r line; do
     printf '%s\n' "$line"
-    if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]] && [[ ! "$line" == *"Ignore import error when loading sglang.srt.models"* ]]; then
-        sleep 3
-        tail -n100 "$SERVER_LOG"
-        exit 1
-    fi
     if [[ "$line" == *"The server is fired up and ready to roll"* ]]; then
         break
     fi
