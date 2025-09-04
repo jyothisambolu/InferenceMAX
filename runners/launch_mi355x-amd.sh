@@ -19,7 +19,7 @@ HF_HUB_CACHE_MOUNT="/shared/amdgpu/home/kimbo_o80/hf_hub_cache/"
 export PORT=8888
 
 set -x
-srun --reservation=PU74C0_reservation --exclusive \
+srun --reservation=PU74C0_reservation --nodelist=GPU74C0 --exclusive \
 --gres=gpu:$TP --cpus-per-task=128 --time=180 \
 --container-image=$IMAGE \
 --container-name="${MODEL_CODE}_container" \
