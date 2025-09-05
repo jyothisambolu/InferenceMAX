@@ -116,7 +116,7 @@ jobs:
   #     framework: 'sglang'
 
   collect-results:
-    needs: [bmk-h200, bmk-b200, bmk-mi300x, bmk-mi325x, bmk-mi355x] 
+    needs: [bmk-h200, bmk-b200, bmk-mi300x, bmk-mi325x] 
     if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
