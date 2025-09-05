@@ -1,13 +1,13 @@
 name: Workflow Scheduler
 
-# concurrency:
-#   group: benchmark-lock
-#   cancel-in-progress: false
+concurrency:
+  group: benchmark-lock
+  cancel-in-progress: false
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '0 5 * * *'
+  schedule:
+    - cron: '0 5 * * *'
 
 jobs:
   cleanup:
