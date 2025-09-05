@@ -76,6 +76,9 @@ jobs:
           token: ${{ secrets.REPO_PAT }}
           fetch-depth: 0
 
+      - name: Debug runner labels
+        run: echo "runner.labels = ${{ toJson(runner.labels) }}"
+
       - name: Resource cleanup - Slurm
         if: contains(runner.labels, 'slurm')
         run: |
