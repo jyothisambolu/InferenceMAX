@@ -21,11 +21,6 @@ results = []
 for result_path in results_dir.rglob(f'*.json'):
     with open(result_path) as f:
         result = json.load(f)
-    # Create combined hw+framework identifier for plotting
-    if result.get('framework') == 'trt':
-        result['hw_label'] = f"{result['hw']}-trt"
-    else:
-        result['hw_label'] = result['hw']
     results.append(result)
 
 
@@ -38,8 +33,8 @@ def plot_tput_vs_e2el(precision_filter=None):
         filtered_results = [r for r in results if r.get('precision', 'fp8') == precision_filter]
 
     for hw_label, color in hw_color.items():
-        xs = [result['median_e2el'] for result in filtered_results if result['hw_label'] == hw_label]
-        ys = [result['tput_per_gpu'] for result in filtered_results if result['hw_label'] == hw_label]
+        xs = [result['median_e2el'] for result in filtered_results if result['hw'] == hw_label]
+        ys = [result['tput_per_gpu'] for result in filtered_results if result['hw'] == hw_label]
         if xs and ys:
             ax.scatter(xs, ys, label=hw_label.upper(), color=color)
 
@@ -66,8 +61,8 @@ def plot_tput_vs_intvty(precision_filter=None):
         filtered_results = [r for r in results if r.get('precision', 'fp8') == precision_filter]
 
     for hw_label, color in hw_color.items():
-        xs = [result['median_intvty'] for result in filtered_results if result['hw_label'] == hw_label]
-        ys = [result['tput_per_gpu'] for result in filtered_results if result['hw_label'] == hw_label]
+        xs = [result['median_intvty'] for result in filtered_results if result['hw'] == hw_label]
+        ys = [result['tput_per_gpu'] for result in filtered_results if result['hw'] == hw_label]
         if xs and ys:
             ax.scatter(xs, ys, label=hw_label.upper(), color=color)
 
@@ -89,8 +84,8 @@ def plot_tput_vs_e2el_for_model(model_results, model_name):
     fig, ax = plt.subplots()
     
     for hw_label, color in hw_color.items():
-        xs = [result['median_e2el'] for result in model_results if result['hw_label'] == hw_label]
-        ys = [result['tput_per_gpu'] for result in model_results if result['hw_label'] == hw_label]
+        xs = [result['median_e2el'] for result in model_results if result['hw'] == hw_label]
+        ys = [result['tput_per_gpu'] for result in model_results if result['hw'] == hw_label]
         if xs and ys:
             ax.scatter(xs, ys, label=hw_label.upper(), color=color)
 
@@ -114,8 +109,8 @@ def plot_tput_vs_intvty_for_model(model_results, model_name):
     fig, ax = plt.subplots()
     
     for hw_label, color in hw_color.items():
-        xs = [result['median_intvty'] for result in model_results if result['hw_label'] == hw_label]
-        ys = [result['tput_per_gpu'] for result in model_results if result['hw_label'] == hw_label]
+        xs = [result['median_intvty'] for result in model_results if result['hw'] == hw_label]
+        ys = [result['tput_per_gpu'] for result in model_results if result['hw'] == hw_label]
         if xs and ys:
             ax.scatter(xs, ys, label=hw_label.upper(), color=color)
 
