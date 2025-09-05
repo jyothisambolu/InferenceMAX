@@ -77,7 +77,7 @@ jobs:
           fetch-depth: 0
 
       - name: Resource cleanup - Slurm
-        if: contains(runer.labels, 'slurm')
+        if: contains(runner.labels, 'slurm')
         run: |
           scancel -u $USER
           while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
@@ -86,7 +86,7 @@ jobs:
           done
 
       - name: Resource cleanup - Docker
-        if: contains(runer.labels, 'docker')
+        if: contains(runner.labels, 'docker')
         run: |
           docker ps -aq | xargs -r docker rm -f
           docker network prune -f
