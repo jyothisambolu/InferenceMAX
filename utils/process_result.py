@@ -6,6 +6,8 @@ from pathlib import Path
 hw = sys.argv[1]
 tp_size = int(sys.argv[2])
 result_filename = sys.argv[3]
+framework = sys.argv[4]
+precision = sys.argv[5]
 
 with open(f'{result_filename}.json') as f:
     bmk_result = json.load(f)
@@ -15,6 +17,8 @@ data = {
     'tp': tp_size,
     'conc': int(bmk_result['max_concurrency']),
     'model': bmk_result['model_id'],
+    'framework': framework,
+    'precision': precision if precision else 'fp8',
     'tput_per_gpu': float(bmk_result['total_token_throughput']) / tp_size
 }
 

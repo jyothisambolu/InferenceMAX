@@ -46,5 +46,5 @@ jobs:
         with:
           name: graphs_${{ inputs.exp-name }}
           path: |
-            tput_vs_intvty_${{ inputs.exp-name }}.png
-            tput_vs_e2el_${{ inputs.exp-name }}.png
+            tput_vs_intvty_*_${{ inputs.exp-name }}.png
+            tput_vs_e2el_*_${{ inputs.exp-name }}.png
