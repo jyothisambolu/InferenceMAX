@@ -4,8 +4,8 @@ export HF_HUB_CACHE_MOUNT="/raid/hf_hub_cache/"
 export PORT_OFFSET=${USER: -1}
 
 MODEL_CODE="${1%%_*}"
-# Reset framework if vllm to use default script
-if [ "$FRAMEWORK" = "vllm" ]; then
+# Reset framework if vllm or sglang to use default script
+if [ "$FRAMEWORK" = "vllm" ] || [ "$FRAMEWORK" = "sglang" ]; then
     FRAMEWORK=""
 fi
 PARTITION="dgx-b200"
