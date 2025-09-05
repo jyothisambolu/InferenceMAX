@@ -43,7 +43,7 @@ jobs:
       runner: h100
       image: 'kedarpotdar147/vllm0.1:latest'
       model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
-      tp-list: '[2]'
+      tp-list: '[2, 4, 8]'
       timeout: ${{ inputs.timeout }}
       framework: 'vllm'
       precision: ''
@@ -61,7 +61,7 @@ jobs:
       runner: h200
       image: 'kedarpotdar147/vllm0.1:latest'
       model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
-      tp-list: '[2]'
+      tp-list: '[1, 2, 4, 8]'
       timeout: ${{ inputs.timeout }}
       framework: 'vllm'
       precision: ''
@@ -79,7 +79,7 @@ jobs:
       runner: h200
       image: 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2'
       model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
-      tp-list: '[2]'  
+      tp-list: '[1, 2, 4, 8]'  
       timeout: ${{ inputs.timeout }}
       framework: 'trt'
       precision: ''
@@ -97,7 +97,7 @@ jobs:
       runner: b200
       image: 'kedarpotdar147/vllm:05'
       model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
-      tp-list: '[2]'  
+      tp-list: '[1, 2]'  
       timeout: ${{ inputs.timeout }}
       framework: 'vllm'
       precision: ''
@@ -112,10 +112,10 @@ jobs:
       osl: ${{ inputs.osl }}
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
-      runner: b200
+      runner: b200-trt
       image: 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2'
       model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
-      tp-list: '[2]'  
+      tp-list: '[1, 2]'  
       timeout: ${{ inputs.timeout }}
       framework: 'trt'
       precision: ''
@@ -151,28 +151,28 @@ jobs:
       runner: mi325x
       image: 'rocm/vllm-dev:nightly_official_0729_rc1_20250718'
       model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
-      tp-list: '[2]'
+      tp-list: '[1, 2, 4, 8]'
       timeout: ${{ inputs.timeout }}
       framework: 'vllm'
       precision: ''
 
-  bmk-mi355x:
-    needs: find-latest-image
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: ${{ inputs.exp-name }}
-      isl: ${{ inputs.isl }}
-      osl: ${{ inputs.osl }}
-      max-model-len: ${{ inputs.max-model-len }}
-      random-range-ratio: ${{ inputs.random-range-ratio }}
-      runner: mi355x
-      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.9.1_mi35x_alpha'
-      model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
-      tp-list: '[2]'
-      timeout: ${{ inputs.timeout }}
-      framework: 'vllm'
-      precision: ''
+  # bmk-mi355x:
+  #   needs: find-latest-image
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: ${{ inputs.isl }}
+  #     osl: ${{ inputs.osl }}
+  #     max-model-len: ${{ inputs.max-model-len }}
+  #     random-range-ratio: ${{ inputs.random-range-ratio }}
+  #     runner: mi355x
+  #     image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.9.1_mi35x_alpha'
+  #     model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
+  #     tp-list: '[2]'
+  #     timeout: ${{ inputs.timeout }}
+  #     framework: 'vllm'
+  #     precision: ''
 
   collect-results:
     needs: [bmk-h100, bmk-h200, bmk-h200-trt, bmk-b200-trt, bmk-mi300x, bmk-mi325x, bmk-mi355x] 
