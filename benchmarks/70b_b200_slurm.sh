@@ -21,6 +21,7 @@ SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 PORT=$(( 8888 + $PORT_OFFSET ))
 
 pip install flashinfer-python==0.3.0
+pip install --upgrade nvidia-nccl-cu12==2.26.2.post1
 
 export TORCH_CUDA_ARCH_LIST="10.0"
 export VLLM_FLASHINFER_ALLREDUCE_FUSION_THRESHOLDS_MB='{"2":32,"4":32,"8":8}'

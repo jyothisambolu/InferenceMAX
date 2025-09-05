@@ -10,6 +10,7 @@
 # MAX_MODEL_LEN
 
 pip install flashinfer-python==0.3.0
+pip install --upgrade nvidia-nccl-cu12==2.26.2.post1
 
 export VLLM_FLASHINFER_ALLREDUCE_FUSION_THRESHOLDS_MB='{"2":32,"4":32,"8":8}'
 
