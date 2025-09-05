@@ -4,6 +4,11 @@ MODEL_CODE="${1%%_*}"
 export HF_HUB_CACHE_MOUNT="/mnt/vast/hf_hub_cache/"
 export PORT_OFFSET=${USER: -1}
 
+# Reset framework if vllm to use default script
+if [ "$FRAMEWORK" = "vllm" ]; then
+    FRAMEWORK=""
+fi
+
 PARTITION="h200"
 # Use framework-specific SQSH file
 if [ "$FRAMEWORK" = "trt" ]; then

@@ -4,6 +4,11 @@ MODEL_CODE="${1%%_*}"
 export HF_HUB_CACHE_MOUNT="/raid/hf_hub_cache/"
 export PORT_OFFSET=${USER: -1}
 
+# Reset framework if vllm to use default script
+if [ "$FRAMEWORK" = "vllm" ]; then
+    FRAMEWORK=""
+fi
+
 PARTITION="dgx-h200"
 # Use framework-specific SQSH file
 if [ "$FRAMEWORK" = "trt" ]; then
@@ -23,14 +28,6 @@ srun --jobid=$JOB_ID \
 --container-mount-home \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \
--e MODEL_CODE=$MODEL_CODE \
-bash -c "
-# Determine which benchmark script to use based on framework
-if [ \"\$FRAMEWORK\" = \"trt\" ]; then
-    bash benchmarks/\${MODEL_CODE}_h200_trt_slurm.sh
-else
-    bash benchmarks/\${MODEL_CODE}_h200_slurm.sh
-fi
-"
+bash benchmarks/${MODEL_CODE}_h200${FRAMEWORK:+_$FRAMEWORK}_slurm.sh
 
 scancel $JOB_ID
