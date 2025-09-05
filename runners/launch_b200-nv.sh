@@ -23,6 +23,7 @@ srun --jobid=$JOB_ID \
 --container-mount-home \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \
+-e MODEL_CODE=$MODEL_CODE \
 bash -c "
 # Determine which benchmark script to use based on framework
 if [ \"\$FRAMEWORK\" = \"trt\" ]; then
