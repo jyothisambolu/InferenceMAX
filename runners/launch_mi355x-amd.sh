@@ -20,7 +20,7 @@ export PORT=8888
 
 set -x
 srun --reservation=PU74C0_reservation --exclusive \
---gres=gpu:$TP --cpus-per-task=128 ----ntasks-per-node=1 --time=180 \
+--gres=gpu:$TP --cpus-per-task=128 --ntasks-per-node=1 --time=180 \
 --container-image=$IMAGE \
 --container-name="${MODEL_CODE}_container" \
 --container-mounts=$GITHUB_WORKSPACE:/workspace/,$HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
