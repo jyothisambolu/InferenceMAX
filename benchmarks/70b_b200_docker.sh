@@ -9,8 +9,7 @@
 # CONC
 # MAX_MODEL_LEN
 
-pip install "git+https://github.com/flashinfer-ai/flashinfer.git@9720182476ede910698f8d783c29b2ec91cec023#egg=flashinfer-python"
-pip install --upgrade --no-deps nvidia-nccl-cu12==2.26.2.post1
+pip install flashinfer-python==0.3.0
 
 export VLLM_FLASHINFER_ALLREDUCE_FUSION_THRESHOLDS_MB='{"2":32,"4":32,"8":8}'
 
