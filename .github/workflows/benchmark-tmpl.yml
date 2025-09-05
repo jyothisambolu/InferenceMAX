@@ -73,7 +73,7 @@ jobs:
     steps:
       - name: Resource cleanup
         run: |
-          if "$(docker info 2>&1 > /dev/null)"; then
+          if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
             docker ps -aq | xargs -r docker rm -f
             docker network prune -f
             while [ -n "$(docker ps -aq)" ]; do
