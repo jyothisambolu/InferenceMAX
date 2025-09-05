@@ -36,8 +36,8 @@ on:
         required: true
         type: string
       precision:
-        required: true
         type: string
+        default: fp8
 
 env:
   HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -67,8 +67,6 @@ jobs:
     env:
       TP: ${{ matrix.tp }}
       CONC: ${{ matrix.conc }}
-      FRAMEWORK: ${{ inputs.framework }}
-      PRECISION: ${{ inputs.precision }}
 
     steps:
       - name: Resource cleanup
@@ -95,12 +93,7 @@ jobs:
 
       - name: Set result filename
         run: |
-          if [ "${{ env.PRECISION }}" = "" ]; then
-            PRECISION_SUFFIX="fp8"
-          else
-            PRECISION_SUFFIX="${{ env.PRECISION }}"
-          fi
-          RESULT_FILENAME=${{ env.EXP_NAME }}_${{ env.FRAMEWORK }}_${PRECISION_SUFFIX}_tp${{ env.TP }}_conc${{ env.CONC }}_${{ runner.name }}
+          RESULT_FILENAME=${{ env.EXP_NAME }}_${{ env.FRAMEWORK }}_${{ env.PRECISION }}_tp${{ env.TP }}_conc${{ env.CONC }}_${{ runner.name }}
           echo "RESULT_FILENAME=${RESULT_FILENAME}" >> $GITHUB_ENV
 
       - name: Launch job script
@@ -109,7 +102,7 @@ jobs:
           bash ./runners/launch_${RUNNER_NAME%%_*}*.sh ${{ inputs.exp-name }}
 
       - name: Process result
-        run: python3 utils/process_result.py ${{ inputs.runner }} ${{ env.TP }} ${{ env.RESULT_FILENAME }} ${{ env.FRAMEWORK }} "${{ env.PRECISION }}"
+        run: python3 utils/process_result.py ${{ inputs.runner }} ${{ env.TP }} ${{ env.RESULT_FILENAME }} ${{ env.FRAMEWORK }} ${{ env.PRECISION }}
 
       - name: Upload result
         uses: actions/upload-artifact@v4

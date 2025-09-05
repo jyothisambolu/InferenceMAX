@@ -46,7 +46,6 @@ jobs:
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
       framework: 'sglang'
-      precision: ''
 
   bmk-b200:
     needs: find-latest-image
@@ -64,7 +63,6 @@ jobs:
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
       framework: 'sglang'
-      precision: ''
 
   bmk-mi300x:
     needs: find-latest-image
@@ -82,7 +80,6 @@ jobs:
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
       framework: 'sglang'
-      precision: ''
 
   bmk-mi325x:
     needs: find-latest-image
@@ -100,28 +97,26 @@ jobs:
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
       framework: 'sglang'
-      precision: ''
 
-  # bmk-mi355x:
-  #   needs: find-latest-image
-  #   uses: ./.github/workflows/benchmark-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: ${{ inputs.exp-name }}
-  #     isl: ${{ inputs.isl }}
-  #     osl: ${{ inputs.osl }}
-  #     max-model-len: ${{ inputs.max-model-len }}
-  #     random-range-ratio: ${{ inputs.random-range-ratio }}
-  #     runner: mi355x
-  #     image: 'lmsysorg/sglang:v0.5.1.post2-rocm700-mi35x'
-  #     model: 'deepseek-ai/DeepSeek-R1-0528'
-  #     tp-list: '[8]'
-  #     timeout: ${{ inputs.timeout }}
-  #     framework: 'sglang'
-  #     precision: ''
+  bmk-mi355x:
+    needs: find-latest-image
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      runner: mi355x
+      image: 'lmsysorg/sglang:v0.5.1.post2-rocm700-mi35x'
+      model: 'deepseek-ai/DeepSeek-R1-0528'
+      tp-list: '[8]'
+      timeout: ${{ inputs.timeout }}
+      framework: 'sglang'
 
   collect-results:
-    needs: [bmk-h200, bmk-b200, bmk-mi300x, bmk-mi325x]  # , bmk-mi355x] 
+    needs: [bmk-h200, bmk-b200, bmk-mi300x, bmk-mi325x, bmk-mi355x] 
     if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
