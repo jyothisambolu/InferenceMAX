@@ -25,12 +25,12 @@ jobs:
           - 'h200-nv_3'
           - 'b200-nv_0'
           - 'b200-nv_1'
-          # - 'mi325x-tw_0'
-          # - 'mi325x-tw_1'
-          # - 'mi325x-tw_2'
-          # - 'mi325x-tw_3'
-          - 'mi355x-amd_0'
-          - 'mi355x-amd_1'
+          - 'mi325x-tw_0'
+          - 'mi325x-tw_1'
+          - 'mi325x-tw_2'
+          - 'mi325x-tw_3'
+          # - 'mi355x-amd_0'
+          # - 'mi355x-amd_1'
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Cancel all jobs
@@ -49,7 +49,7 @@ jobs:
         runner:
           - 'h100-cr_0'
           - 'h100-cr_1'
-          # - 'b200-tg_0'
+          - 'b200-tg_0'
           - 'mi300x-cr_0'
           - 'mi300x-amd_0'
           - 'mi300x-amd_1'
