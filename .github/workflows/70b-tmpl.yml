@@ -30,21 +30,23 @@ jobs:
       - name: Find the latest Docker image
         run: echo "Hardcoding image tags for now."
 
-  # bmk-h100:
-  #   needs: find-latest-image
-  #   uses: ./.github/workflows/benchmark-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: ${{ inputs.exp-name }}
-  #     isl: ${{ inputs.isl }}
-  #     osl: ${{ inputs.osl }}
-  #     max-model-len: ${{ inputs.max-model-len }}
-  #     random-range-ratio: ${{ inputs.random-range-ratio }}
-  #     runner: h100
-  #     image: 'kedarpotdar147/vllm0.1:latest'
-  #     model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
-  #     tp-list: '[2, 4, 8]'
-  #     timeout: ${{ inputs.timeout }}
+  bmk-h100:
+    needs: find-latest-image
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      runner: h100
+      image: 'kedarpotdar147/vllm0.1:latest'
+      model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
+      tp-list: '[2]'
+      timeout: ${{ inputs.timeout }}
+      framework: 'vllm'
+      precision: ''
 
   bmk-h200:
     needs: find-latest-image
@@ -173,7 +175,7 @@ jobs:
   #     precision: ''
 
   collect-results:
-    needs: [bmk-h200, bmk-h200-trt, bmk-b200, bmk-b200-trt] 
+    needs: [bmk-h100, bmk-h200, bmk-h200-trt, bmk-b200, bmk-b200-trt] 
     if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
