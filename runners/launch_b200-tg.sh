@@ -14,12 +14,12 @@ set -x
 docker run --rm -d --network $network_name --name $server_name \
 --runtime nvidia --gpus all --ipc host --privileged --shm-size=16g --ulimit memlock=-1 --ulimit stack=67108864 \
 -v $HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
--v $(realpath benchmarks/):/tmp/ \
+-v $PWD:/workspace/ -w /workspace/ \
 -e HF_TOKEN -e HF_HUB_CACHE -e MODEL -e TP -e CONC -e MAX_MODEL_LEN -e PORT=$PORT \
 -e TORCH_CUDA_ARCH_LIST="10.0" -e CUDA_DEVICE_ORDER=PCI_BUS_ID -e CUDA_VISIBLE_DEVICES="0,1,2,3,4,5,6,7" \
 --entrypoint=/bin/bash \
 $IMAGE \
-/tmp/"${1%%_*}_b200_docker.sh"
+benchmarks/"${1%%_*}_b200_docker.sh"
 
 set +x
 while IFS= read -r line; do
