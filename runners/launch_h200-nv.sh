@@ -18,11 +18,13 @@ srun --jobid=$JOB_ID \
 --container-mount-home \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \
+bash -c "
 # Determine which benchmark script to use based on framework
-if [ "$FRAMEWORK" = "trt" ]; then
-    bash benchmarks/${MODEL_CODE}_h200_trt_slurm.sh
+if [ \"\$FRAMEWORK\" = \"trt\" ]; then
+    bash benchmarks/\${MODEL_CODE}_h200_trt_slurm.sh
 else
-    bash benchmarks/${MODEL_CODE}_h200_slurm.sh
+    bash benchmarks/\${MODEL_CODE}_h200_slurm.sh
 fi
+"
 
 scancel $JOB_ID
