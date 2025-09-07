@@ -15,7 +15,7 @@
 # HF_TOKEN
 
 MODEL_CODE="${1%%_*}"
-HF_HUB_CACHE_MOUNT="/opt/hf_hub_cache/"
+HF_HUB_CACHE_MOUNT="/shared/data/O80/hf_hub_cache/"
 export PORT=8888
 
 set -x
