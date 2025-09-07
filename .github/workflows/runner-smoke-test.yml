@@ -69,23 +69,6 @@ jobs:
   bmk-smoke-test:
     runs-on: ${{ inputs.runner }}
     steps:
-      - name: Resource cleanup
-        run: |
-          if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-            docker ps -aq | xargs -r docker rm -f
-            docker network prune -f
-            while [ -n "$(docker ps -aq)" ]; do
-              sleep 5
-            done
-          fi
-          if command -v squeue >/dev/null 2>&1; then
-            scancel -u $USER
-            while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
-              squeue -u $USER
-              sleep 5
-            done
-          fi
-
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.REPO_PAT }}
