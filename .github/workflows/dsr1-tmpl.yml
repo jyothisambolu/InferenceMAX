@@ -88,41 +88,41 @@ jobs:
       framework: 'trt'
       precision: fp4
 
-  # bmk-mi300x:
-  #   needs: find-latest-image
-  #   uses: ./.github/workflows/benchmark-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: ${{ inputs.exp-name }}
-  #     isl: ${{ inputs.isl }}
-  #     osl: ${{ inputs.osl }}
-  #     max-model-len: ${{ inputs.max-model-len }}
-  #     random-range-ratio: ${{ inputs.random-range-ratio }}
-  #     runner: mi300x
-  #     image: 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
-  #     model: 'deepseek-ai/DeepSeek-R1-0528'
-  #     tp-list: '[8]'
-  #     timeout: ${{ inputs.timeout }}
-  #     framework: 'sglang'
-  #     precision: ${{ inputs.precision }}
+  bmk-mi300x:
+    needs: find-latest-image
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      runner: mi300x
+      image: 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
+      model: 'deepseek-ai/DeepSeek-R1-0528'
+      tp-list: '[8]'
+      timeout: ${{ inputs.timeout }}
+      framework: 'sglang'
+      precision: ${{ inputs.precision }}
 
-  # bmk-mi325x:
-  #   needs: find-latest-image
-  #   uses: ./.github/workflows/benchmark-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: ${{ inputs.exp-name }}
-  #     isl: ${{ inputs.isl }}
-  #     osl: ${{ inputs.osl }}
-  #     max-model-len: ${{ inputs.max-model-len }}
-  #     random-range-ratio: ${{ inputs.random-range-ratio }}
-  #     runner: mi325x
-  #     image: 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
-  #     model: 'deepseek-ai/DeepSeek-R1-0528'
-  #     tp-list: '[8]'
-  #     timeout: ${{ inputs.timeout }}
-  #     framework: 'sglang'
-  #     precision: ${{ inputs.precision }}
+  bmk-mi325x:
+    needs: find-latest-image
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      runner: mi325x
+      image: 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
+      model: 'deepseek-ai/DeepSeek-R1-0528'
+      tp-list: '[8]'
+      timeout: ${{ inputs.timeout }}
+      framework: 'sglang'
+      precision: ${{ inputs.precision }}
 
   # bmk-mi355x:
   #   needs: find-latest-image
@@ -140,9 +140,10 @@ jobs:
   #     tp-list: '[8]'
   #     timeout: ${{ inputs.timeout }}
   #     framework: 'sglang'
+  #     precision: ${{ inputs.precision }}
 
   collect-results:
-    needs: [bmk-h200, bmk-b200, bmk-b200-trt-fp4, ] 
+    needs: [bmk-h200, bmk-b200, bmk-b200-trt-fp4, bmk-mi300x, bmk-mi325x] 
     if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
