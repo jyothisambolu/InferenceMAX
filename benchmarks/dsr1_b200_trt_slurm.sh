@@ -32,9 +32,6 @@ kv_cache_config:
   dtype: fp8 
   enable_block_reuse: false 
 stream_interval: 10
-speculative_config:
-  decoding_type: MTP
-  num_nextn_predict_layers: 3
 moe_config:
   backend: TRTLLM
 EOF
@@ -65,7 +62,7 @@ python3 bench_serving/benchmark_serving.py \
 --dataset-name random \
 --random-input-len $ISL --random-output-len $OSL --random-range-ratio $RANDOM_RANGE_RATIO \
 --num-prompts $(( $CONC * 10 )) --max-concurrency $CONC \
---request-rate inf --ignore-eos --use-chat-template \
+--request-rate inf --ignore-eos \
 --save-result --percentile-metrics 'ttft,tpot,itl,e2el' \
 --result-dir /workspace/ \
 --result-filename $RESULT_FILENAME.json
