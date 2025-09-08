@@ -11,9 +11,9 @@ fi
 PARTITION="dgx-b200"
 # Use framework-specific SQSH file
 if [ "$FRAMEWORK" = "trt" ]; then
-    SQUASH_FILE="/raid/image_${MODEL_CODE}_b200_trt-0903.sqsh"
+    SQUASH_FILE="/raid/image_${MODEL_CODE}_b200_trt-0907.sqsh"
 else
-    SQUASH_FILE="/raid/image_${MODEL_CODE}_b200-0903.sqsh"
+    SQUASH_FILE="/raid/image_${MODEL_CODE}_b200-0907.sqsh"
 fi
 
 salloc --partition=$PARTITION --gres=gpu:$TP --exclusive --time=180 --no-shell
