@@ -94,7 +94,7 @@ jobs:
       runner: b200
       image: 'kedarpotdar147/vllm:05'
       model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
-      tp-list: '[1, 2]'  
+      tp-list: '[1, 2, 4, 8]'  
       timeout: ${{ inputs.timeout }}
       framework: 'vllm'
 
@@ -109,9 +109,9 @@ jobs:
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
       runner: b200-trt
-      image: 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2'
+      image: 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2.post1'
       model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
-      tp-list: '[1, 2]'  
+      tp-list: '[1,2]'  
       timeout: ${{ inputs.timeout }}
       framework: 'trt'
 
@@ -167,7 +167,7 @@ jobs:
   #     framework: 'vllm'
 
   collect-results:
-    needs: [bmk-h100, bmk-h200, bmk-h200-trt, bmk-b200-trt, bmk-mi300x, bmk-mi325x] 
+    needs: [ bmk-h200, bmk-h200-trt, bmk-b200, bmk-b200-trt, bmk-mi300x, bmk-mi325x]  
     if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
