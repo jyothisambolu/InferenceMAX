@@ -1,7 +1,7 @@
 name: Workflow Scheduler
 
 # concurrency:
-#   group: benchmark-lock-v2
+#   group: benchmark-lock
 #   cancel-in-progress: false
 
 on:
