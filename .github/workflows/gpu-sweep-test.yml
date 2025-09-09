@@ -107,6 +107,10 @@ jobs:
         run: |
           RUNNER_NAME=${{ runner.name }}
           bash ./runners/launch_${RUNNER_NAME%%_*}*.sh ${{ env.EXP_NAME }}
+          if [ ! -f "$RESULT_FILENAME.json" ]; then
+            echo "Run failed: Benchmark result $RESULT_FILENAME.json not found." >&2
+            exit 1
+          fi
 
   bmk-sweep-test-dsr1:
     runs-on: ${{ inputs.runner }}
@@ -161,3 +165,7 @@ jobs:
         run: |
           RUNNER_NAME=${{ runner.name }}
           bash ./runners/launch_${RUNNER_NAME%%_*}*.sh ${{ env.EXP_NAME }}
+          if [ ! -f "$RESULT_FILENAME.json" ]; then
+            echo "Run failed: Benchmark result $RESULT_FILENAME.json not found." >&2
+            exit 1
+          fi
