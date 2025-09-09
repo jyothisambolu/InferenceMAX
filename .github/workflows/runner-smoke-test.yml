@@ -1,4 +1,4 @@
-name: Smoke Test - Runner
+name: Test - Runner
 
 on:
   workflow_dispatch:
