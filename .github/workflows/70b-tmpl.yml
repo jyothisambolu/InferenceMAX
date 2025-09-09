@@ -1,4 +1,4 @@
-name: LLaMA 70B Template
+name: Template - LLaMA 70B
 
 on:
   workflow_call:
