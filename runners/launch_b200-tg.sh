@@ -38,7 +38,7 @@ docker run --rm --network $network_name --name $client_name \
 --entrypoint=python3 \
 $IMAGE \
 bench_serving/benchmark_serving.py \
---model $MODEL  --backend vllm --base-url http://$server_name:$port \
+--model $MODEL  --backend vllm --base-url http://$server_name:$PORT \
 --dataset-name random \
 --random-input-len $ISL --random-output-len $OSL --random-range-ratio $RANDOM_RANGE_RATIO \
 --num-prompts $(( $CONC * 10 )) \
