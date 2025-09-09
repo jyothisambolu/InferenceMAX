@@ -1,4 +1,4 @@
-name: GPU Sweep Test
+name: Test - GPU Sweep
 
 on:
   workflow_dispatch:
