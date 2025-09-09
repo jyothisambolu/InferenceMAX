@@ -37,6 +37,7 @@ on:
           - 'nvidia/Llama-3.3-70B-Instruct-FP8'
           - 'amd/Llama-3.3-70B-Instruct-FP8-KV'
           - 'deepseek-ai/DeepSeek-R1-0528'
+          - 'openai/gpt-oss-120b'
 
       image:
         description: 'Docker Image'
@@ -47,6 +48,7 @@ on:
           - 'kedarpotdar147/vllm:05'
           - 'rocm/vllm-dev:nightly_official_0729_rc1_20250718'
           - 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.9.1_mi35x_alpha'
+          - 'rocm/vllm-dev:open-mi300-08052025'
           - 'lmsysorg/sglang:v0.4.9.post1-cu126'
           - 'lmsysorg/sglang:v0.5.0rc1-cu128-b200'
           - 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
@@ -79,7 +81,17 @@ jobs:
       - name: Launch job script
         run: |
           RUNNER_NAME=${{ inputs.runner }}
-          MODEL_HANDLE=$([[ ${{ env.MODEL }} == *70B* ]] && printf '70b' || printf 'dsr1')
+
+					MODEL_HANDLE=$(
+						if [[ "${{ env.MODEL }}" == *70B* ]]; then
+							printf '70b'
+						elif [[ "${{ env.MODEL }}" == *R1* ]]; then
+							printf 'dsr1'
+						else
+							printf 'gptoss'
+						fi
+					)
+
           bash ./runners/launch_${RUNNER_NAME%%_*}*.sh $MODEL_HANDLE
           if [ ! -f "$RESULT_FILENAME.json" ]; then
             echo "Run failed: Benchmark result $RESULT_FILENAME.json not found." >&2
