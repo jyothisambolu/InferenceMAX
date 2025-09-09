@@ -26,7 +26,7 @@ on:
           - 'mi300x-amd_4'
           - 'mi325x-amd_0'
 
-      70b-image:
+      70b_image:
         description: '70B Docker Image'
         required: true
         type: choice
@@ -37,7 +37,7 @@ on:
           - 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.9.1_mi35x_alpha'
           - 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2'
 
-      dsr1-image:
+      dsr1_image:
         description: 'DSR1 Docker Image'
         required: true
         type: choice
@@ -64,7 +64,7 @@ jobs:
 
     env:
       EXP_NAME: '70b_test'
-      IMAGE: ${{ inputs.70b-image }}
+      IMAGE: ${{ inputs.70b_image }}
 
     steps:
       - name: Resource cleanup
@@ -109,7 +109,7 @@ jobs:
 
     env:
       EXP_NAME: 'dsr1_test'
-      IMAGE: ${{ inputs.dsr1-image }}
+      IMAGE: ${{ inputs.dsr1_image }}
 
     steps:
       - name: Resource cleanup
