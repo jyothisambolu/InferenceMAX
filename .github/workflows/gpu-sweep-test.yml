@@ -1,5 +1,7 @@
 name: Test - GPU Sweep
 
+run-name: ${{ github.event.inputs.runner }} Sweep Test
+
 on:
   workflow_dispatch:
     inputs:

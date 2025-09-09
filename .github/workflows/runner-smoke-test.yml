@@ -1,5 +1,7 @@
 name: Test - Runner
 
+run-name: ${{ github.event.inputs.model }} on ${{ github.event.inputs.runner }} Smoke Test
+
 on:
   workflow_dispatch:
     inputs:
