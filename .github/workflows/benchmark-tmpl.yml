@@ -1,4 +1,4 @@
-name: Benchmark Template
+name: Template - Benchmark
 on:
   workflow_call:
     inputs:
