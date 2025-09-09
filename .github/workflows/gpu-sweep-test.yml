@@ -90,6 +90,9 @@ jobs:
 
       - name: Set config variables
         run: |
+          FRAMEWORK=$([[ ${{ inputs.runner == *trt ]] && printf "trt" || printf "")
+          echo "FRAMEWORK=${FRAMEWORK}" >> $GITHUB_ENV
+
           NV_MODEL="nvidia/Llama-3.3-70B-Instruct-FP8"
           AMD_MODEL="amd/Llama-3.3-70B-Instruct-FP8-KV"
           MODEL=$([[ ${{ inputs.runner}} == mi* ]] && printf $AMD_MODEL || printf $NV_MODEL)
@@ -144,8 +147,12 @@ jobs:
 
       - name: Set config variables
         run: |
+          FRAMEWORK=$([[ ${{ inputs.runner == *trt ]] && printf "trt" || printf "")
+          echo "FRAMEWORK=${FRAMEWORK}" >> $GITHUB_ENV
+
           RESULT_FILENAME=${{ env.EXP_NAME }}_tp${{ env.TP }}_conc${{ env.CONC }}_${{ runner.name }}
           echo "RESULT_FILENAME=${RESULT_FILENAME}" >> $GITHUB_ENV
+
           echo "MODEL=deepseek-ai/DeepSeek-R1-0528" >> $GITHUB_ENV
 
       - name: Launch job script - DSR1
