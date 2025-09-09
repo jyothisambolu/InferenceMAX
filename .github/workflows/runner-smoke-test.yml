@@ -28,6 +28,7 @@ on:
           - 'mi300x-amd_3'
           - 'mi300x-amd_4'
           - 'mi325x-amd_0'
+          - 'mi355x-amd_0'
 
       model:
         description: 'Model Type'
