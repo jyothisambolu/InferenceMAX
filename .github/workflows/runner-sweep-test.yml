@@ -1,0 +1,148 @@
+name: Runner Sweep Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Runner'
+        required: true
+        type: choice
+        options:
+          - 'h100-cw_0'
+          - 'h200-cw_0'
+          - 'h200-nb_0'
+          - 'h200-nv_0'
+          - 'b200-nv_0'
+          - 'mi325x-tw_0'
+          - 'mi355x-amd_0'
+          - 'h100-cr_0'
+          - 'h100-cr_1'
+          - 'b200-tg_0'
+          - 'mi300x-cr_0'
+          - 'mi300x-amd_0'
+          - 'mi300x-amd_1'
+          - 'mi300x-amd_2'
+          - 'mi300x-amd_3'
+          - 'mi300x-amd_4'
+          - 'mi325x-amd_0'
+
+      70b-image:
+        description: '70B Docker Image'
+        required: true
+        type: choice
+        options:
+          - 'kedarpotdar147/vllm0.1:latest'
+          - 'kedarpotdar147/vllm:05'
+          - 'rocm/vllm-dev:nightly_official_0729_rc1_20250718'
+          - 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.9.1_mi35x_alpha'
+          - 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2'
+
+      dsr1-image:
+        description: 'DSR1 Docker Image'
+        required: true
+        type: choice
+        options:
+          - 'lmsysorg/sglang:v0.4.9.post1-cu126'
+          - 'lmsysorg/sglang:v0.5.0rc1-cu128-b200'
+          - 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
+          - 'lmsysorg/sglang:v0.5.1.post2-rocm700-mi35x'
+          - 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2'
+
+env:
+  HF_TOKEN: ${{ secrets.HF_TOKEN }}
+  HF_HUB_CACHE: '/mnt/hf_hub_cache/'
+  ISL: 1024
+  OSL: 1024
+  MAX_MODEL_LEN: 2048
+  RANDOM_RANGE_RATIO: 0.8
+  TP: 8
+  CONC: 4
+
+jobs:
+  bmk-smoke-test-70b:
+    runs-on: ${{ inputs.runner }}
+
+    env:
+      EXP_NAME: '70b_test'
+      IMAGE: ${{ inputs.70b-image }}
+
+    steps:
+      - name: Resource cleanup
+        run: |
+          if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+            docker ps -aq | xargs -r docker rm -f
+            docker network prune -f
+            while [ -n "$(docker ps -aq)" ]; do
+              sleep 5
+            done
+          fi
+          if command -v squeue >/dev/null 2>&1; then
+            scancel -u $USER
+            while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
+              squeue -u $USER
+              sleep 5
+            done
+          fi
+
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.REPO_PAT }}
+          fetch-depth: 0
+
+      - name: Set model name
+        run: |
+          MODEL=$([[ ${{ inputs.runner}} == mi* ]] && printf 'amd/Llama-3.3-70B-Instruct-FP8-KV' || printf 'nvidia/Llama-3.3-70B-Instruct-FP8')
+          echo "MODEL=${MODEL}" >> $GITHUB_ENV
+
+      - name: Set result filename
+        run: |
+          RESULT_FILENAME=${{ env.EXP_NAME }}_tp${{ env.TP }}_conc${{ env.CONC }}_${{ runner.name }}
+          echo "RESULT_FILENAME=${RESULT_FILENAME}" >> $GITHUB_ENV
+
+      - name: Launch job script - 70B
+        run: |
+          RUNNER_NAME=${{ inputs.runner }}
+          bash ./runners/launch_${RUNNER_NAME%%_*}*.sh ${{ env.EXP_NAME }}
+
+  bmk-smoke-test-dsr1:
+    runs-on: ${{ inputs.runner }}
+
+    env:
+      EXP_NAME: 'dsr1_test'
+      IMAGE: ${{ inputs.dsr1-image }}
+
+    steps:
+      - name: Resource cleanup
+        run: |
+          if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+            docker ps -aq | xargs -r docker rm -f
+            docker network prune -f
+            while [ -n "$(docker ps -aq)" ]; do
+              sleep 5
+            done
+          fi
+          if command -v squeue >/dev/null 2>&1; then
+            scancel -u $USER
+            while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
+              squeue -u $USER
+              sleep 5
+            done
+          fi
+
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.REPO_PAT }}
+          fetch-depth: 0
+
+      - name: Set model name
+        run: echo "MODEL=deepseek-ai/DeepSeek-R1-0528" >> $GITHUB_ENV
+
+      - name: Set result filename
+        run: |
+          RESULT_FILENAME=${{ env.EXP_NAME }}_tp${{ env.TP }}_conc${{ env.CONC }}_${{ runner.name }}
+          echo "RESULT_FILENAME=${RESULT_FILENAME}" >> $GITHUB_ENV
+
+      - name: Launch job script - 70B
+        run: |
+          RUNNER_NAME=${{ inputs.runner }}
+          bash ./runners/launch_${RUNNER_NAME%%_*}*.sh ${{ env.EXP_NAME }}
