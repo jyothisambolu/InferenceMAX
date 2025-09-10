@@ -1,7 +1,7 @@
 name: Template - gpt-oss
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       exp-name:
         required: true
@@ -20,8 +20,8 @@ on:
         type: string
       timeout:
         required: false
-        type: string
-        default: '180'
+        type: number
+        default: 180
 
 jobs:
   bmk-h100:
