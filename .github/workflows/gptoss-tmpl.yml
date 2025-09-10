@@ -20,8 +20,8 @@ on:
         type: string
       timeout:
         required: false
-        type: number
-        default: 180
+        type: string
+        default: '180'
 
 jobs:
   bmk-h100:

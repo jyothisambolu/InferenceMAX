@@ -47,10 +47,6 @@ serve $MODEL --port $port \
 set +x
 while IFS= read -r line; do
     printf '%s\n' "$line"
-    if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
-        docker stop $server_name
-        exit 1
-    fi
     if [[ "$line" == *"Application startup complete"* ]]; then
         break
     fi
