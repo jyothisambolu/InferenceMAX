@@ -126,7 +126,7 @@ jobs:
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
       runner: mi300x
-      image: 'rocm/vllm-dev:nightly_official_0729_rc1_20250718'
+      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
       model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
       tp-list: '[1, 2, 4, 8]'
       timeout: ${{ inputs.timeout }}
@@ -143,7 +143,7 @@ jobs:
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
       runner: mi325x
-      image: 'rocm/vllm-dev:nightly_official_0729_rc1_20250718'
+      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
       model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
       tp-list: '[1, 2, 4, 8]'
       timeout: ${{ inputs.timeout }}
@@ -160,9 +160,9 @@ jobs:
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
       runner: mi355x
-      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.9.1_mi35x_alpha'
+      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
       model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
-      tp-list: '[2]'
+      tp-list: '[1]'
       timeout: ${{ inputs.timeout }}
       framework: 'vllm'
 
