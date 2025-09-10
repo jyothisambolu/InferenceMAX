@@ -27,9 +27,9 @@ export VLLM_USE_AITER_TRITON_GEMM=1
 set -x
 vllm serve $MODEL --port $PORT \
 --tensor-parallel-size=$TP \
---no-enable-prefix-caching \
 --compilation-config='{"compile_sizes": [1, 2, 4, 8, 16, 24, 32, 64], "full_cuda_graph": true}' \
---block-size=64
+--block-size=64 \
+--no-enable-prefix-caching \
 --disable-log-requests > $SERVER_LOG 2>&1 &
 
 set +x
