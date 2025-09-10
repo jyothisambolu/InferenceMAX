@@ -93,6 +93,25 @@ jobs:
           token: ${{ secrets.REPO_PAT }}
           fetch-depth: 0
 
+      - name: Resource cleanup
+        run: |
+          if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+            echo "Cleaning Docker resource ..."
+            docker ps -aq | xargs -r docker rm -f
+            docker network prune -f
+            while [ -n "$(docker ps -aq)" ]; do
+              sleep 5
+            done
+          fi
+          if command -v squeue >/dev/null 2>&1; then
+            echo "Cleaning Slurm resource ..."
+            scancel -u $USER
+            while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
+              squeue -u $USER
+              sleep 5
+            done
+          fi
+
       - name: Launch job script
         run: |
           RUNNER_NAME=${{ inputs.runner }}
