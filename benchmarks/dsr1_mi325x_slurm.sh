@@ -6,9 +6,20 @@ SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 PORT=$(( 8888 + $PORT_OFFSET ))
 huggingface-cli download $MODEL
 
+# Reference
+# https://rocm.docs.amd.com/en/docs-7.0-rc1/preview/benchmark-docker/inference-sglang-deepseek-r1-fp8.html#run-the-inference-benchmark
+
+export SGLANG_USE_AITER=1
 set -x
-python3 -m sglang.launch_server --model-path $MODEL --host 0.0.0.0 --port $PORT --trust-remote-code \
---tp $TP --cuda-graph-max-bs $CONC --disable-radix-cache \
+python3 -m sglang.launch_server \
+--model-path=$MODEL --host=0.0.0.0 --port=$PORT --trust-remote-code \
+--tensor-parallel-size=$TP \
+--mem-fraction-static=0.8 \
+--cuda-graph-max-bs=$CONC \
+--chunked-prefill-size=196608 \
+--num-continuous-decode-steps=4 \
+--max-prefill-tokens=196608 \
+--disable-radix-cache \
 > $SERVER_LOG 2>&1 &
 
 set +x

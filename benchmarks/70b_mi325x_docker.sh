@@ -1,78 +1,39 @@
 #!/usr/bin/env bash
 
-# === Required Env Vars === 
+# ========= Required Env Vars =========
 # HF_TOKEN
 # HF_HUB_CACHE
-# IMAGE
 # MODEL
-# ISL
-# OSL
-# MAX_MODEL_LEN
-# RANDOM_RANGE_RATIO
+# PORT
 # TP
 # CONC
-# RESULT_FILENAME
-# HF_HUB_CACHE_MOUNT
-# GITHUB_WORKSPACE
+# MAX_MODEL_LEN
 
-sudo sh -c 'echo 0 > /proc/sys/kernel/numa_balancing'
+# Reference
+# https://rocm.docs.amd.com/en/docs-7.0-rc1/preview/benchmark-docker/inference-vllm-llama-3.3-70b-fp8.html#run-the-inference-benchmark
 
-while [ -n "$(docker ps -aq)" ]; do
-  sleep 1
-done
-
-network_name="bmk-net"
-server_name="bmk-server"
-client_name="bmk-client"
-port=8888
-
-docker network create $network_name
+export HF_HUB_OFFLINE=1
+export VLLM_USE_V1=1
+export VLLM_V1_USE_PREFILL_DECODE_ATTENTION=1
+export AMDGCN_USE_BUFFER_OPS=1
+export VLLM_USE_AITER_TRITON_ROPE=1
+export TRITON_HIP_ASYNC_COPY_BYPASS_PERMUTE=1
+export TRITON_HIP_USE_ASYNC_COPY=1
+export TRITON_HIP_USE_BLOCK_PINGPONG=1
+export TRITON_HIP_ASYNC_FAST_SWIZZLE=1
+export VLLM_ROCM_USE_AITER=1
+export VLLM_ROCM_USE_AITER_RMSNORM=1
 
 set -x
-docker run --rm -d --ipc host --shm-size=16g --network $network_name --name $server_name \
---privileged --cap-add=CAP_SYS_ADMIN --device=/dev/kfd --device=/dev/dri --device=/dev/mem \
---group-add render --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
--v $HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
--e HF_TOKEN=$HF_TOKEN -e HF_HUB_CACHE=$HF_HUB_CACHE -e VLLM_USE_TRITON_FLASH_ATTN=0 \
---entrypoint=vllm \
-$IMAGE \
-serve $MODEL --port $port \
---tensor-parallel-size $TP --distributed-executor-backend mp \
---dtype bfloat16 --quantization fp8 \
---max-num-seqs $CONC --max-model-len $MAX_MODEL_LEN --max-seq-len-to-capture $MAX_MODEL_LEN \
+vllm serve $MODEL --port=$PORT \
+--swap-space=64 \
+--gpu-memory-utilization=0.94 \
+--dtype=auto --kv-cache-dtype=fp8 \
+--distributed-executor-backend=mp --tensor-parallel-size=$TP \
+--max-model-len=$MAX_MODEL_LEN \
+--max-seq-len-to-capture=$MAX_MODEL_LEN \
+--max-num-seqs=$CONC \
+--max-num-batched-tokens=131072 \
 --no-enable-prefix-caching \
+--async-scheduling \
 --disable-log-requests
-
-set +x
-while IFS= read -r line; do
-    printf '%s\n' "$line"
-    if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
-        docker stop $server_name
-        exit 1
-    fi
-    if [[ "$line" == *"Application startup complete"* ]]; then
-        break
-    fi
-done < <(docker logs -f --tail=0 $server_name 2>&1)
-
-git clone https://github.com/kimbochen/bench_serving.git
-
-set -x
-docker run --rm --network $network_name --name $client_name \
---privileged --cap-add=CAP_SYS_ADMIN --device=/dev/kfd --device=/dev/dri --device=/dev/mem \
---group-add render --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
--v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ -e HF_TOKEN=$HF_TOKEN -e PYTHONPYCACHEPREFIX=/tmp/pycache/ \
---entrypoint=python3 \
-$IMAGE \
-bench_serving/benchmark_serving.py \
---model $MODEL  --backend vllm --base-url http://$server_name:$port \
---dataset-name random \
---random-input-len $ISL --random-output-len $OSL --random-range-ratio $RANDOM_RANGE_RATIO \
---num-prompts $(( $CONC * 10 )) \
---max-concurrency $CONC \
---request-rate inf --ignore-eos \
---save-result --percentile-metrics "ttft,tpot,itl,e2el" \
---result-dir /workspace/ --result-filename $RESULT_FILENAME.json
-
-docker stop $server_name
-docker network rm $network_name
