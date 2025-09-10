@@ -39,7 +39,7 @@ docker run --rm -d --ipc host --shm-size=16g --network $network_name --name $ser
 --entrypoint=vllm \
 $IMAGE \
 serve $MODEL --port $port \
---tensor-parallel-size $TP --distributed-executor-backend mp \
+--tensor-parallel-size $TP \
 --no-enable-prefix-caching \
 --compilation-config '{"full_cuda_graph": true}' \
 --disable-log-requests
