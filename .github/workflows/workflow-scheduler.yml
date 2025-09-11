@@ -8,38 +8,47 @@ on:
   workflow_dispatch:
     inputs:
       _70b_1k1k:
+        description: '70B 1K/1K'
         required: false
         type: boolean
 
       dsr1_1k1k:
+        description: 'DSR1 1K/1K'
         required: false
         type: boolean
 
       gptoss_1k1k:
+        description: 'gpt-oss 1K/1K'
         required: false
         type: boolean
 
       _70b_8k1k:
+        description: '70B 8K/1K'
         required: false
         type: boolean
 
       dsr1_8k1k:
+        description: 'DSR1 8K/1K'
         required: false
         type: boolean
 
       gptoss_8k1k:
+        description: 'gpt-oss 8K/1K'
         required: false
         type: boolean
 
       _70b_1k8k:
+        description: '70B 1K/8K'
         required: false
         type: boolean
 
       dsr1_1k8k:
+        description: 'DSR1 1K/8K'
         required: false
         type: boolean
 
       gptoss_1k8k:
+        description: 'gpt-oss 1K/8K'
         required: false
         type: boolean
 
