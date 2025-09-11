@@ -76,7 +76,7 @@ jobs:
       precision: 'fp4'
 
   collect-results:
-    needs: [ bmk-h200, bmk-h200-trt, bmk-b200, bmk-b200-trt, bmk-mi300x, bmk-mi325x]  
+    needs: [bmk-mi300x, bmk-mi325x, bmk-mi355x]  
     if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
