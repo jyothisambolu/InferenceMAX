@@ -72,15 +72,16 @@ jobs:
       - name: Resource cleanup
         run: |
           if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-            echo "Cleaning Docker resource ..."
+            echo "[Docker] Cleaning up resources ..."
             docker ps -aq | xargs -r docker rm -f
             docker network prune -f
             while [ -n "$(docker ps -aq)" ]; do
+              docker ps -a
               sleep 5
             done
           fi
           if command -v squeue >/dev/null 2>&1; then
-            echo "Cleaning Slurm resource ..."
+            echo "[Slurm] Cleaning up resources ..."
             scancel -u $USER
             while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
               squeue -u $USER
@@ -102,6 +103,10 @@ jobs:
         run: |
           RUNNER_NAME=${{ runner.name }}
           bash ./runners/launch_${RUNNER_NAME%%_*}*.sh ${{ inputs.exp-name }}
+          if [ ! -f "$RESULT_FILENAME.json" ]; then
+            echo "Run failed: Benchmark result $RESULT_FILENAME.json not found." >&2
+            exit 1
+          fi
 
       - name: Process result
         run: python3 utils/process_result.py ${{ inputs.runner }} ${{ env.TP }} ${{ env.RESULT_FILENAME }} ${{ env.FRAMEWORK }} ${{ env.PRECISION }}
