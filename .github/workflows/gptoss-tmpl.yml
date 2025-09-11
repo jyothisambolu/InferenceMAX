@@ -120,7 +120,7 @@ jobs:
       random-range-ratio: ${{ inputs.random-range-ratio }}
       runner: mi300x
       image: 'rocm/vllm-dev:open-mi300-08052025'
-      model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
+      model: 'openai/gpt-oss-120b'
       tp-list: '[1, 2, 4, 8]'
       timeout: ${{ inputs.timeout }}
       framework: 'vllm'
