@@ -42,7 +42,8 @@ vllm serve $MODEL --port=$PORT \
 --block-size=64 \
 --swap-space=16 \
 --no-enable-prefix-caching \
---disable-log-requests
+--disable-log-requests \
+> $SERVER_LOG 2>&1 &
 
 set +x
 while IFS= read -r line; do
