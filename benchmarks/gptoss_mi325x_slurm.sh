@@ -35,7 +35,7 @@ export VLLM_DISABLE_COMPILE_CACHE=1
 export HSA_NO_SCRATCH_RECLAIM=1
 
 set -x
-vllm serve $MODEL --port=$port \
+vllm serve $MODEL --port=$PORT \
 --tensor-parallel-size=$TP \
 --gpu-memory-utilization=0.95 \
 --compilation-config='{"full_cuda_graph": true}' \
