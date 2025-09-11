@@ -28,14 +28,7 @@ on:
         default: fp8
 
 jobs:
-  find-latest-image:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Find the latest Docker image
-        run: echo "Hardcoding image tags for now."
-
   bmk-h200:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -53,7 +46,6 @@ jobs:
       precision: ${{ inputs.precision }}
 
   bmk-b200:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -71,7 +63,6 @@ jobs:
       precision: ${{ inputs.precision }}
 
   bmk-b200-trt-fp4:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -89,7 +80,6 @@ jobs:
       precision: fp4
 
   bmk-mi300x:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -107,7 +97,6 @@ jobs:
       precision: ${{ inputs.precision }}
 
   bmk-mi325x:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -125,7 +114,6 @@ jobs:
       precision: ${{ inputs.precision }}
 
   bmk-mi355x:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:

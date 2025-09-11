@@ -24,14 +24,7 @@ on:
         default: 180
 
 jobs:
-  find-latest-image:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Find the latest Docker image
-        run: echo "Hardcoding image tags for now."
-
   bmk-h100:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -48,7 +41,6 @@ jobs:
       framework: 'vllm'
 
   bmk-h200:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -65,7 +57,6 @@ jobs:
       framework: 'vllm'
 
   bmk-h200-trt:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -82,7 +73,6 @@ jobs:
       framework: 'trt'
 
   bmk-b200:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -99,7 +89,6 @@ jobs:
       framework: 'vllm'
 
   bmk-b200-trt:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -116,7 +105,6 @@ jobs:
       framework: 'trt'
 
   bmk-mi300x:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -133,7 +121,6 @@ jobs:
       framework: 'vllm'
 
   bmk-mi325x:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -150,7 +137,6 @@ jobs:
       framework: 'vllm'
 
   bmk-mi355x:
-    needs: find-latest-image
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
