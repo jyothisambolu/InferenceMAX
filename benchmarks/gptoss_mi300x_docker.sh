@@ -24,6 +24,7 @@ export HSA_NO_SCRATCH_RECLAIM=1
 
 vllm serve $MODEL --port=$PORT \
 --tensor-parallel-size=$TP \
+--max-model-len $MAX_MODEL_LEN \
 --gpu-memory-utilization=0.95 \
 --compilation-config='{"full_cuda_graph": true}' \
 --block-size=64 \
