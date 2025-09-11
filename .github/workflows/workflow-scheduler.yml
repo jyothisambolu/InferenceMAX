@@ -6,11 +6,49 @@ concurrency:
 
 on:
   workflow_dispatch:
+    inputs:
+      _70b_1k1k:
+        required: false
+        type: boolean
+
+      dsr1_1k1k:
+        required: false
+        type: boolean
+
+      gptoss_1k1k:
+        required: false
+        type: boolean
+
+      _70b_8k1k:
+        required: false
+        type: boolean
+
+      dsr1_8k1k:
+        required: false
+        type: boolean
+
+      gptoss_8k1k:
+        required: false
+        type: boolean
+
+      _70b_1k8k:
+        required: false
+        type: boolean
+
+      dsr1_1k8k:
+        required: false
+        type: boolean
+
+      gptoss_1k8k:
+        required: false
+        type: boolean
+
   schedule:
     - cron: '0 5 * * *'
 
 jobs:
   _70b-1k1k:
+    if: ${{ inputs._70b_1k1k }}
     uses: ./.github/workflows/70b-tmpl.yml
     secrets: inherit
     with:
@@ -21,6 +59,7 @@ jobs:
       random-range-ratio: 0.8
 
   dsr1-1k1k:
+    if: ${{ inputs.dsr1_1k1k }}
     uses: ./.github/workflows/dsr1-tmpl.yml
     secrets: inherit
     with:
@@ -31,6 +70,7 @@ jobs:
       random-range-ratio: 0.8
 
   gptoss-1k1k:
+    if: ${{ inputs.gptoss_1k1k }}
     uses: ./.github/workflows/gptoss-tmpl.yml
     secrets: inherit
     with:
@@ -40,43 +80,47 @@ jobs:
       max-model-len: 2048
       random-range-ratio: 0.8
 
-  # _70b-8k1k:
-  #   uses: ./.github/workflows/70b-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: '70b_8k1k'
-  #     isl: 8192
-  #     osl: 1024
-  #     max-model-len: 9216
-  #     random-range-ratio: 0.8
-  # 
-  # dsr1-8k1k:
-  #   uses: ./.github/workflows/dsr1-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: 'dsr1_8k1k'
-  #     isl: 8192
-  #     osl: 1024
-  #     max-model-len: 9216
-  #     random-range-ratio: 0.8
+  _70b-8k1k:
+    if: ${{ inputs._70b_8k1k }}
+    uses: ./.github/workflows/70b-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: '70b_8k1k'
+      isl: 8192
+      osl: 1024
+      max-model-len: 9216
+      random-range-ratio: 0.8
+  
+  dsr1-8k1k:
+    if: ${{ inputs.dsr1_8k1k }}
+    uses: ./.github/workflows/dsr1-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: 'dsr1_8k1k'
+      isl: 8192
+      osl: 1024
+      max-model-len: 9216
+      random-range-ratio: 0.8
 
-  # _70b-1k8k:
-  #   uses: ./.github/workflows/70b-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: '70b_1k8k'
-  #     isl: 1024
-  #     osl: 8192
-  #     max-model-len: 9216
-  #     random-range-ratio: 0.8
-  #     timeout: 240
+  _70b-1k8k:
+    if: ${{ inputs._70b_1k8k }}
+    uses: ./.github/workflows/70b-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: '70b_1k8k'
+      isl: 1024
+      osl: 8192
+      max-model-len: 9216
+      random-range-ratio: 0.8
+      timeout: 240
 
-  # dsr1-1k8k:
-  #   uses: ./.github/workflows/dsr1-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: 'dsr1_1k8k'
-  #     isl: 1024
-  #     osl: 8192
-  #     max-model-len: 9216
-  #     random-range-ratio: 0.8
+  dsr1-1k8k:
+    if: ${{ inputs.dsr1_1k8k }}
+    uses: ./.github/workflows/dsr1-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: 'dsr1_1k8k'
+      isl: 1024
+      osl: 8192
+      max-model-len: 9216
+      random-range-ratio: 0.8
