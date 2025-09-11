@@ -19,6 +19,11 @@ on:
           - 'mi325x'
           - 'mi355x'
 
+      enable-70b:
+        description: 'Run 70B'
+        required: false
+        type: boolean
+
       image-70b:
         description: '70B Docker Image'
         required: true
@@ -30,6 +35,11 @@ on:
           - 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.9.1_mi35x_alpha'
           - 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2'
 
+      enable-dsr1:
+        description: 'Run DSR1'
+        required: false
+        type: boolean
+
       image-dsr1:
         description: 'DSR1 Docker Image'
         required: true
@@ -38,9 +48,12 @@ on:
           - 'lmsysorg/sglang:v0.4.9.post1-cu126'
           - 'lmsysorg/sglang:v0.5.0rc1-cu128-b200'
           - 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_sgl-dev-v0.5.2rc2-mi30x_rc1'
-          - 'lmsysorg/sglang:v0.4.9.post2-rocm630-mi30x'
-          - 'lmsysorg/sglang:v0.5.1.post2-rocm700-mi35x'
           - 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2'
+
+      enable-gptoss:
+        description: 'Run gpt-oss'
+        required: false
+        type: boolean
 
       image-gptoss:
         description: 'gpt-oss Docker Image'
@@ -61,6 +74,7 @@ env:
 
 jobs:
   bmk-sweep-test-70b:
+    if: ${{ inputs.enable-70b }}
     runs-on: ${{ inputs.runner }}
 
     strategy:
@@ -122,6 +136,7 @@ jobs:
           fi
 
   bmk-sweep-test-dsr1:
+    if: ${{ inputs.enable-dsr1 }}
     runs-on: ${{ inputs.runner }}
 
     strategy:
@@ -180,6 +195,7 @@ jobs:
           fi
 
   bmk-sweep-test-gptoss:
+    if: ${{ inputs.enable-gptoss }}
     runs-on: ${{ inputs.runner }}
 
     strategy:
