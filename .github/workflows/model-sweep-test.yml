@@ -32,11 +32,6 @@ on:
         type: boolean
         required: false
 
-      run_mi300x:
-        description: 'Test MI300X'
-        type: boolean
-        required: false
-
       run_mi325x:
         description: 'Test MI325X'
         type: boolean
