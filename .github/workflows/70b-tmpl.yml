@@ -138,22 +138,22 @@ jobs:
   #     timeout: ${{ inputs.timeout }}
   #     framework: 'vllm'
 
-  bmk-mi300x-fp4:
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: ${{ inputs.exp-name }}
-      isl: ${{ inputs.isl }}
-      osl: ${{ inputs.osl }}
-      max-model-len: ${{ inputs.max-model-len }}
-      random-range-ratio: ${{ inputs.random-range-ratio }}
-      runner: mi300x
-      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
-      model: 'amd/Llama-3.3-70B-Instruct-MXFP4-Preview'
-      tp-list: '[1, 2, 4, 8]'
-      timeout: ${{ inputs.timeout }}
-      framework: 'vllm'
-      precision: 'fp4'
+  # bmk-mi300x-fp4:
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: ${{ inputs.isl }}
+  #     osl: ${{ inputs.osl }}
+  #     max-model-len: ${{ inputs.max-model-len }}
+  #     random-range-ratio: ${{ inputs.random-range-ratio }}
+  #     runner: mi300x
+  #     image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
+  #     model: 'amd/Llama-3.3-70B-Instruct-MXFP4-Preview'
+  #     tp-list: '[1, 2, 4, 8]'
+  #     timeout: ${{ inputs.timeout }}
+  #     framework: 'vllm'
+  #     precision: 'fp4'
 
   # bmk-mi325x-fp4:
   #   uses: ./.github/workflows/benchmark-tmpl.yml
