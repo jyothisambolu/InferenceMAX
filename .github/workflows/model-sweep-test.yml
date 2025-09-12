@@ -100,7 +100,7 @@ jobs:
       - name: Resource cleanup
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
-          if command -v docker >/dev/null 2>&1; then
+          if command -v docker info >/dev/null 2>&1; then
             echo "[Docker] Cleaning up resources ..."
             docker ps -aq | xargs -r docker rm -f
             docker network prune -f
@@ -279,7 +279,7 @@ jobs:
       - name: Resource cleanup
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
-          if command -v docker >/dev/null 2>&1; then
+          if command -v docker info >/dev/null 2>&1; then
             echo "[Docker] Cleaning up resources ..."
             docker ps -aq | xargs -r docker rm -f
             docker network prune -f
@@ -368,7 +368,7 @@ jobs:
       - name: Resource cleanup
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
-          if command -v docker >/dev/null 2>&1; then
+          if command -v docker info >/dev/null 2>&1; then
             echo "[Docker] Cleaning up resources ..."
             docker ps -aq | xargs -r docker rm -f
             docker network prune -f
@@ -456,7 +456,7 @@ jobs:
       - name: Resource cleanup
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
-          if command -v docker >/dev/null 2>&1; then
+          if command -v docker info >/dev/null 2>&1; then
             echo "[Docker] Cleaning up resources ..."
             docker ps -aq | xargs -r docker rm -f
             docker network prune -f
@@ -541,7 +541,7 @@ jobs:
       - name: Resource cleanup
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
-          if command -v docker >/dev/null 2>&1; then
+          if command -v docker info >/dev/null 2>&1; then
             echo "[Docker] Cleaning up resources ..."
             docker ps -aq | xargs -r docker rm -f
             docker network prune -f
