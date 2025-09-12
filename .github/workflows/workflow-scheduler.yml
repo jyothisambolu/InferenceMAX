@@ -7,56 +7,38 @@ concurrency:
 on:
   workflow_dispatch:
     inputs:
-      _70b_1k1k:
-        description: '70B 1K/1K'
+      run_70b:
+        description: 'Run Model 70B'
         required: false
         type: boolean
         default: true
 
-      dsr1_1k1k:
-        description: 'DSR1 1K/1K'
+      run_dsr1:
+        description: 'Run Model DSR1'
         required: false
         type: boolean
         default: true
 
-      gptoss_1k1k:
-        description: 'gpt-oss 1K/1K'
+      run_gptoss:
+        description: 'Run Model gpt-oss'
         required: false
         type: boolean
         default: true
 
-      _70b_8k1k:
-        description: '70B 8K/1K'
+      run_1k1k:
+        description: 'Run 1K/1K'
         required: false
         type: boolean
         default: true
 
-      dsr1_8k1k:
-        description: 'DSR1 8K/1K'
+      run_8k1k:
+        description: 'Run 8K/1K'
         required: false
         type: boolean
         default: true
 
-      gptoss_8k1k:
-        description: 'gpt-oss 8K/1K'
-        required: false
-        type: boolean
-        default: true
-
-      _70b_1k8k:
-        description: '70B 1K/8K'
-        required: false
-        type: boolean
-        default: true
-
-      dsr1_1k8k:
-        description: 'DSR1 1K/8K'
-        required: false
-        type: boolean
-        default: true
-
-      gptoss_1k8k:
-        description: 'gpt-oss 1K/8K'
+      run_1k8k:
+        description: 'Run 1K/8K'
         required: false
         type: boolean
         default: true
@@ -66,7 +48,7 @@ on:
 
 jobs:
   _70b-1k1k:
-    if: ${{ inputs._70b_1k1k }}
+    if: ${{ inputs.run_70b }} && ${{ inputs.run_1k1k }}
     uses: ./.github/workflows/70b-tmpl.yml
     secrets: inherit
     with:
@@ -77,7 +59,7 @@ jobs:
       random-range-ratio: 0.8
 
   dsr1-1k1k:
-    if: ${{ inputs.dsr1_1k1k }}
+    if: ${{ inputs.run_dsr1 }} && ${{ inputs.run_1k1k }}
     uses: ./.github/workflows/dsr1-tmpl.yml
     secrets: inherit
     with:
@@ -88,7 +70,7 @@ jobs:
       random-range-ratio: 0.8
 
   gptoss-1k1k:
-    if: ${{ inputs.gptoss_1k1k }}
+    if: ${{ inputs.run_gptoss }} && ${{ inputs.run_1k1k }}
     uses: ./.github/workflows/gptoss-tmpl.yml
     secrets: inherit
     with:
@@ -99,7 +81,7 @@ jobs:
       random-range-ratio: 0.8
 
   _70b-8k1k:
-    if: ${{ inputs._70b_8k1k }}
+    if: ${{ inputs.run_70b }} && ${{ inputs.run_8k1k }}
     uses: ./.github/workflows/70b-tmpl.yml
     secrets: inherit
     with:
@@ -110,7 +92,7 @@ jobs:
       random-range-ratio: 0.8
   
   dsr1-8k1k:
-    if: ${{ inputs.dsr1_8k1k }}
+    if: ${{ inputs.run_dsr1 }} && ${{ inputs.run_8k1k }}
     uses: ./.github/workflows/dsr1-tmpl.yml
     secrets: inherit
     with:
@@ -121,7 +103,7 @@ jobs:
       random-range-ratio: 0.8
 
   _70b-1k8k:
-    if: ${{ inputs._70b_1k8k }}
+    if: ${{ inputs.run_70b }} && ${{ inputs.run_1k8k }}
     uses: ./.github/workflows/70b-tmpl.yml
     secrets: inherit
     with:
@@ -133,7 +115,7 @@ jobs:
       timeout: 240
 
   dsr1-1k8k:
-    if: ${{ inputs.dsr1_1k8k }}
+    if: ${{ inputs.run_dsr1 }} && ${{ inputs.run_1k8k }}
     uses: ./.github/workflows/dsr1-tmpl.yml
     secrets: inherit
     with:
