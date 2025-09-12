@@ -84,7 +84,7 @@ jobs:
           }
 
     runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.exp-name }} - ${{ matrix.runner }}'
+    name: '${{ matrix.config.exp-name }} - ${{ matrix.runner }}'
 
     env:
       RUNNER_NAME: ${{ matrix.runner }}
@@ -176,7 +176,7 @@ jobs:
           }
 
     runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.exp-name }} - ${{ matrix.runner }}'
+    name: '${{ matrix.config.exp-name }} - ${{ matrix.runner }}'
 
     env:
       RUNNER_NAME: ${{ matrix.runner }}
@@ -261,7 +261,7 @@ jobs:
           }
 
     runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.exp-name }} - ${{ matrix.runner }}'
+    name: '${{ matrix.config.exp-name }} - ${{ matrix.runner }}'
 
     env:
       RUNNER_NAME: ${{ matrix.runner }}
@@ -349,7 +349,7 @@ jobs:
           }
 
     runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.exp-name }} - ${{ matrix.runner }}'
+    name: '${{ matrix.config.exp-name }} - ${{ matrix.runner }}'
 
     env:
       RUNNER_NAME: ${{ matrix.runner }}
@@ -436,7 +436,7 @@ jobs:
           }
 
     runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.exp-name }} - ${{ matrix.runner }}'
+    name: '${{ matrix.config.exp-name }} - ${{ matrix.runner }}'
 
     env:
       RUNNER_NAME: ${{ matrix.runner }}
@@ -520,7 +520,7 @@ jobs:
           }
 
     runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.exp-name }} - ${{ matrix.runner }}'
+    name: '${{ matrix.config.exp-name }} - ${{ matrix.runner }}'
 
     env:
       RUNNER_NAME: ${{ matrix.runner }}
