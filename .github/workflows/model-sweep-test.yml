@@ -329,7 +329,7 @@ jobs:
           - {
             'exp-name': '70b_test',
             'image': 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1',
-            'model': 'nvidia/Llama-3.3-70B-Instruct-FP8',
+            'model': 'amd/Llama-3.3-70B-Instruct-FP8-KV',
             'mname': 'LLaMA 70B'
           }
           - {
@@ -417,7 +417,7 @@ jobs:
           - {
             'exp-name': '70b_test',
             'image': 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1',
-            'model': 'nvidia/Llama-3.3-70B-Instruct-FP8',
+            'model': 'amd/Llama-3.3-70B-Instruct-FP8-KV',
             'mname': 'LLaMA 70B'
           }
           - {
@@ -502,7 +502,7 @@ jobs:
           - {
             'exp-name': '70b_test',
             'image': 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1',
-            'model': 'nvidia/Llama-3.3-70B-Instruct-FP8',
+            'model': 'amd/Llama-3.3-70B-Instruct-FP8-KV',
             'mname': 'LLaMA 70B'
           }
           - {
