@@ -20,7 +20,7 @@ docker run --rm -d --ipc=host --shm-size=16g --network=$network_name --name=$ser
 -e HF_TOKEN -e HF_HUB_CACHE -e MODEL -e TP -e CONC -e MAX_MODEL_LEN -e PORT=$PORT \
 --entrypoint=/bin/bash \
 $IMAGE \
-benchmarks/"${1%%_*}_mi300x_docker.sh"
+benchmarks/"${EXP_NAME%%_*}_${PRECISION}_mi300x_docker.sh"
 
 set +x
 while IFS= read -r line; do
