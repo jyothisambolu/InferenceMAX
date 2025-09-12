@@ -52,6 +52,30 @@ env:
   TP: 8
   CONC: 4
 
+x-common-steps:
+  - &resource-cleanup:
+    name: Resource cleanup
+    if: ${{ matrix.config.mname == github.event.inputs.model }}
+    run: |
+      if command -v docker >/dev/null 2>&1; then
+        echo "[Docker] Cleaning up resources ..."
+        docker ps -aq | xargs -r docker rm -f
+        docker network prune -f
+        while [ -n "$(docker ps -aq)" ]; do
+          docker ps -a
+          sleep 5
+        done
+      fi
+      if command -v squeue >/dev/null 2>&1; then
+        echo "[Slurm] Cleaning up resources ..."
+        scancel -u $USER
+        while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
+          squeue -u $USER
+          sleep 5
+        done
+      fi
+
+
 jobs:
   bmk_h100:
     if: ${{ github.event.inputs.run_h100 }}
@@ -85,26 +109,7 @@ jobs:
           echo "github.event.inputs.model = ${{ github.event.inputs.model }}"
           echo "matrix.config.mname = ${{ matrix.config.mname }}"
 
-      - name: Resource cleanup
-        if: ${{ matrix.config.mname == github.event.inputs.model }}
-        run: |
-          if command -v docker >/dev/null 2>&1; then
-            echo "[Docker] Cleaning up resources ..."
-            docker ps -aq | xargs -r docker rm -f
-            docker network prune -f
-            while [ -n "$(docker ps -aq)" ]; do
-              docker ps -a
-              sleep 5
-            done
-          fi
-          if command -v squeue >/dev/null 2>&1; then
-            echo "[Slurm] Cleaning up resources ..."
-            scancel -u $USER
-            while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
-              squeue -u $USER
-              sleep 5
-            done
-          fi
+      - *resource-cleanup
 
       - uses: actions/checkout@v3
         if: ${{ matrix.config.mname == github.event.inputs.model }}
