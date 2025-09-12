@@ -96,6 +96,7 @@ jobs:
       - name: Debug step
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
+          echo "github.event.inputs.run_h100 = ${{ github.event.inputs.run_h100 }}"
           echo "RUNNER_NAME=$RUNNER_NAME"
           echo "RESULT_FILENAME=${EXP_NAME}_tp${TP}_conc${CONC}_${RUNNER_NAME}"
           echo "Script filepath: /runners/launch_${RUNNER_NAME%%_*}*.sh"
@@ -188,6 +189,7 @@ jobs:
       - name: Debug step
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
+          echo "github.event.inputs.run_h200 = ${{ github.event.inputs.run_h200 }}"
           echo "RUNNER_NAME=$RUNNER_NAME"
           echo "RESULT_FILENAME=${EXP_NAME}_tp${TP}_conc${CONC}_${RUNNER_NAME}"
           echo "Script filepath: /runners/launch_${RUNNER_NAME%%_*}*.sh"
@@ -273,6 +275,7 @@ jobs:
       - name: Debug step
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
+          echo "github.event.inputs.run_b200 = ${{ github.event.inputs.run_b200 }}"
           echo "RUNNER_NAME=$RUNNER_NAME"
           echo "RESULT_FILENAME=${EXP_NAME}_tp${TP}_conc${CONC}_${RUNNER_NAME}"
           echo "Script filepath: /runners/launch_${RUNNER_NAME%%_*}*.sh"
@@ -361,6 +364,7 @@ jobs:
       - name: Debug step
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
+          echo "github.event.inputs.run_mi300x = ${{ github.event.inputs.run_mi300x }}"
           echo "RUNNER_NAME=$RUNNER_NAME"
           echo "RESULT_FILENAME=${EXP_NAME}_tp${TP}_conc${CONC}_${RUNNER_NAME}"
           echo "Script filepath: /runners/launch_${RUNNER_NAME%%_*}*.sh"
@@ -448,6 +452,7 @@ jobs:
       - name: Debug step
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
+          echo "github.event.inputs.run_mi325x = ${{ github.event.inputs.run_mi325x }}"
           echo "RUNNER_NAME=$RUNNER_NAME"
           echo "RESULT_FILENAME=${EXP_NAME}_tp${TP}_conc${CONC}_${RUNNER_NAME}"
           echo "Script filepath: /runners/launch_${RUNNER_NAME%%_*}*.sh"
@@ -532,6 +537,7 @@ jobs:
       - name: Debug step
         if: ${{ matrix.config.mname == github.event.inputs.model }}
         run: |
+          echo "github.event.inputs.run_mi355x = ${{ github.event.inputs.run_mi355x }}"
           echo "RUNNER_NAME=$RUNNER_NAME"
           echo "RESULT_FILENAME=${EXP_NAME}_tp${TP}_conc${CONC}_${RUNNER_NAME}"
           echo "Script filepath: /runners/launch_${RUNNER_NAME%%_*}*.sh"
