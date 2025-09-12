@@ -16,37 +16,31 @@ on:
         description: 'Test H100'
         type: boolean
         required: false
-        default: false
 
       run_h200:
         description: 'Test H200'
         type: boolean
         required: false
-        default: false
 
       run_b200:
         description: 'Test B200'
         type: boolean
         required: false
-        default: false
 
       run_mi300x:
         description: 'Test MI300X'
         type: boolean
         required: false
-        default: false
 
       run_mi325x:
         description: 'Test MI325X'
         type: boolean
         required: false
-        default: false
 
       run_mi355x:
         description: 'Test MI355X'
         type: boolean
         required: false
-        default: false
 
 env:
   HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -60,7 +54,7 @@ env:
 
 jobs:
   bmk_h100:
-    if: ${{ github.event.inputs.run_h100 }}
+    if: ${{ github.event.inputs.run_h100 == 'true' }}
     strategy:
       fail-fast: false
       matrix:
@@ -141,7 +135,7 @@ jobs:
           fi
 
   bmk_h200:
-    if: ${{ github.event.inputs.run_h200 }}
+    if: ${{ github.event.inputs.run_h200 == 'true' }}
     strategy:
       fail-fast: false
       matrix:
@@ -234,7 +228,7 @@ jobs:
           fi
 
   bmk_b200:
-    if: ${{ github.event.inputs.run_b200 }}
+    if: ${{ github.event.inputs.run_b200 == 'true' }}
     strategy:
       fail-fast: false
       matrix:
@@ -320,7 +314,7 @@ jobs:
           fi
 
   bmk_mi300x:
-    if: ${{ github.event.inputs.run_mi300x }}
+    if: ${{ github.event.inputs.run_mi300x == 'true' }}
     strategy:
       fail-fast: false
       matrix:
@@ -409,7 +403,7 @@ jobs:
           fi
 
   bmk_mi325x:
-    if: ${{ github.event.inputs.run_mi325x }}
+    if: ${{ github.event.inputs.run_mi325x == 'true' }}
     strategy:
       fail-fast: false
       matrix:
@@ -497,7 +491,7 @@ jobs:
           fi
 
   bmk_mi355x:
-    if: ${{ github.event.inputs.run_mi355x }}
+    if: ${{ github.event.inputs.run_mi355x == 'true' }}
     strategy:
       fail-fast: false
       matrix:
