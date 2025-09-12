@@ -58,25 +58,25 @@ jobs:
       framework: 'vllm'
       precision: 'fp4'
 
-  bmk-mi355x:
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: ${{ inputs.exp-name }}
-      isl: ${{ inputs.isl }}
-      osl: ${{ inputs.osl }}
-      max-model-len: ${{ inputs.max-model-len }}
-      random-range-ratio: ${{ inputs.random-range-ratio }}
-      runner: mi355x
-      image: 'rocm/vllm-dev:open-mi355-08052025'
-      model: 'openai/gpt-oss-120b'
-      tp-list: '[1, 2]'
-      timeout: ${{ inputs.timeout }}
-      framework: 'vllm'
-      precision: 'fp4'
+  # bmk-mi355x:
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: ${{ inputs.isl }}
+  #     osl: ${{ inputs.osl }}
+  #     max-model-len: ${{ inputs.max-model-len }}
+  #     random-range-ratio: ${{ inputs.random-range-ratio }}
+  #     runner: mi355x
+  #     image: 'rocm/vllm-dev:open-mi355-08052025'
+  #     model: 'openai/gpt-oss-120b'
+  #     tp-list: '[1, 2]'
+  #     timeout: ${{ inputs.timeout }}
+  #     framework: 'vllm'
+  #     precision: 'fp4'
 
   collect-results:
-    needs: [bmk-mi300x, bmk-mi325x, bmk-mi355x]  
+    needs: [bmk-mi300x, bmk-mi325x]  # , bmk-mi355x]  
     if: ${{ always() && !cancelled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
