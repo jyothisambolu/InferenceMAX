@@ -120,6 +120,7 @@ jobs:
       tp-list: '[1, 2, 4, 8]'
       timeout: ${{ inputs.timeout }}
       framework: 'vllm'
+      precision: 'fp8'
 
   # bmk-mi325x:
   #   uses: ./.github/workflows/benchmark-tmpl.yml
