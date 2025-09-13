@@ -9,6 +9,14 @@ on:
   schedule:
     - cron: '0 5 * * *'
 
+env:
+  USE_H100: true
+  USE_H200: true
+  USE_B200: true
+  USE_MI300X: true
+  USE_MI325X: true
+  USE_MI355X: false
+
 jobs:
   _70b-1k1k:
     uses: ./.github/workflows/70b-tmpl.yml
@@ -19,6 +27,12 @@ jobs:
       osl: 1024
       max-model-len: 2048
       random-range-ratio: 0.8
+      use_h100: ${{ env.USE_H100 }}
+      use_h200: ${{ env.USE_H200 }}
+      use_b200: ${{ env.USE_B200 }}
+      use_mi300x: ${{ env.USE_MI300X }}
+      use_mi325x: ${{ env.USE_MI325X }}
+      use_mi355x: ${{ env.USE_MI355X }}
 
   collect-70b-1k1k-results:
     needs: _70b-1k1k
