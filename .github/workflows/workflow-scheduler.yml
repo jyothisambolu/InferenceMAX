@@ -1,13 +1,21 @@
 name: Workflow Scheduler
 
-# concurrency:
-#   group: benchmark-lock
-#   cancel-in-progress: false
+concurrency:
+  group: benchmark-lock
+  cancel-in-progress: false
 
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 5 * * *'
+
+# GPU Status
+# use_h100: true
+# use_h200: true
+# use_b200: true
+# use_mi300x: true
+# use_mi325x: true
+# use_mi355x: false
 
 jobs:
   _70b-1k1k:
