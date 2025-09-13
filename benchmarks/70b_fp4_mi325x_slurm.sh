@@ -78,3 +78,5 @@ python3 bench_serving/benchmark_serving.py \
 --save-result --percentile-metrics 'ttft,tpot,itl,e2el' \
 --result-dir /workspace/ \
 --result-filename $RESULT_FILENAME.json
+
+rm -rf quark_logs/  # Avoid runner error

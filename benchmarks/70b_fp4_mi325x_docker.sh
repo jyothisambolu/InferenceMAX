@@ -44,3 +44,5 @@ vllm serve $MODEL --port=$PORT \
 --no-enable-prefix-caching \
 --async-scheduling \
 --disable-log-requests
+
+rm -rf quark_logs/  # Avoid runner error
