@@ -20,22 +20,22 @@ on:
         type: string
 
       use_h100:
-        type: boolean
+        type: number
         required: true
       use_h200:
-        type: boolean
+        type: number
         required: true
       use_b200:
-        type: boolean
+        type: number
         required: true
       use_mi300x:
-        type: boolean
+        type: number
         required: true
       use_mi325x:
-        type: boolean
+        type: number
         required: true
       use_mi355x:
-        type: boolean
+        type: number
         required: true
 
 jobs:

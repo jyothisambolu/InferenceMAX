@@ -19,12 +19,12 @@ jobs:
       osl: 1024
       max-model-len: 2048
       random-range-ratio: 0.8
-      use_h100: true
-      use_h200: true
-      use_b200: true
-      use_mi300x: true
-      use_mi325x: true
-      use_mi355x: false
+      use_h100: 1
+      use_h200: 1
+      use_b200: 1
+      use_mi300x: 1
+      use_mi325x: 1
+      use_mi355x: 0
 
   collect-70b-1k1k-results:
     needs: _70b-1k1k
