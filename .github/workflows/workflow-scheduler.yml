@@ -38,6 +38,14 @@ jobs:
   #     max-model-len: 2048
   #     random-range-ratio: 0.8
 
+  # collect-dsr1-1k1k-results:
+  #   needs: dsr1-1k1k
+  #   if: ${{ always() && !cancelled() }}
+  #   uses: ./.github/workflows/collect-results.yml
+  #   secrets: inherit
+  #   with:
+  #     exp-name: 'dsr1_1k1k'
+
   # gptoss-1k1k:
   #   uses: ./.github/workflows/gptoss-tmpl.yml
   #   secrets: inherit
@@ -47,6 +55,14 @@ jobs:
   #     osl: 1024
   #     max-model-len: 2048
   #     random-range-ratio: 0.8
+
+  # collect-gptoss-1k1k-results:
+  #   needs: gptoss-1k1k
+  #   if: ${{ always() && !cancelled() }}
+  #   uses: ./.github/workflows/collect-results.yml
+  #   secrets: inherit
+  #   with:
+  #     exp-name: 'gptoss_1k1k'
 
   # _70b-8k1k:
   #   uses: ./.github/workflows/70b-tmpl.yml

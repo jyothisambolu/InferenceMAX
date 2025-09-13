@@ -74,11 +74,3 @@ jobs:
   #     timeout: ${{ inputs.timeout }}
   #     framework: 'vllm'
   #     precision: 'fp4'
-
-  collect-results:
-    needs: [bmk-mi300x, bmk-mi325x]  # , bmk-mi355x]  
-    if: ${{ always() && !cancelled() }}
-    uses: ./.github/workflows/collect-results.yml
-    secrets: inherit
-    with:
-      exp-name: ${{ inputs.exp-name }}
