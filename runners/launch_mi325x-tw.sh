@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MODEL_CODE="${1%%_*}"
+MODEL_CODE="${EXP_NAME%%_*}"
 export HF_HUB_CACHE_MOUNT="/home/hf_hub_cache/"
 export PORT_OFFSET=${USER: -1}
 
