@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  USE_H100: true
+  USE_H100: 'true'
   USE_H200: true
   USE_B200: true
   USE_MI300X: true
