@@ -22,10 +22,6 @@ on:
         required: false
         type: number
         default: 180
-      precision:
-        required: false
-        type: string
-        default: fp8
 
 jobs:
   bmk-h200:
@@ -43,7 +39,7 @@ jobs:
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
       framework: 'sglang'
-      precision: ${{ inputs.precision }}
+      precision: 'fp8'
 
   bmk-b200:
     uses: ./.github/workflows/benchmark-tmpl.yml
@@ -60,7 +56,7 @@ jobs:
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
       framework: 'sglang'
-      precision: ${{ inputs.precision }}
+      precision: 'fp8'
 
   bmk-b200-trt-fp4:
     uses: ./.github/workflows/benchmark-tmpl.yml
@@ -94,7 +90,7 @@ jobs:
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
       framework: 'sglang'
-      precision: ${{ inputs.precision }}
+      precision: 'fp8'
 
   bmk-mi325x:
     uses: ./.github/workflows/benchmark-tmpl.yml
@@ -111,9 +107,9 @@ jobs:
       tp-list: '[8]'
       timeout: ${{ inputs.timeout }}
       framework: 'sglang'
-      precision: ${{ inputs.precision }}
+      precision: 'fp8'
 
-  # bmk-mi355x:
+  # bmk-mi355x-fp8:
   #   uses: ./.github/workflows/benchmark-tmpl.yml
   #   secrets: inherit
   #   with:
@@ -128,12 +124,21 @@ jobs:
   #     tp-list: '[8]'
   #     timeout: ${{ inputs.timeout }}
   #     framework: 'sglang'
-  #     precision: ${{ inputs.precision }}
+  #     precision: 'fp8'
 
-  collect-results:
-    needs: [bmk-h200, bmk-b200, bmk-b200-trt-fp4, bmk-mi300x, bmk-mi325x]  # , bmk-mi355x] 
-    if: ${{ always() && !cancelled() }}
-    uses: ./.github/workflows/collect-results.yml
-    secrets: inherit
-    with:
-      exp-name: ${{ inputs.exp-name }}
+  # bmk-mi355x-fp4:
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: ${{ inputs.isl }}
+  #     osl: ${{ inputs.osl }}
+  #     max-model-len: ${{ inputs.max-model-len }}
+  #     random-range-ratio: ${{ inputs.random-range-ratio }}
+  #     runner: mi355x
+  #     image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_sgl-dev-v0.5.2rc2_mi35x_rc1'
+  #     model: 'amd/DeepSeek-R1-0528-MXFP4-Preview'
+  #     tp-list: '[8]'
+  #     timeout: ${{ inputs.timeout }}
+  #     framework: 'sglang'
+  #     precision: 'fp4'

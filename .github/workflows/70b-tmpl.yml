@@ -24,7 +24,7 @@ on:
         default: 180
 
 jobs:
-  # bmk-h100:
+  # bmk-h100-fp8:
   #   uses: ./.github/workflows/benchmark-tmpl.yml
   #   secrets: inherit
   #   with:
@@ -41,7 +41,7 @@ jobs:
   #     framework: 'vllm'
   #     precision: 'fp8'
 
-  # bmk-h200:
+  # bmk-h200-fp8:
   #   uses: ./.github/workflows/benchmark-tmpl.yml
   #   secrets: inherit
   #   with:
@@ -122,22 +122,6 @@ jobs:
       framework: 'vllm'
       precision: 'fp8'
 
-  # bmk-mi325x:
-  #   uses: ./.github/workflows/benchmark-tmpl.yml
-  #   secrets: inherit
-  #   with:
-  #     exp-name: ${{ inputs.exp-name }}
-  #     isl: ${{ inputs.isl }}
-  #     osl: ${{ inputs.osl }}
-  #     max-model-len: ${{ inputs.max-model-len }}
-  #     random-range-ratio: ${{ inputs.random-range-ratio }}
-  #     runner: mi325x
-  #     image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
-  #     model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
-  #     tp-list: '[1, 2, 4, 8]'
-  #     timeout: ${{ inputs.timeout }}
-  #     framework: 'vllm'
-
   bmk-mi300x-fp4:
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
@@ -154,6 +138,22 @@ jobs:
       timeout: ${{ inputs.timeout }}
       framework: 'vllm'
       precision: 'fp4'
+
+  # bmk-mi325x-fp8:
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: ${{ inputs.isl }}
+  #     osl: ${{ inputs.osl }}
+  #     max-model-len: ${{ inputs.max-model-len }}
+  #     random-range-ratio: ${{ inputs.random-range-ratio }}
+  #     runner: mi325x
+  #     image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
+  #     model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
+  #     tp-list: '[1, 2, 4, 8]'
+  #     timeout: ${{ inputs.timeout }}
+  #     framework: 'vllm'
 
   # bmk-mi325x-fp4:
   #   uses: ./.github/workflows/benchmark-tmpl.yml
@@ -172,7 +172,7 @@ jobs:
   #     framework: 'vllm'
   #     precision: 'fp4'
 
-  # bmk-mi355x:
+  # bmk-mi355x-fp8:
   #   uses: ./.github/workflows/benchmark-tmpl.yml
   #   secrets: inherit
   #   with:
