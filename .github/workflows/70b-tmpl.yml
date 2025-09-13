@@ -18,7 +18,6 @@ on:
       random-range-ratio:
         required: true
         type: string
-
       use_h100:
         type: number
         required: true
@@ -40,7 +39,7 @@ on:
 
 jobs:
   bmk-h100-fp8:
-    if: ${{ github.event.inputs.use_h100 == 1 }}
+    if: ${{ inputs.use_h100 == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -57,7 +56,7 @@ jobs:
       tp-list: '[2, 4, 8]'
 
   bmk-h200-fp8:
-    if: ${{ github.event.inputs.use_h200 == 1 }}
+    if: ${{ inputs.use_h200 == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -74,7 +73,7 @@ jobs:
       tp-list: '[1, 2, 4, 8]'
 
   bmk-h200-trt-fp8:
-    if: ${{ github.event.inputs.use_h200 == 1 }}
+    if: ${{ inputs.use_h200 == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -91,7 +90,7 @@ jobs:
       tp-list: '[1, 2, 4, 8]'  
 
   bmk-b200-fp8:
-    if: ${{ github.event.inputs.use_b200 == 1 }}
+    if: ${{ inputs.use_b200 == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -108,7 +107,7 @@ jobs:
       tp-list: '[1, 2]'  
 
   bmk-b200-trt-fp8:
-    if: ${{ github.event.inputs.use_b200 == 1 }}
+    if: ${{ inputs.use_b200 == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -125,7 +124,7 @@ jobs:
       tp-list: '[1, 2]'  
 
   bmk-mi300x-fp8:
-    if: ${{ github.event.inputs.use_mi300x == 1 }}
+    if: ${{ inputs.use_mi300x == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -142,7 +141,7 @@ jobs:
       tp-list: '[1, 2, 4, 8]'
 
   bmk-mi300x-fp4:
-    if: ${{ github.event.inputs.use_mi300x == 1 }}
+    if: ${{ inputs.use_mi300x == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -159,7 +158,7 @@ jobs:
       tp-list: '[1, 2, 4, 8]'
 
   bmk-mi325x-fp8:
-    if: ${{ github.event.inputs.use_mi325x == 1 }}
+    if: ${{ inputs.use_mi325x == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -176,7 +175,7 @@ jobs:
       tp-list: '[1, 2, 4, 8]'
 
   bmk-mi325x-fp4:
-    if: ${{ github.event.inputs.use_mi325x == 1 }}
+    if: ${{ inputs.use_mi325x == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -193,7 +192,7 @@ jobs:
       tp-list: '[1, 2, 4, 8]'
 
   bmk-mi355x-fp8:
-    if: ${{ github.event.inputs.use_mi355x == 1 }}
+    if: ${{ inputs.use_mi355x == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
@@ -210,7 +209,7 @@ jobs:
       tp-list: '[1, 2]'
 
   bmk-mi355x-fp4:
-    if: ${{ github.event.inputs.use_mi355x == 1 }}
+    if: ${{ inputs.use_mi355x == 1 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
