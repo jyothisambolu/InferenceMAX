@@ -12,6 +12,8 @@
 # Reference
 # https://rocm.docs.amd.com/en/docs-7.0-rc1/preview/benchmark-docker/inference-vllm-llama-3.1-405b-fp4.html#run-the-inference-benchmark
 
+pip install amd-quark
+
 export VLLM_USE_V1=1
 export VLLM_V1_USE_PREFILL_DECODE_ATTENTION=1
 export AMDGCN_USE_BUFFER_OPS=1
