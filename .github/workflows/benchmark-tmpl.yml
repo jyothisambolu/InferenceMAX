@@ -62,7 +62,7 @@ jobs:
       matrix:
         tp: ${{ fromJson(inputs.tp-list) }}
         conc: [4, 8, 16, 32, 64]
-    name: '${{ inputs.runner }} (tp${{ matrix.tp }} , conc${{ matrix.conc }})'
+    name: '${{ inputs.runner }}, ${{ inputs.precision }}, tp${{ matrix.tp }} , conc${{ matrix.conc }}'
 
     env:
       TP: ${{ matrix.tp }}
