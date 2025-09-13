@@ -20,6 +20,6 @@ srun --jobid=$JOB_ID \
 --container-remap-root \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \
-bash benchmarks/${MODEL_CODE}_mi325x_slurm.sh
+bash benchmarks/${MODEL_CODE}_${PRECISION}_mi325x_slurm.sh
 
 scancel $JOB_ID
