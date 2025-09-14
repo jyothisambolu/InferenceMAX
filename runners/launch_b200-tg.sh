@@ -18,7 +18,7 @@ docker run --rm -d --network $network_name --name $server_name \
 -e TORCH_CUDA_ARCH_LIST="10.0" -e CUDA_DEVICE_ORDER=PCI_BUS_ID -e CUDA_VISIBLE_DEVICES="0,1,2,3,4,5,6,7" \
 --entrypoint=/bin/bash \
 $IMAGE \
-benchmarks/"${1%%_*}_b200_docker.sh"
+benchmarks/"${EXP_NAME%%_*}_${PRECISION}_b200_docker.sh"
 
 set +x
 while IFS= read -r line; do

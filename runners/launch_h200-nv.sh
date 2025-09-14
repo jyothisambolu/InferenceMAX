@@ -3,7 +3,7 @@
 export HF_HUB_CACHE_MOUNT="/raid/hf_hub_cache_${USER: -1}/"
 export PORT_OFFSET=0  # Doesn't matter when --exclusive
 
-MODEL_CODE="${1%%_*}"
+MODEL_CODE="${EXP_NAME%%_*}"
 FRAMEWORK_SUFFIX=$([[ "$FRAMEWORK" == "trt" ]] && printf '_trt' || printf '')
 
 PARTITION="dgx-h200"
@@ -20,6 +20,6 @@ srun --jobid=$JOB_ID \
 --container-mount-home \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \
-bash benchmarks/${MODEL_CODE}_h200${FRAMEWORK_SUFFIX}_slurm.sh
+bash benchmarks/${MODEL_CODE}_${PRECISION}_h200${FRAMEWORK_SUFFIX}_slurm.sh
 
 scancel $JOB_ID
