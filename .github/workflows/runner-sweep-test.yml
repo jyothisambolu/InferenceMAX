@@ -100,7 +100,9 @@ jobs:
 
       - name: Debug
         run: |
+          echo "$GITHUB_WORKSPACE"
           ls -la $GITHUB_WORKSPACE
+          ls -la $GITHUB_WORKSPACE/.github/workflows
 
       - uses: ./.github/workflows/benchmark-tmpl.yml
         with:
