@@ -88,11 +88,8 @@ jobs:
           - 'h100-cr_1'
           - 'h100-cw_0'
           - 'h100-cw_1'
-
-    runs-on: ${{ matrix.runner }}
     name: '${{ matrix.runner }}'
-
-    uses: InferenceMAX/InferenceMAX/.github/workflows/benchmark-tmpl.yml@main
+    uses: ./.github/workflows/benchmark-tmpl.yml
     with:
       runner: ${{ matrix.runner }}
       image: ${{ inputs.image }}
