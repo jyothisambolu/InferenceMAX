@@ -100,9 +100,9 @@ jobs:
 
       - name: Debug
         run: |
-          ls $GITHUB_WORKSPACE
+          ls -la $GITHUB_WORKSPACE
 
-      - uses: ./.github/workflows/benchmark-tmpl.yml
+      - uses: .github/workflows/benchmark-tmpl.yml
         with:
           runner: ${{ matrix.runner }}
           image: ${{ inputs.image }}
