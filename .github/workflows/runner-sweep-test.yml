@@ -1,5 +1,5 @@
 name: 'Test - Runner Sweep'
-run-name: '${{ github.event.inputs.runner }} Sweep - ${{ github.event.inputs.model }} ${{ github.event.inputs.precision }}'
+run-name: '${{ github.event.inputs.runner }} Sweep - ${{ github.event.inputs.model }}'
 on:
   workflow_dispatch:
     inputs:
