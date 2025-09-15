@@ -91,33 +91,20 @@ jobs:
 
     runs-on: ${{ matrix.runner }}
     name: '${{ matrix.runner }}'
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.REPO_PAT }}
-          fetch-depth: 0
-
-      - name: Debug
-        run: |
-          echo "$GITHUB_WORKSPACE"
-          ls -la $GITHUB_WORKSPACE
-          ls -la $GITHUB_WORKSPACE/.github/workflows
-
-      - uses: ./benchmark-tmpl.yml
-        with:
-          runner: ${{ matrix.runner }}
-          image: ${{ inputs.image }}
-          model: ${{ inputs.model }}
-          framework: ${{ inputs.framework }}
-          precision: ${{ inputs.precision }}
-          exp-name: ${{ inputs.exp-name }}
-          isl: 1024
-          osl: 1024
-          max-model-len: 2048
-          random-range-ratio: 0.8
-          tp-list: '[8]'
-          conc-list: '[1]'
+    uses: InferenceMAX/InferenceMAX/.github/workflows/benchmark-tmpl.yml@main
+      with:
+        runner: ${{ matrix.runner }}
+        image: ${{ inputs.image }}
+        model: ${{ inputs.model }}
+        framework: ${{ inputs.framework }}
+        precision: ${{ inputs.precision }}
+        exp-name: ${{ inputs.exp-name }}
+        isl: 1024
+        osl: 1024
+        max-model-len: 2048
+        random-range-ratio: 0.8
+        tp-list: '[8]'
+        conc-list: '[1]'
 
   # bmk_h200:
   #   if: ${{ inputs.runner == 'h200' || inputs.runner == 'h200-trt' }}
