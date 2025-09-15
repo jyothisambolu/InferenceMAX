@@ -12,6 +12,7 @@ on:
       run_1k8k:
         type: boolean
         required: true
+
       use_h100:
         type: boolean
         required: true
