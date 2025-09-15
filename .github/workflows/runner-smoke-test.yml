@@ -51,6 +51,13 @@ on:
           - 'deepseek-ai/DeepSeek-R1-0528'
           - 'openai/gpt-oss-120b'
 
+      precision:
+        description: 'Precision'
+        required: true
+        type: choice
+        options:
+          - 'fp8'
+        
       image:
         description: 'Docker Image'
         required: true
@@ -69,8 +76,8 @@ on:
 env:
   HF_TOKEN: ${{ secrets.HF_TOKEN }}
   HF_HUB_CACHE: '/mnt/hf_hub_cache/'
-  EXP_NAME: 'bmk-smoke-test'
   MODEL: ${{ inputs.model }}
+  PRECISION: ${{ inputs.precision }}
   IMAGE: ${{ inputs.image }}
   ISL: 1024
   OSL: 1024
@@ -78,7 +85,7 @@ env:
   RANDOM_RANGE_RATIO: 0.8
   TP: 8
   CONC: 4
-  RESULT_FILENAME: 'bmk-smoke-test'
+  RESULT_FILENAME: 'results'
 
 jobs:
   bmk-smoke-test:
@@ -111,17 +118,17 @@ jobs:
 
       - name: Launch job script
         run: |
-          RUNNER_NAME=${{ inputs.runner }}
-          MODEL_HANDLE=$(
+          export EXP_NAME=$(
             if [[ "${{ env.MODEL }}" == *70B* ]]; then
-              printf '70b'
+              printf '70b_test'
             elif [[ "${{ env.MODEL }}" == *R1* ]]; then
-              printf 'dsr1'
+              printf 'dsr1_test'
             else
-              printf 'gptoss'
+              printf 'gptoss_test'
             fi
           )
-          bash ./runners/launch_${RUNNER_NAME%%_*}*.sh $MODEL_HANDLE
+          RUNNER_NAME=${{ inputs.runner }}
+          bash ./runners/launch_${RUNNER_NAME%%_*}*.sh
           if [ ! -f "$RESULT_FILENAME.json" ]; then
             echo "Run failed: Benchmark result $RESULT_FILENAME.json not found." >&2
             exit 1
@@ -135,4 +142,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.RESULT_FILENAME }}
-          path: agg_${EXP_NAME}_tp${TP}_conc${CONC}_${RUNNER_NAME}.json
+          path: agg_${EXP_NAME}_tp${TP}_conc${CONC}_${{ inputs.runner }}.json
