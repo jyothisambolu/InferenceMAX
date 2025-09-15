@@ -91,7 +91,6 @@ jobs:
 
     runs-on: ${{ matrix.runner }}
     name: '${{ matrix.runner }}'
-    secrets: inherit
 
     steps:
     - uses: ./.github/workflows/benchmark-tmpl.yml
