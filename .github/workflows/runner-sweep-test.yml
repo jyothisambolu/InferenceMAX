@@ -92,202 +92,203 @@ jobs:
     runs-on: ${{ matrix.runner }}
     name: '${{ matrix.runner }}'
 
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      runner: ${{ matrix.runner }}
-      image: ${{ inputs.image }}
-      model: ${{ inputs.model }}
-      framework: ${{ inputs.framework }}
-      precision: ${{ inputs.precision }}
-      exp-name: ${{ inputs.exp-name }}
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-      tp-list: '[8]'
-      conc-list: '[1]'
+    steps:
+    - uses: ./.github/workflows/benchmark-tmpl.yml
+      secrets: inherit
+      with:
+        runner: ${{ matrix.runner }}
+        image: ${{ inputs.image }}
+        model: ${{ inputs.model }}
+        framework: ${{ inputs.framework }}
+        precision: ${{ inputs.precision }}
+        exp-name: ${{ inputs.exp-name }}
+        isl: 1024
+        osl: 1024
+        max-model-len: 2048
+        random-range-ratio: 0.8
+        tp-list: '[8]'
+        conc-list: '[1]'
 
-  bmk_h200:
-    if: ${{ inputs.runner == 'h200' || inputs.runner == 'h200-trt' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        runner:
-          - 'h200-cw_0'
-          - 'h200-cw_1'
-          - 'h200-nb_0'
-          - 'h200-nb_1'
-          - 'h200-nb_2'
-          - 'h200-nb_3'
-          - 'h200-nv_0'
-          - 'h200-nv_1'
-          - 'h200-nv_2'
-          - 'h200-nv_3'
+  # bmk_h200:
+  #   if: ${{ inputs.runner == 'h200' || inputs.runner == 'h200-trt' }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       runner:
+  #         - 'h200-cw_0'
+  #         - 'h200-cw_1'
+  #         - 'h200-nb_0'
+  #         - 'h200-nb_1'
+  #         - 'h200-nb_2'
+  #         - 'h200-nb_3'
+  #         - 'h200-nv_0'
+  #         - 'h200-nv_1'
+  #         - 'h200-nv_2'
+  #         - 'h200-nv_3'
 
-    runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.runner }}'
+  #   runs-on: ${{ matrix.runner }}
+  #   name: '${{ matrix.runner }}'
 
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      runner: ${{ matrix.runner }}
-      image: ${{ inputs.image }}
-      model: ${{ inputs.model }}
-      framework: ${{ inputs.framework }}
-      precision: ${{ inputs.precision }}
-      exp-name: ${{ inputs.exp-name }}
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-      tp-list: '[8]'
-      conc-list: '[1]'
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     runner: ${{ matrix.runner }}
+  #     image: ${{ inputs.image }}
+  #     model: ${{ inputs.model }}
+  #     framework: ${{ inputs.framework }}
+  #     precision: ${{ inputs.precision }}
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: 1024
+  #     osl: 1024
+  #     max-model-len: 2048
+  #     random-range-ratio: 0.8
+  #     tp-list: '[8]'
+  #     conc-list: '[1]'
 
-  bmk_b200:
-    if: ${{ inputs.runner == 'b200' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        runner:
-          - 'b200-nv_0'
-          - 'b200-nv_1'
-          - 'b200-tg_0'
+  # bmk_b200:
+  #   if: ${{ inputs.runner == 'b200' }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       runner:
+  #         - 'b200-nv_0'
+  #         - 'b200-nv_1'
+  #         - 'b200-tg_0'
 
-    runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.runner }}'
+  #   runs-on: ${{ matrix.runner }}
+  #   name: '${{ matrix.runner }}'
 
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      runner: ${{ matrix.runner }}
-      image: ${{ inputs.image }}
-      model: ${{ inputs.model }}
-      framework: ${{ inputs.framework }}
-      precision: ${{ inputs.precision }}
-      exp-name: ${{ inputs.exp-name }}
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-      tp-list: '[8]'
-      conc-list: '[1]'
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     runner: ${{ matrix.runner }}
+  #     image: ${{ inputs.image }}
+  #     model: ${{ inputs.model }}
+  #     framework: ${{ inputs.framework }}
+  #     precision: ${{ inputs.precision }}
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: 1024
+  #     osl: 1024
+  #     max-model-len: 2048
+  #     random-range-ratio: 0.8
+  #     tp-list: '[8]'
+  #     conc-list: '[1]'
 
-  bmk_b200-trt:
-    if: ${{ inputs.runner == 'b200-trt' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        runner:
-          - 'b200-nv_0'
-          - 'b200-nv_1'
+  # bmk_b200-trt:
+  #   if: ${{ inputs.runner == 'b200-trt' }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       runner:
+  #         - 'b200-nv_0'
+  #         - 'b200-nv_1'
 
-    runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.runner }}'
+  #   runs-on: ${{ matrix.runner }}
+  #   name: '${{ matrix.runner }}'
 
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      runner: ${{ matrix.runner }}
-      image: ${{ inputs.image }}
-      model: ${{ inputs.model }}
-      framework: ${{ inputs.framework }}
-      precision: ${{ inputs.precision }}
-      exp-name: ${{ inputs.exp-name }}
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-      tp-list: '[8]'
-      conc-list: '[1]'
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     runner: ${{ matrix.runner }}
+  #     image: ${{ inputs.image }}
+  #     model: ${{ inputs.model }}
+  #     framework: ${{ inputs.framework }}
+  #     precision: ${{ inputs.precision }}
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: 1024
+  #     osl: 1024
+  #     max-model-len: 2048
+  #     random-range-ratio: 0.8
+  #     tp-list: '[8]'
+  #     conc-list: '[1]'
 
-  bmk_mi300x:
-    if: ${{ inputs.runner == 'mi300x' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        runner:
-          - 'mi300x-amd_0'
-          - 'mi300x-amd_1'
-          - 'mi300x-amd_2'
-          - 'mi300x-amd_3'
-          - 'mi300x-amd_4'
-          - 'mi300x-cr_0'
+  # bmk_mi300x:
+  #   if: ${{ inputs.runner == 'mi300x' }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       runner:
+  #         - 'mi300x-amd_0'
+  #         - 'mi300x-amd_1'
+  #         - 'mi300x-amd_2'
+  #         - 'mi300x-amd_3'
+  #         - 'mi300x-amd_4'
+  #         - 'mi300x-cr_0'
 
-    runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.runner }}'
+  #   runs-on: ${{ matrix.runner }}
+  #   name: '${{ matrix.runner }}'
 
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      runner: ${{ matrix.runner }}
-      image: ${{ inputs.image }}
-      model: ${{ inputs.model }}
-      framework: ${{ inputs.framework }}
-      precision: ${{ inputs.precision }}
-      exp-name: ${{ inputs.exp-name }}
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-      tp-list: '[8]'
-      conc-list: '[1]'
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     runner: ${{ matrix.runner }}
+  #     image: ${{ inputs.image }}
+  #     model: ${{ inputs.model }}
+  #     framework: ${{ inputs.framework }}
+  #     precision: ${{ inputs.precision }}
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: 1024
+  #     osl: 1024
+  #     max-model-len: 2048
+  #     random-range-ratio: 0.8
+  #     tp-list: '[8]'
+  #     conc-list: '[1]'
 
-  bmk_mi325x:
-    if: ${{ inputs.runner == 'mi325x' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        runner:
-          - 'mi325x-amd_0'
-          - 'mi325x-tw_0'
-          - 'mi325x-tw_1'
-          - 'mi325x-tw_2'
-          - 'mi325x-tw_3'
+  # bmk_mi325x:
+  #   if: ${{ inputs.runner == 'mi325x' }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       runner:
+  #         - 'mi325x-amd_0'
+  #         - 'mi325x-tw_0'
+  #         - 'mi325x-tw_1'
+  #         - 'mi325x-tw_2'
+  #         - 'mi325x-tw_3'
 
-    runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.runner }}'
+  #   runs-on: ${{ matrix.runner }}
+  #   name: '${{ matrix.runner }}'
 
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      runner: ${{ matrix.runner }}
-      image: ${{ inputs.image }}
-      model: ${{ inputs.model }}
-      framework: ${{ inputs.framework }}
-      precision: ${{ inputs.precision }}
-      exp-name: ${{ inputs.exp-name }}
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-      tp-list: '[8]'
-      conc-list: '[1]'
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     runner: ${{ matrix.runner }}
+  #     image: ${{ inputs.image }}
+  #     model: ${{ inputs.model }}
+  #     framework: ${{ inputs.framework }}
+  #     precision: ${{ inputs.precision }}
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: 1024
+  #     osl: 1024
+  #     max-model-len: 2048
+  #     random-range-ratio: 0.8
+  #     tp-list: '[8]'
+  #     conc-list: '[1]'
 
-  bmk_mi355x:
-    if: ${{ inputs.runner == 'mi355x' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        runner:
-          - 'mi355x-amd_0'
-          - 'mi355x-amd_1'
+  # bmk_mi355x:
+  #   if: ${{ inputs.runner == 'mi355x' }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       runner:
+  #         - 'mi355x-amd_0'
+  #         - 'mi355x-amd_1'
 
-    runs-on: ${{ matrix.runner }}
-    name: '${{ matrix.runner }}'
+  #   runs-on: ${{ matrix.runner }}
+  #   name: '${{ matrix.runner }}'
 
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      runner: ${{ matrix.runner }}
-      image: ${{ inputs.image }}
-      model: ${{ inputs.model }}
-      framework: ${{ inputs.framework }}
-      precision: ${{ inputs.precision }}
-      exp-name: ${{ inputs.exp-name }}
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-      tp-list: '[8]'
-      conc-list: '[1]'
+  #   uses: ./.github/workflows/benchmark-tmpl.yml
+  #   secrets: inherit
+  #   with:
+  #     runner: ${{ matrix.runner }}
+  #     image: ${{ inputs.image }}
+  #     model: ${{ inputs.model }}
+  #     framework: ${{ inputs.framework }}
+  #     precision: ${{ inputs.precision }}
+  #     exp-name: ${{ inputs.exp-name }}
+  #     isl: 1024
+  #     osl: 1024
+  #     max-model-len: 2048
+  #     random-range-ratio: 0.8
+  #     tp-list: '[8]'
+  #     conc-list: '[1]'
