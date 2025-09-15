@@ -149,9 +149,7 @@ jobs:
           - 'b200-nv_1'
           - 'b200-tg_0'
 
-    runs-on: ${{ matrix.runner }}
     name: '${{ matrix.runner }}'
-
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
