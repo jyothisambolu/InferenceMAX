@@ -18,21 +18,31 @@ echo "JOB $SLURM_JOB_ID running on $SLURMD_NODENAME"
 
 set -x
 hf download $MODEL
+pip install datasets pandas
+
+# Create config.yaml
+cat > config.yaml << EOF
+kv-cache-dtype: fp8
+async-scheduling: true
+no-enable-prefix-caching: true
+max-num-batched-tokens: 8192
+max-model-len: 10240
+EOF
+
 SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 PORT=$(( 8888 + $PORT_OFFSET ))
 
 export TORCH_CUDA_ARCH_LIST="9.0"
-vllm serve $MODEL --host 0.0.0.0 --port $PORT \
---trust-remote-code --quantization modelopt --gpu-memory-utilization 0.9 \
---pipeline-parallel-size 1 --tensor-parallel-size $TP --max-num-seqs $CONC --max-num-batched-tokens 8192 --max-model-len $MAX_MODEL_LEN \
---enable-chunked-prefill --async-scheduling --no-enable-prefix-caching \
---compilation-config '{"pass_config": {"enable_fi_allreduce_fusion": true}, "custom_ops": ["+rms_norm"], "level": 3}' \
---disable-log-requests > $SERVER_LOG 2>&1 &
+
+PYTHONNOUSERSITE=1 vllm serve $MODEL --host 0.0.0.0 --port $PORT --config config.yaml \
+ --gpu-memory-utilization 0.9 --tensor-parallel-size $TP --max-num-seqs $CONC  \
+ --disable-log-requests > $SERVER_LOG 2>&1 &
 
 set +x
 while IFS= read -r line; do
     printf '%s\n' "$line"
-    if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
+    # Ignore intel_extension_for_pytorch import errors
+    if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]] && [[ ! "$line" =~ "intel_extension_for_pytorch" ]]; then
 		sleep 5
 		tail -n100 $SERVER_LOG
         echo "JOB $SLURM_JOB_ID ran on NODE $SLURMD_NODENAME"
