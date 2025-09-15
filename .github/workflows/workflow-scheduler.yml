@@ -10,83 +10,16 @@ on:
     - cron: '0 5 * * *'
 
 jobs:
-  _70b-1k1k:
-    uses: ./.github/workflows/70b-tmpl.yml
+  mega-run:
+    uses: ./.github/workflows/workflow-schedule-tmpl.yml
     secrets: inherit
     with:
-      exp-name: '70b_1k1k'
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-
-  dsr1-1k1k:
-    uses: ./.github/workflows/dsr1-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: 'dsr1_1k1k'
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-
-  gptoss-1k1k:
-    uses: ./.github/workflows/gptoss-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: 'gptoss_1k1k'
-      isl: 1024
-      osl: 1024
-      max-model-len: 2048
-      random-range-ratio: 0.8
-
-  _70b-8k1k:
-    uses: ./.github/workflows/70b-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: '70b_8k1k'
-      isl: 8192
-      osl: 1024
-      max-model-len: 9216
-      random-range-ratio: 0.8
-  
-  dsr1-8k1k:
-    uses: ./.github/workflows/dsr1-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: 'dsr1_8k1k'
-      isl: 8192
-      osl: 1024
-      max-model-len: 9216
-      random-range-ratio: 0.8
-
-  _70b-1k8k:
-    uses: ./.github/workflows/70b-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: '70b_1k8k'
-      isl: 1024
-      osl: 8192
-      max-model-len: 9216
-      random-range-ratio: 0.8
-      timeout: 240
-
-  dsr1-1k8k:
-    uses: ./.github/workflows/dsr1-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: 'dsr1_1k8k'
-      isl: 1024
-      osl: 8192
-      max-model-len: 9216
-      random-range-ratio: 0.8
-
-  gptoss-1k8k:
-    uses: ./.github/workflows/gptoss-tmpl.yml
-    secrets: inherit
-    with:
-      exp-name: 'gptoss_1k8k'
-      isl: 1024
-      osl: 8192
-      max-model-len: 9216
-      random-range-ratio: 0.8
+      run_1k1k: true
+      run_8k1k: true
+      run_1k8k: true
+      use_h100: true
+      use_h200: true
+      use_b200: true
+      use_mi300x: true
+      use_mi325x: true
+      use_mi355x: true

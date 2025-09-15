@@ -1,21 +1,13 @@
 #!/usr/bin/env bash
 
-MODEL_CODE="${1%%_*}"
 export HF_HUB_CACHE_MOUNT="/mnt/vast/hf_hub_cache/"
 export PORT_OFFSET=${USER: -1}
 
-# Reset framework if vllm or sglang to use default script
-if [ "$FRAMEWORK" = "vllm" ] || [ "$FRAMEWORK" = "sglang" ]; then
-    FRAMEWORK=""
-fi
+MODEL_CODE="${EXP_NAME%%_*}"
+FRAMEWORK_SUFFIX=$([[ "$FRAMEWORK" == "trt" ]] && printf '_trt' || printf '')
 
 PARTITION="h200"
-# Use framework-specific SQSH file
-if [ "$FRAMEWORK" = "trt" ]; then
-    SQUASH_FILE="/mnt/vast/squash/image_${MODEL_CODE}_h200_trt.sqsh"
-else
-    SQUASH_FILE="/mnt/vast/squash/image_${MODEL_CODE}_h200.sqsh"
-fi
+SQUASH_FILE="/mnt/vast/squash/image_${MODEL_CODE}_h200${FRAMEWORK_SUFFIX}.sqsh"
 
 salloc --partition=$PARTITION --gres=gpu:$TP --exclusive --time=180 --no-shell
 JOB_ID=$(squeue -u $USER -h -o %A | head -n1)
@@ -28,6 +20,6 @@ srun --jobid=$JOB_ID \
 --container-mount-home \
 --container-workdir=/workspace/ \
 --no-container-entrypoint --export=ALL \
-bash benchmarks/${MODEL_CODE}_h200${FRAMEWORK:+_$FRAMEWORK}_slurm.sh
+bash benchmarks/${MODEL_CODE}_${PRECISION}_h200${FRAMEWORK_SUFFIX}_slurm.sh
 
 scancel $JOB_ID
