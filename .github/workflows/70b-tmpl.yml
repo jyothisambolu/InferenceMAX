@@ -18,6 +18,7 @@ on:
       random-range-ratio:
         required: true
         type: string
+
       use_h100:
         type: boolean
         required: true
@@ -140,23 +141,6 @@ jobs:
       random-range-ratio: ${{ inputs.random-range-ratio }}
       tp-list: '[1, 2, 4, 8]'
 
-  bmk-mi300x-fp4:
-    if: ${{ inputs.use_mi300x }}
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      runner: mi300x
-      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
-      model: 'amd/Llama-3.3-70B-Instruct-MXFP4-Preview'
-      framework: 'vllm'
-      precision: 'fp4'
-      exp-name: ${{ inputs.exp-name }}
-      isl: ${{ inputs.isl }}
-      osl: ${{ inputs.osl }}
-      max-model-len: ${{ inputs.max-model-len }}
-      random-range-ratio: ${{ inputs.random-range-ratio }}
-      tp-list: '[1, 2, 4, 8]'
-
   bmk-mi325x-fp8:
     if: ${{ inputs.use_mi325x }}
     uses: ./.github/workflows/benchmark-tmpl.yml
@@ -167,23 +151,6 @@ jobs:
       model: 'amd/Llama-3.3-70B-Instruct-FP8-KV'
       framework: 'vllm'
       precision: 'fp8'
-      exp-name: ${{ inputs.exp-name }}
-      isl: ${{ inputs.isl }}
-      osl: ${{ inputs.osl }}
-      max-model-len: ${{ inputs.max-model-len }}
-      random-range-ratio: ${{ inputs.random-range-ratio }}
-      tp-list: '[1, 2, 4, 8]'
-
-  bmk-mi325x-fp4:
-    if: ${{ inputs.use_mi325x }}
-    uses: ./.github/workflows/benchmark-tmpl.yml
-    secrets: inherit
-    with:
-      runner: mi325x
-      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
-      model: 'amd/Llama-3.3-70B-Instruct-MXFP4-Preview'
-      framework: 'vllm'
-      precision: 'fp4'
       exp-name: ${{ inputs.exp-name }}
       isl: ${{ inputs.isl }}
       osl: ${{ inputs.osl }}
@@ -207,6 +174,40 @@ jobs:
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
       tp-list: '[1, 2]'
+
+  bmk-b200-fp4:
+    if: ${{ inputs.use_b200 }}
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      runner: b200
+      image: 'kedarpotdar147/vllm:05'
+      model: 'nvidia/Llama-3.3-70B-Instruct-FP4'
+      framework: 'vllm'
+      precision: 'fp4'
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      tp-list: '[1, 2]'  
+
+  bmk-b200-trt-fp4:
+    if: ${{ inputs.use_b200 }}
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      runner: b200-trt
+      image: 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2.post1'
+      model: 'nvidia/Llama-3.3-70B-Instruct-FP4'
+      framework: 'trt'
+      precision: 'fp4'
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      tp-list: '[1, 2]'  
 
   bmk-mi355x-fp4:
     if: ${{ inputs.use_mi355x }}
