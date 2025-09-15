@@ -18,7 +18,7 @@ data = {
     'conc': int(bmk_result['max_concurrency']),
     'model': bmk_result['model_id'],
     'framework': framework,
-    'precision': precision if precision else 'fp8',
+    'precision': precision,
     'tput_per_gpu': float(bmk_result['total_token_throughput']) / tp_size
 }
 
