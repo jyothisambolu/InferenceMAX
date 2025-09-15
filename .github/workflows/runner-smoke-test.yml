@@ -137,7 +137,7 @@ jobs:
       - name: Process result
         run: |
           FRAMEWORK=$(
-            elif [[ "${{ env.MODEL }}" == *R1* ]]; then
+            if [[ "${{ env.MODEL }}" == *R1* ]]; then
               printf 'sglang'
             else
               printf 'vllm'
