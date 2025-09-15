@@ -1,4 +1,4 @@
-name: Template - Workflow Schedule
+name: Template - Full Sweep
 
 on:
   workflow_call:

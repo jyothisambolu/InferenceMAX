@@ -1,4 +1,4 @@
-name: Test - Workflow Scheduler
+name: Test - Full Sweep
 
 on:
   workflow_dispatch:
@@ -34,7 +34,7 @@ on:
 
 jobs:
   mega-test-run:
-    uses: ./.github/workflows/workflow-schedule-tmpl.yml
+    uses: ./.github/workflows/full-sweep-tmpl.yml
     secrets: inherit
     with:
       run_1k1k: ${{ inputs.run_1k1k }}
