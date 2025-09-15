@@ -1,4 +1,4 @@
-name: Collect Results
+name: Template - Collect Results
 
 on:
   workflow_call:
