@@ -156,6 +156,7 @@ jobs:
       tp-list: '[8]'
 
   bmk-mi355x-fp4:
+    if: ${{ inputs.use_mi355x }}
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
