@@ -92,19 +92,19 @@ jobs:
     runs-on: ${{ matrix.runner }}
     name: '${{ matrix.runner }}'
     uses: InferenceMAX/InferenceMAX/.github/workflows/benchmark-tmpl.yml@main
-      with:
-        runner: ${{ matrix.runner }}
-        image: ${{ inputs.image }}
-        model: ${{ inputs.model }}
-        framework: ${{ inputs.framework }}
-        precision: ${{ inputs.precision }}
-        exp-name: ${{ inputs.exp-name }}
-        isl: 1024
-        osl: 1024
-        max-model-len: 2048
-        random-range-ratio: 0.8
-        tp-list: '[8]'
-        conc-list: '[1]'
+    with:
+      runner: ${{ matrix.runner }}
+      image: ${{ inputs.image }}
+      model: ${{ inputs.model }}
+      framework: ${{ inputs.framework }}
+      precision: ${{ inputs.precision }}
+      exp-name: ${{ inputs.exp-name }}
+      isl: 1024
+      osl: 1024
+      max-model-len: 2048
+      random-range-ratio: 0.8
+      tp-list: '[8]'
+      conc-list: '[1]'
 
   # bmk_h200:
   #   if: ${{ inputs.runner == 'h200' || inputs.runner == 'h200-trt' }}
