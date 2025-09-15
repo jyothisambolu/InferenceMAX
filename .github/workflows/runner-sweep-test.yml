@@ -90,6 +90,7 @@ jobs:
           - 'h100-cw_1'
     name: '${{ matrix.runner }}'
     uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
     with:
       runner: ${{ matrix.runner }}
       image: ${{ inputs.image }}
