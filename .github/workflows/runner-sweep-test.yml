@@ -97,6 +97,11 @@ jobs:
         with:
           token: ${{ secrets.REPO_PAT }}
           fetch-depth: 0
+
+      - name: Debug
+        run: |
+          ls $GITHUB_WORKSPACE
+
       - uses: ./.github/workflows/benchmark-tmpl.yml
         with:
           runner: ${{ matrix.runner }}
