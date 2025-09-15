@@ -104,7 +104,7 @@ jobs:
           ls -la $GITHUB_WORKSPACE
           ls -la $GITHUB_WORKSPACE/.github/workflows
 
-      - uses: ./.github/workflows/benchmark-tmpl.yml
+      - uses: benchmark-tmpl.yml
         with:
           runner: ${{ matrix.runner }}
           image: ${{ inputs.image }}
