@@ -136,6 +136,13 @@ jobs:
 
       - name: Process result
         run: |
+          FRAMEWORK=$(
+            elif [[ "${{ env.MODEL }}" == *R1* ]]; then
+              printf 'sglang'
+            else
+              printf 'vllm'
+            fi
+          )
           python3 utils/process_result.py ${{ inputs.runner }} $TP $RESULT_FILENAME $FRAMEWORK $PRECISION
 
       - name: Upload result
