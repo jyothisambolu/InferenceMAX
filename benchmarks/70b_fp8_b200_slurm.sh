@@ -17,35 +17,39 @@
 echo "JOB $SLURM_JOB_ID running on $SLURMD_NODENAME"
 
 hf download $MODEL
+
+
+pip install datasets pandas
+
+
+cat > config.yaml << EOF
+kv-cache-dtype: fp8
+compilation-config: '{"pass_config":{"enable_fi_allreduce_fusion":true,"enable_attn_fusion":true,"enable_noop":true},"custom_ops":["+quant_fp8","+rms_norm"],"cudagraph_mode":"FULL_DECODE_ONLY","splitting_ops":[]}'
+async-scheduling: true
+no-enable-prefix-caching: true
+max-num-batched-tokens: 8192
+max-model-len: 10240
+EOF
+
 SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 PORT=$(( 8888 + $PORT_OFFSET ))
 
-pip install flashinfer-python==0.3.0
-pip install --upgrade nvidia-nccl-cu12==2.26.2.post1
 
 export TORCH_CUDA_ARCH_LIST="10.0"
 export VLLM_FLASHINFER_ALLREDUCE_FUSION_THRESHOLDS_MB='{"2":32,"4":32,"8":8}'
 
-FUSION_FLAG='{'\
-'"pass_config": {"enable_fi_allreduce_fusion": true, "enable_attn_fusion": true, "enable_noop": true},'\
-'"custom_ops": ["+quant_fp8", "+rms_norm"],'\
-'"cudagraph_mode": "FULL_DECODE_ONLY",'\
-'"splitting_ops": []'\
-'}'
-
 set -x
-vllm serve $MODEL --host 0.0.0.0 --port $PORT \
---trust-remote-code --kv-cache-dtype fp8 --gpu-memory-utilization 0.9 \
---pipeline-parallel-size 1 --tensor-parallel-size $TP \
---max-num-batched-tokens 8192 --max-num-seqs 512 --max-model-len $MAX_MODEL_LEN \
---enable-chunked-prefill --async-scheduling --no-enable-prefix-caching \
---compilation-config "$FUSION_FLAG" \
---disable-log-requests > $SERVER_LOG 2>&1 &
+
+
+PYTHONNOUSERSITE=1 vllm serve $MODEL --host 0.0.0.0 --port $PORT --config config.yaml \
+ --gpu-memory-utilization 0.9 --tensor-parallel-size $TP --max-num-seqs 512  \
+ --disable-log-requests > $SERVER_LOG 2>&1 &
 
 set +x
 while IFS= read -r line; do
     printf '%s\n' "$line"
-    if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]]; then
+    # Ignore intel_extension_for_pytorch import errors
+    if [[ "$line" =~ [Ee][Rr][Rr][Oo][Rr] ]] && [[ ! "$line" =~ "intel_extension_for_pytorch" ]]; then
 		sleep 5
 		tail -n100 $SERVER_LOG
         echo "JOB $SLURM_JOB_ID ran on NODE $SLURMD_NODENAME"
