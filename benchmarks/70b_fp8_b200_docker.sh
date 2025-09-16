@@ -9,8 +9,6 @@
 # CONC
 # MAX_MODEL_LEN
 
-pip install -q datasets pandas
-
 FUSION_FLAG='{'\
 '"pass_config": {"enable_fi_allreduce_fusion": true, "enable_attn_fusion": true, "enable_noop": true},'\
 '"custom_ops": ["+quant_fp8", "+rms_norm"],'\
@@ -19,7 +17,7 @@ FUSION_FLAG='{'\
 '}'
 cat > config.yaml <<-EOF
 kv-cache-dtype: fp8
-compilation-config: \'$FUSION_FLAG\'
+compilation-config: '$FUSION_FLAG'
 async-scheduling: true
 no-enable-prefix-caching: true
 max-num-batched-tokens: 8192

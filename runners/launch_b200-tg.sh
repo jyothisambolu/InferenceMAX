@@ -34,17 +34,18 @@ set -x
 docker run --rm --network $network_name --name $client_name \
 -v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ \
 -e HF_TOKEN -e PYTHONPYCACHEPREFIX=/tmp/pycache/ \
---entrypoint=python3 \
+--entrypoint=/bin/bash \
 $IMAGE \
-bench_serving/benchmark_serving.py \
+-lc "pip install -q datasets pandas && \
+python3 bench_serving/benchmark_serving.py \
 --model $MODEL  --backend vllm --base-url http://$server_name:$PORT \
 --dataset-name random \
 --random-input-len $ISL --random-output-len $OSL --random-range-ratio $RANDOM_RANGE_RATIO \
 --num-prompts $(( $CONC * 10 )) \
 --max-concurrency $CONC \
 --request-rate inf --ignore-eos \
---save-result --percentile-metrics "ttft,tpot,itl,e2el" \
---result-dir /workspace/ --result-filename $RESULT_FILENAME.json
+--save-result --percentile-metrics 'ttft,tpot,itl,e2el' \
+--result-dir /workspace/ --result-filename $RESULT_FILENAME.json"
 
 while [ -n "$(docker ps -aq)" ]; do
     docker stop $server_name
