@@ -7,7 +7,7 @@ MODEL_CODE="${EXP_NAME%%_*}"
 FRAMEWORK_SUFFIX=$([[ "$FRAMEWORK" == "trt" ]] && printf '_trt' || printf '')
 
 PARTITION="dgx-h200"
-SQUASH_FILE="/raid/squash/$(echo "$IMAGE" | sed 's/[\/:@]/_/g').sqsh"
+SQUASH_FILE="/raid/squash/$(echo "$IMAGE" | sed 's/[\/:@#]/_/g').sqsh"
 
 salloc --partition=$PARTITION --gres=gpu:$TP --exclusive --time=180 --no-shell
 JOB_ID=$(squeue -u $USER -h -o %A | head -n1)
