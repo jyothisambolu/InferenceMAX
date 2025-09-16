@@ -96,7 +96,7 @@ jobs:
     secrets: inherit
     with:
       runner: b200
-      image: 'kedarpotdar147/vllm:05'
+      image: 'vllm/vllm-openai:v0.10.2'
       model: 'nvidia/Llama-3.3-70B-Instruct-FP8'
       framework: 'vllm'
       precision: 'fp8'
