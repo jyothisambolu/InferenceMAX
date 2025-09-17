@@ -282,6 +282,7 @@ jobs:
 
   collect-test-results:
     needs: [ bmk_h100, bmk_h200, bmk_b200, bmk_b200-trt, bmk_mi300x, bmk_mi325x, bmk_mi355x ]
+    if: ${{ always() && !canceled() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
     with:
