@@ -144,8 +144,8 @@ jobs:
     secrets: inherit
     with:
       runner: b200-trt
-      image: 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2.post1'
-      model: 'nvidia/DeepSeek-R1-0528-FP4'
+      image: 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2.post2'
+      model: 'nvidia/DeepSeek-R1-0528-FP4-v2'
       framework: 'trt'
       precision: fp4
       exp-name: ${{ inputs.exp-name }}
@@ -154,6 +154,7 @@ jobs:
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
       tp-list: '[8]'
+      conc-list: '[4, 8, 16, 32, 64, 128]'  # Custom concurrency values for this job
 
   bmk-mi355x-fp4:
     if: ${{ inputs.use_mi355x }}
