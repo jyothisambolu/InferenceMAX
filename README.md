@@ -51,9 +51,12 @@ Please checkout the scripts in `benchmarks/` for the most up-to-date configs.
 
 ## Sponsors
 
+- SemiAnalysis
 - NVIDIA
+- AMD
 - Crusoe
 - Nebius
 - CoreWeave
-- AMD
 - TogetherAI
+- TensorWave
+- Oracle
