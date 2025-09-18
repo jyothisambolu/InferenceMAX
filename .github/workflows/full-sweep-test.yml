@@ -53,6 +53,7 @@ jobs:
 
   calc-success-rate:
     needs: mega-test-run
+    if: ${{ always() && !cancelled() }}
     runs-on: ubuntu-latest
 
     env:
