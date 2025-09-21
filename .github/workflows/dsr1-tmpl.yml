@@ -101,7 +101,7 @@ jobs:
     secrets: inherit
     with:
       runner: mi300x
-      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_sgl-dev-v0.5.2rc2-mi30x_rc1'
+      image: 'rocm/7.0:rocm7.0_ubuntu_22.04_sgl-dev-v0.5.2-rocm7.0-mi30x-20250915'
       model: 'deepseek-ai/DeepSeek-R1-0528'
       framework: 'sglang'
       precision: 'fp8'
@@ -118,7 +118,7 @@ jobs:
     secrets: inherit
     with:
       runner: mi325x
-      image: 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_sgl-dev-v0.5.2rc2-mi30x_rc1'
+      image: 'rocm/7.0:rocm7.0_ubuntu_22.04_sgl-dev-v0.5.2-rocm7.0-mi30x-20250915'
       model: 'deepseek-ai/DeepSeek-R1-0528'
       framework: 'sglang'
       precision: 'fp8'
