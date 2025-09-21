@@ -33,6 +33,8 @@ on:
           - 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2.post2'
           - 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_vllm_0.10.1_instinct_rc1'
           - 'rocm/7.0-preview:rocm7.0_preview_ubuntu_22.04_sgl-dev-v0.5.2rc2-mi30x_rc1'
+          - 'rocm/7.0:rocm7.0_ubuntu_22.04_sgl-dev-v0.5.2-rocm7.0-mi35x-20250915'
+          - 'rocm/7.0:rocm7.0_ubuntu_22.04_vllm_0.10.1_instinct_20250915'
           - 'rocm/vllm-dev:open-mi300-08052025'
           - 'rocm/vllm-dev:open-mi355-08052025'
           - 'vllm/vllm-openai:v0.10.2'
@@ -95,6 +97,7 @@ jobs:
           - 'h100-cr_1'
           - 'h100-cw_0'
           - 'h100-cw_1'
+
     name: '${{ matrix.runner }}'
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
@@ -154,6 +157,8 @@ jobs:
         runner:
           - 'b200-nv_0'
           - 'b200-nv_1'
+          - 'b200-nvd_0'
+          - 'b200-nvd_1'
           - 'b200-tg_0'
 
     name: '${{ matrix.runner }}'
@@ -266,6 +271,8 @@ jobs:
         runner:
           - 'mi355x-amd_0'
           - 'mi355x-amd_1'
+          - 'mi355x-amd_2'
+          - 'mi355x-amd_3'
 
     name: '${{ matrix.runner }}'
     uses: ./.github/workflows/benchmark-tmpl.yml
