@@ -8,8 +8,12 @@ n_concs = 5  # [4, 8, 16, 32, 64]
 # H200: (70b-tp: [1, 2, 4, 8], dsr1-tp: [8], gptoss-tp: [1, 2, 4, 8]) x [vllm/sglang, trt] + 70b-tp x trt extra conc: [128]
 h200_runs = (4 + 1 + 4) * 2 * n_iosl * n_concs + 4 * n_iosl * 1
 
-# B200: ((70b-tp: [1, 8], dsr1-tp: [8]) x [fp4, fp8], gptoss-tp: [1, 8]) x [vllm/sglang, trt] + 7b-tp x [fp4, fp8] x trt extra conc: [128, 256]
-b200_runs = ((2 + 1) * 2 + 2) * 2 * n_iosl * n_concs + 2 * 2 * n_iosl * 2
+# B200:
+# 70b = [tp1, tp8] x [fp4, fp8] x n_concs
+# 70b-trt = [tp1, tp8] x [fp4, fp8] x conc:[4, 8, 16, 32, 64, 128, 256]
+# dsr1 = [tp8] x (fp8: n_concs + fp4: [4, 8, 16, 32, 64, 128, 256])
+# dsr1-trt = fp8: ([tp8] x n_concs) + fp4: ([tp4, tp8] x conc:[4, 8, 16, 32, 64, 128, 256])
+b200_runs = (2 * 2 * n_concs + 2 * 2 * 7 + 1 * (n_concs + 7) + (1 * n_concs + 2 * 7)) * n_iosl
 
 total_runs = {
     'h100': (3 + 4) * n_iosl * n_concs,              # 70b-tp: [2, 4, 8], gptoss-tp: [1, 2, 4, 8]
