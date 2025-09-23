@@ -61,6 +61,23 @@ jobs:
       random-range-ratio: ${{ inputs.random-range-ratio }}
       tp-list: '[8]'
 
+  bmk-h200-trt-fp8:
+    if: ${{ inputs.use_h200 }}
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      runner: h200-trt
+      image: 'nvcr.io#nvidia/tensorrt-llm/release:1.1.0rc2.post2'
+      model: 'deepseek-ai/DeepSeek-R1-0528'
+      framework: 'trt'
+      precision: 'fp8'
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      tp-list: '[8]'
+
   bmk-b200-fp8:
     if: ${{ inputs.use_b200 }}
     uses: ./.github/workflows/benchmark-tmpl.yml
