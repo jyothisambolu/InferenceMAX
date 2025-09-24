@@ -57,23 +57,12 @@ jobs:
     steps:
       - name: Resource cleanup
         run: |
-          if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-            echo "[Docker] Cleaning up resources ..."
-            docker ps -aq | xargs -r docker rm -f
-            docker network prune -f
-            while [ -n "$(docker ps -aq)" ]; do
-              docker ps -a
-              sleep 5
-            done
-          fi
-          if command -v squeue >/dev/null 2>&1; then
-            echo "[Slurm] Cleaning up resources ..."
-            scancel -u $USER
-            while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
-              squeue -u $USER
-              sleep 5
-            done
-          fi
+          echo "[Slurm] Cleaning up resources ..."
+          scancel -u $USER
+          while [ -n "$(squeue -u $USER --noheader --format='%i')" ]; do
+            squeue -u $USER
+            sleep 5
+          done
 
       - uses: actions/checkout@v3
         with:
@@ -83,7 +72,7 @@ jobs:
       - name: Launch multi-node job script
         env:
           RUNNER_NAME: ${{ runner.name }}
-          RESULT_FILENAME: ${{ env.EXP_NAME }}_${{ env.PRECISION }}_${{ env.FRAMEWORK }}_${{ runner.name }}
+          RESULT_FILENAME: ${{ env.EXP_NAME }}_${{ env.PRECISION }}_${{ env.FRAMEWORK }}_mtp-${{ env.MTP_MODE }}_${{ runner.name }}
         run: |
           bash ./runners/launch_${RUNNER_NAME%%_*}.sh
           # Check if at least one result file was created
@@ -104,7 +93,7 @@ jobs:
               # Extract GPU count from filename for tp_size calculation
               gpus=$(echo "$result_file" | sed "s/.*_gpus\([0-9]*\)\.json/\1/")
               if [ -n "$gpus" ]; then
-                python3 utils/process_result.py ${{ inputs.runner }} $gpus ${result_file%.json} $FRAMEWORK $PRECISION
+                python3 utils/process_result.py ${{ inputs.runner }} $gpus ${result_file%.json} $FRAMEWORK $PRECISION $MTP_MODE
               fi
             fi
           done
