@@ -61,7 +61,11 @@ bench_serving/benchmark_serving.py \
 --save-result --percentile-metrics="ttft,tpot,itl,e2el" \
 --result-dir=/workspace/ --result-filename=$RESULT_FILENAME.json
 
-rm -f gpucore.*  # Remove the mysterious file dump
+if ls gpucore.* 1> /dev/null 2>&1; then
+  echo "gpucore files exist. not good"
+  rm -f gpucore.*
+fi
+
 
 while [ -n "$(docker ps -aq)" ]; do
     docker stop $server_name
