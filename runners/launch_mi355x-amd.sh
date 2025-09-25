@@ -30,6 +30,7 @@ docker run --rm -d --ipc=host --shm-size=16g --network=$network_name --name=$ser
 -v $HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
 -v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ \
 -e HF_TOKEN -e HF_HUB_CACHE -e MODEL -e TP -e CONC -e MAX_MODEL_LEN -e PORT=$PORT \
+-e ISL -e OSL \
 --entrypoint=/bin/bash \
 $IMAGE \
 benchmarks/"${EXP_NAME%%_*}_${PRECISION}_mi355x_docker.sh"
@@ -59,6 +60,8 @@ bench_serving/benchmark_serving.py \
 --request-rate=inf --ignore-eos \
 --save-result --percentile-metrics="ttft,tpot,itl,e2el" \
 --result-dir=/workspace/ --result-filename=$RESULT_FILENAME.json
+
+rm -f gpucore.*  # Remove the mysterious file dump
 
 while [ -n "$(docker ps -aq)" ]; do
     docker stop $server_name
