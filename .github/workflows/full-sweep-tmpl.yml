@@ -256,7 +256,7 @@ jobs:
 
   collect-gptoss-1k8k-results:
     needs: gptoss-1k8k
-    if: ${{ inputs.run_1k8k && always()) }}
+    if: ${{ inputs.run_1k8k && always() }}
     uses: ./.github/workflows/collect-results.yml
     secrets: inherit
     with:
