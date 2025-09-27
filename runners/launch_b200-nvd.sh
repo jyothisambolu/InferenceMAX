@@ -11,6 +11,8 @@ CACHE_DIR="/raid/flashinfer_cache/${MODEL_NAME}_${PRECISION}${FRAMEWORK_SUFFIX}_
 server_name="bmk-server"
 client_name="bmk-client"
 
+nvidia-smi
+
 set -x
 docker run --rm -d --network host --name $server_name \
 --runtime nvidia --gpus all --ipc host --privileged --shm-size=16g --ulimit memlock=-1 --ulimit stack=67108864 \
@@ -79,3 +81,5 @@ while [ -n "$(docker ps -aq)" ]; do
     docker stop $server_name
     sleep 5
 done
+
+nvidia-smi
