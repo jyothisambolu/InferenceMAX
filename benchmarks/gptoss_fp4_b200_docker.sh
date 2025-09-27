@@ -14,6 +14,9 @@
 # RESULT_FILENAME
 # PORT_OFFSET
 
+nvidia-smi
+
+
 sed -i '102,108d' /usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py
 
 cat > config.yaml << EOF

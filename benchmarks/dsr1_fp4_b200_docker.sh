@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+nvidia-smi
+
+
 sed -i '102,108d' /usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py
 
 # Default: recv every ~10 requests; if CONC ≥ 16, relax to ~30 requests between scheduler recv polls.

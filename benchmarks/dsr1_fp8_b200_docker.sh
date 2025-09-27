@@ -9,6 +9,9 @@
 # CONC
 # MAX_MODEL_LEN
 
+nvidia-smi
+
+
 sed -i '102,108d' /usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py
 
 export SGL_ENABLE_JIT_DEEPGEMM=false
