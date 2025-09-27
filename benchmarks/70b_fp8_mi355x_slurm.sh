@@ -18,8 +18,6 @@ SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 # Reference
 # https://rocm.docs.amd.com/en/docs-7.0-rc1/preview/benchmark-docker/inference-vllm-llama-3.3-70b-fp8.html#run-the-inference-benchmark
 
-export VLLM_ROCM_USE_AITER=1
-export VLLM_ROCM_USE_AITER_RMSNORM=1
 export VLLM_ROCM_QUICK_REDUCE_QUANTIZATION=INT4
 
 if [[ "$ISL" == "1024" && "$OSL" == "1024" ]]; then
@@ -27,7 +25,9 @@ if [[ "$ISL" == "1024" && "$OSL" == "1024" ]]; then
 elif [[ "$ISL" == "1024" && "$OSL" == "8192" ]]; then
     export VLLM_ROCM_USE_AITER_MHA=0
 elif [[ "$ISL" == "8192" && "$OSL" == "1024" ]]; then
-    export VLLM_ROCM_USE_AITER_MHA=1
+    if [[ "$CONC" -gt "16" ]]; then
+        export VLLM_ROCM_USE_AITER_MHA=1
+    fi
 fi
 
 set -x
