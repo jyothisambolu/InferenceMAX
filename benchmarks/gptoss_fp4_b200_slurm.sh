@@ -23,8 +23,8 @@ pip install datasets pandas
 
 nvidia-smi
 
-sed -i '102,108d' /usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py
-
+# fixes race condition when downloading cubins
+pip install --upgrade --force-reinstall flashinfer-python==0.3.1.post1
 
 # Calculate max-model-len based on ISL and OSL
 if [ "$ISL" = "1024" ] && [ "$OSL" = "1024" ]; then
