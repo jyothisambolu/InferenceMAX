@@ -18,6 +18,8 @@ echo "JOB $SLURM_JOB_ID running on $SLURMD_NODENAME"
 
 hf download $MODEL
 
+SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
+PORT=$(( 8888 + $PORT_OFFSET ))
 
 pip install datasets pandas
 
