@@ -1,4 +1,4 @@
-name: Full Sweep Scheduler
+name: Full Sweep Scheduler - 8k1k
 
 concurrency:
   group: benchmark-lock
