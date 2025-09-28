@@ -7,15 +7,15 @@ concurrency:
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 3 * * *'
 
 jobs:
   mega-run:
     uses: ./.github/workflows/full-sweep-tmpl.yml
     secrets: inherit
     with:
-      run_1k1k: true
-      run_8k1k: true
+      run_1k1k: false
+      run_8k1k: false
       run_1k8k: true
       use_h100: true
       use_h200: true
