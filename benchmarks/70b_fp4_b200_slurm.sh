@@ -45,10 +45,9 @@ EOF
 
 export TORCH_CUDA_ARCH_LIST="10.0"
 export VLLM_FLASHINFER_ALLREDUCE_FUSION_THRESHOLDS_MB='{"2":32,"4":32,"8":8}'
-export PYTHONNOUSERSITE=1
 
 set -x
-vllm serve $MODEL --host 0.0.0.0 --port $PORT --config config.yaml \
+PYTHONNOUSERSITE=1 vllm serve $MODEL --host 0.0.0.0 --port $PORT --config config.yaml \
 --gpu-memory-utilization 0.9 --tensor-parallel-size $TP --max-num-seqs 512 \
 --disable-log-requests > $SERVER_LOG 2>&1 &
 
