@@ -23,7 +23,7 @@ pip install datasets pandas
 
 nvidia-smi
 
-sed -i '102,108d' /usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py
+pip install --upgrade --force-reinstall flashinfer==0.3.1.post1
 
 
 FUSION_FLAG='{'\
