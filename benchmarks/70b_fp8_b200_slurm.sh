@@ -23,7 +23,7 @@ pip install datasets pandas
 
 nvidia-smi
 
-pip install --upgrade --force-reinstall flashinfer==0.3.1.post1
+pip install --upgrade --force-reinstall flashinfer-python==0.3.1.post1
 
 
 FUSION_FLAG='{'\
