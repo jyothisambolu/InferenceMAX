@@ -8,7 +8,7 @@ SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 set -x
 PORT=$(( 8888 + $PORT_OFFSET ))
 
-sed -i '102,108d' /usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py
+pip install --upgrade --force-reinstall flashinfer-python==0.3.1.post1
 
 export SGL_ENABLE_JIT_DEEPGEMM=false
 export SGLANG_ENABLE_FLASHINFER_GEMM=true
