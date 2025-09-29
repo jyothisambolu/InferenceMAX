@@ -1,7 +1,7 @@
 name: Full Sweep Scheduler - 1k1k
 
 concurrency:
-  group: benchmark-lock
+  group: benchmark-lock-1k1k
   cancel-in-progress: true
 
 on:
