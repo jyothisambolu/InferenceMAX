@@ -25,7 +25,7 @@ pip install datasets pandas
 
 nvidia-smi
 
-pip install --upgrade --force-reinstall flashinfer-python==0.3.1.post1
+pip install --upgrade --force-reinstall flashinfer-python==0.3.0post1
 
 # Calculate max-model-len based on ISL and OSL
 if [ "$ISL" = "1024" ] && [ "$OSL" = "1024" ]; then

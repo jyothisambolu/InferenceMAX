@@ -23,8 +23,7 @@ pip install datasets pandas
 
 nvidia-smi
 
-# pip install --upgrade --force-reinstall flashinfer-python==0.3.1.post1
-
+pip install --upgrade --force-reinstall flashinfer-python==0.3.0post1
 
 FUSION_FLAG='{'\
 '"pass_config": {"enable_fi_allreduce_fusion": true, "enable_attn_fusion": true, "enable_noop": true},'\

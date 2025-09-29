@@ -8,7 +8,7 @@ SERVER_LOG=$(mktemp /tmp/server-XXXXXX.log)
 set -x
 PORT=$(( 8888 + $PORT_OFFSET ))
 
-pip install --upgrade --force-reinstall flashinfer-python==0.3.1.post1
+pip install --upgrade --force-reinstall flashinfer-python==0.3.0post1
 
 export SGL_ENABLE_JIT_DEEPGEMM=false
 export SGLANG_ENABLE_FLASHINFER_GEMM=true
