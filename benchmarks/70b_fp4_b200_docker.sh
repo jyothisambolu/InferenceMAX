@@ -16,7 +16,7 @@
 
 nvidia-smi
 
-pip install --upgrade --force-reinstall flashinfer==0.3.1.post1
+sed -i '102,108d' /usr/local/lib/python3.12/dist-packages/flashinfer/jit/cubin_loader.py
 
 # Calculate max-model-len based on ISL and OSL
 if [ "$ISL" = "1024" ] && [ "$OSL" = "1024" ]; then
