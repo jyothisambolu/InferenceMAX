@@ -35,6 +35,9 @@ on:
         type: boolean
         required: false
         default: false
+      use_gaudi3:
+        type: boolean
+        required: true
 
 jobs:
   _70b-1k1k:
@@ -53,6 +56,7 @@ jobs:
       use_mi300x: ${{ inputs.use_mi300x }}
       use_mi325x: ${{ inputs.use_mi325x }}
       use_mi355x: ${{ inputs.use_mi355x }}
+      use_gaudi3: ${{ inputs.use_gaudi3 }}
 
   collect-70b-1k1k-results:
     needs: _70b-1k1k
@@ -103,6 +107,7 @@ jobs:
       use_mi300x: ${{ inputs.use_mi300x }}
       use_mi325x: ${{ inputs.use_mi325x }}
       use_mi355x: ${{ inputs.use_mi355x }}
+      use_gaudi3: ${{ inputs.use_gaudi3 }}
 
   collect-gptoss-1k1k-results:
     needs: gptoss-1k1k
@@ -128,6 +133,7 @@ jobs:
       use_mi300x: ${{ inputs.use_mi300x }}
       use_mi325x: ${{ inputs.use_mi325x }}
       use_mi355x: ${{ inputs.use_mi355x }}
+      use_gaudi3: ${{ inputs.use_gaudi3 }}
 
   collect-70b-8k1k-results:
     needs: _70b-8k1k
@@ -178,6 +184,7 @@ jobs:
       use_mi300x: ${{ inputs.use_mi300x }}
       use_mi325x: ${{ inputs.use_mi325x }}
       use_mi355x: ${{ inputs.use_mi355x }}
+      use_gaudi3: ${{ inputs.use_gaudi3 }}
 
   collect-gptoss-8k1k-results:
     needs: gptoss-8k1k
@@ -203,6 +210,7 @@ jobs:
       use_mi300x: ${{ inputs.use_mi300x }}
       use_mi325x: ${{ inputs.use_mi325x }}
       use_mi355x: ${{ inputs.use_mi355x }}
+      use_gaudi3: ${{ inputs.use_gaudi3 }}
 
   collect-70b-1k8k-results:
     needs: _70b-1k8k
@@ -253,6 +261,7 @@ jobs:
       use_mi300x: ${{ inputs.use_mi300x }}
       use_mi325x: ${{ inputs.use_mi325x }}
       use_mi355x: ${{ inputs.use_mi355x }}
+      use_gaudi3: ${{ inputs.use_gaudi3 }}
 
   collect-gptoss-1k8k-results:
     needs: gptoss-1k8k
