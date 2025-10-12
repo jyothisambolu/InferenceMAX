@@ -37,6 +37,9 @@ on:
       use_mi355x:
         type: boolean
         required: true
+      use_gaudi3:
+        type: boolean
+        required: true
 
 jobs:
   bmk-h100-fp8:
@@ -176,6 +179,42 @@ jobs:
       max-model-len: ${{ inputs.max-model-len }}
       random-range-ratio: ${{ inputs.random-range-ratio }}
       tp-list: '[1, 2, 4, 8]'
+
+  # ========== GAUDI3 JOBS ==========
+  bmk-gaudi3-fp8:
+    if: ${{ inputs.use_gaudi3 }}
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      runner: gaudi25
+      image: 'vault.habana.ai/gaudi-docker/1.22.0/ubuntu24.04/habanalabs/vllm-installer-2.7.1:latest'
+      model: 'meta-llama/Llama-3.3-70B-Instruct'
+      framework: 'vllm'
+      precision: 'fp8'
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      tp-list: '[1, 2, 4, 8]'
+
+  bmk-gaudi3-bf16:
+    if: ${{ inputs.use_gaudi3 }}
+    uses: ./.github/workflows/benchmark-tmpl.yml
+    secrets: inherit
+    with:
+      runner: gaudi25
+      image: 'vault.habana.ai/gaudi-docker/1.22.0/ubuntu24.04/habanalabs/vllm-installer-2.7.1:latest'
+      model: 'meta-llama/Llama-3.3-70B-Instruct'
+      framework: 'vllm'
+      precision: 'bf16'
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      tp-list: '[2, 4, 8]'  # BF16 needs more memory, may not fit on TP=1
+  # =================================
 
   bmk-b200-fp4:
     if: ${{ inputs.use_b200 }}
