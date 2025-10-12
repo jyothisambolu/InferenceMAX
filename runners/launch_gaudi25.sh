@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+#HF_HUB_CACHE_MOUNT="/home/ubuntu/hf_hub_cache/"
 HF_HUB_CACHE_MOUNT="/home/ubuntu/hf_hub_cache/"
 PORT=8888
 
@@ -8,7 +9,7 @@ client_name="bmk-client"
 
 set -x
 docker run --rm -d --network=host --name=$server_name \
---runtime=habana --privileged --ipc=host --shm-size=16g --ulimit memlock=-1 --ulimit stack=67108864 \
+--runtime=habana --cap-add=sys_nice -v /software/data/pytorch/huggingface/hub:/root/.cache/huggingface/hub --privileged --ipc=host --shm-size=16g \
 -v $HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
 -v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ \
 -e HF_TOKEN -e HF_HUB_CACHE -e MODEL -e TP -e CONC -e MAX_MODEL_LEN -e ISL -e OSL -e PORT=$PORT \
