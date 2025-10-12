@@ -1,0 +1,43 @@
+name: Test - Gaudi3 70B
+
+concurrency:
+  group: benchmark-lock
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_1k1k:
+        type: boolean
+        required: false
+        default: true
+        description: 'Run 1K input / 1K output test'
+      run_8k1k:
+        type: boolean
+        required: false
+        default: false
+        description: 'Run 8K input / 1K output test'
+      run_1k8k:
+        type: boolean
+        required: false
+        default: false
+        description: 'Run 1K input / 8K output test'
+
+jobs:
+  gaudi3-70b-test:
+    uses: ./.github/workflows/full-sweep-tmpl.yml
+    secrets: inherit
+    with:
+      run_1k1k: ${{ inputs.run_1k1k }}
+      run_8k1k: ${{ inputs.run_8k1k }}
+      run_1k8k: ${{ inputs.run_1k8k }}
+      # Enable only Gaudi3
+      use_gaudi3: true
+      # Disable all other GPUs
+      use_h100: false
+      use_h200: false
+      use_b200: false
+      use_mi300x: false
+      use_mi325x: false
+      use_mi355x: false
+      use_gb200: false
