@@ -3,6 +3,10 @@ name: Test - Gaudi3 70B Only
 on:
   workflow_dispatch:
 
+permissions:
+  actions: write
+  contents: read
+
 jobs:
   gaudi3-70b-test:
     uses: ./.github/workflows/70b-tmpl.yml
