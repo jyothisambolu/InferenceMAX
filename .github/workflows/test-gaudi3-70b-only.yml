@@ -1,0 +1,22 @@
+name: Test - Gaudi3 70B Only
+
+on:
+  workflow_dispatch:
+
+jobs:
+  gaudi3-70b-test:
+    uses: ./.github/workflows/70b-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: 'gaudi3-test-70b'
+      isl: 1024
+      osl: 1024
+      max-model-len: 2048
+      random-range-ratio: 0.8
+      use_gaudi3: true
+      use_h100: false
+      use_h200: false
+      use_b200: false
+      use_mi300x: false
+      use_mi325x: false
+      use_mi355x: false
