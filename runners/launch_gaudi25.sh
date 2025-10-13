@@ -11,12 +11,12 @@ set -x
 docker run --rm -d --network=host --name=$server_name \
 --runtime=habana --cap-add=sys_nice -v /software/data/pytorch/huggingface/hub:/root/.cache/huggingface/hub --privileged --ipc=host --shm-size=16g \
 -v $HF_HUB_CACHE_MOUNT:$HF_HUB_CACHE \
--v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ \
+-v $GITHUB_WORKSPACE:/work/ -w /work/ \
 -e HF_TOKEN -e HF_HUB_CACHE -e MODEL -e TP -e CONC -e MAX_MODEL_LEN -e ISL -e OSL -e PORT=$PORT \
 -e HABANA_VISIBLE_DEVICES=all \
 --entrypoint=/bin/bash \
 $IMAGE \
-benchmarks/"${EXP_NAME%%_*}_${PRECISION}_gaudi25_docker.sh"
+/work/benchmarks/"${EXP_NAME%%_*}_${PRECISION}_gaudi25_docker.sh"
 
 set +x
 while IFS= read -r line; do
@@ -35,7 +35,7 @@ git clone https://github.com/kimbochen/bench_serving.git
 
 set -x
 docker run --rm --network=host --name=$client_name \
--v $GITHUB_WORKSPACE:/workspace/ -w /workspace/ \
+-v $GITHUB_WORKSPACE:/work/ -w /work/ \
 -e HF_TOKEN -e PYTHONPYCACHEPREFIX=/tmp/pycache/ \
 --entrypoint=/bin/bash \
 $IMAGE \
@@ -49,7 +49,7 @@ python3 bench_serving/benchmark_serving.py \
 --num-prompts=$(( $CONC * 10 )) --max-concurrency=$CONC \
 --request-rate=inf --ignore-eos \
 --save-result --percentile-metrics='ttft,tpot,itl,e2el' \
---result-dir=/workspace/ \
+--result-dir=/work/ \
 --result-filename=$RESULT_FILENAME.json"
 
 docker stop $server_name
