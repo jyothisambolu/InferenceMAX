@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InferenceMAX Dashboard - Gaudi3 Benchmarks</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .filters {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        select, input {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 1em;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        canvas {
+            max-height: 400px;
+        }
+
+        .data-table {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            overflow-x: auto;
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #333;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.5em;
+        }
+
+        .refresh-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .last-updated {
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 InferenceMAX Dashboard</h1>
+        <p class="subtitle">Real-time Gaudi3 70B Benchmark Results</p>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Hardware</label>
+                <select id="hwFilter">
+                    <option value="all">All Hardware</option>
+                    <option value="gaudi25">Gaudi3 (gaudi25)</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Precision</label>
+                <select id="precisionFilter">
+                    <option value="all">All Precision</option>
+                    <option value="fp8">FP8</option>
+                    <option value="bf16">BF16</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Tensor Parallel</label>
+                <select id="tpFilter">
+                    <option value="all">All TP</option>
+                    <option value="1">TP=1</option>
+                    <option value="2">TP=2</option>
+                    <option value="4">TP=4</option>
+                    <option value="8">TP=8</option>
+                </select>
+            </div>
+            <button class="refresh-btn" onclick="loadData()">🔄 Refresh Data</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Peak Throughput</div>
+                <div class="stat-value" id="peakThroughput">-</div>
+                <div class="stat-label">tokens/sec/GPU</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Best Latency (TTFT)</div>
+                <div class="stat-value" id="bestLatency">-</div>
+                <div class="stat-label">seconds</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Configurations</div>
+                <div class="stat-value" id="totalConfigs">-</div>
+                <div class="stat-label">tested</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Best Interactivity</div>
+                <div class="stat-value" id="bestInteractivity">-</div>
+                <div class="stat-label">tokens/sec/user</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">📈 Throughput vs Latency (Pareto Frontier)</h2>
+            <canvas id="paretoChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">⚡ Performance by Tensor Parallelism</h2>
+            <canvas id="tpChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h2 class="chart-title">🎯 Throughput by Concurrency</h2>
+            <canvas id="concChart"></canvas>
+        </div>
+
+        <div class="data-table">
+            <h2 class="chart-title">📊 Detailed Results</h2>
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Hardware</th>
+                        <th>TP</th>
+                        <th>Concurrency</th>
+                        <th>Precision</th>
+                        <th>Throughput/GPU</th>
+                        <th>TTFT (p99)</th>
+                        <th>Interactivity</th>
+                        <th>E2E Latency</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                    <tr><td colspan="8" class="loading">Loading data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="last-updated">Last updated: <span id="lastUpdated">-</span></p>
+    </div>
+
+    <script>
+        let allResults = [];
+        let charts = {};
+
+        // Load data from results.json
+        async function loadData() {
+            try {
+                const response = await fetch('results.json');
+                allResults = await response.json();
+                updateDashboard();
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('resultsBody').innerHTML = 
+                    '<tr><td colspan="8" style="color: red;">Error loading data. Make sure results.json exists!</td></tr>';
+            }
+        }
+
+        function updateDashboard() {
+            const filtered = filterResults();
+            updateStats(filtered);
+            updateCharts(filtered);
+            updateTable(filtered);
+        }
+
+        function filterResults() {
+            const hw = document.getElementById('hwFilter').value;
+            const precision = document.getElementById('precisionFilter').value;
+            const tp = document.getElementById('tpFilter').value;
+
+            return allResults.filter(r => {
+                if (hw !== 'all' && r.hw !== hw) return false;
+                if (precision !== 'all' && r.precision !== precision) return false;
+                if (tp !== 'all' && r.tp !== parseInt(tp)) return false;
+                return true;
+            });
+        }
+
+        function updateStats(results) {
+            if (results.length === 0) {
+                document.getElementById('peakThroughput').textContent = '-';
+                document.getElementById('bestLatency').textContent = '-';
+                document.getElementById('totalConfigs').textContent = '0';
+                document.getElementById('bestInteractivity').textContent = '-';
+                return;
+            }
+
+            const peakTput = Math.max(...results.map(r => r.tput_per_gpu));
+            const bestTTFT = Math.min(...results.map(r => r.median_ttft));
+            const bestIntvty = Math.max(...results.map(r => r.median_intvty));
+
+            document.getElementById('peakThroughput').textContent = peakTput.toFixed(1);
+            document.getElementById('bestLatency').textContent = bestTTFT.toFixed(3);
+            document.getElementById('totalConfigs').textContent = results.length;
+            document.getElementById('bestInteractivity').textContent = bestIntvty.toFixed(1);
+        }
+
+        function updateCharts(results) {
+            // Pareto Chart: Throughput vs Latency
+            updateParetoChart(results);
+            
+            // TP Chart: Performance by Tensor Parallelism
+            updateTPChart(results);
+            
+            // Concurrency Chart
+            updateConcChart(results);
+        }
+
+        function updateParetoChart(results) {
+            const ctx = document.getElementById('paretoChart');
+            if (charts.pareto) charts.pareto.destroy();
+
+            const data = results.map(r => ({
+                x: r.median_ttft,
+                y: r.tput_per_gpu,
+                label: `TP${r.tp} C${r.conc} ${r.precision}`
+            }));
+
+            charts.pareto = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Throughput vs Latency',
+                        data: data,
+                        backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const point = context.raw;
+                                    return `${point.label}: ${point.y.toFixed(1)} tok/s/GPU @ ${point.x.toFixed(3)}s TTFT`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Median TTFT (seconds) - Lower is Better' },
+                            type: 'logarithmic'
+                        },
+                        y: {
+                            title: { display: true, text: 'Throughput per GPU (tokens/sec)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTPChart(results) {
+            const ctx = document.getElementById('tpChart');
+            if (charts.tp) charts.tp.destroy();
+
+            const tpGroups = {};
+            results.forEach(r => {
+                if (!tpGroups[r.tp]) tpGroups[r.tp] = [];
+                tpGroups[r.tp].push(r.tput_per_gpu);
+            });
+
+            const labels = Object.keys(tpGroups).sort((a, b) => a - b);
+            const avgTput = labels.map(tp => {
+                const vals = tpGroups[tp];
+                return vals.reduce((a, b) => a + b, 0) / vals.length;
+            });
+
+            charts.tp = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels.map(tp => `TP=${tp}`),
+                    datasets: [{
+                        label: 'Avg Throughput per GPU',
+                        data: avgTput,
+                        backgroundColor: 'rgba(118, 75, 162, 0.7)',
+                        borderColor: 'rgba(118, 75, 162, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Tokens/sec/GPU' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateConcChart(results) {
+            const ctx = document.getElementById('concChart');
+            if (charts.conc) charts.conc.destroy();
+
+            const concGroups = {};
+            results.forEach(r => {
+                if (!concGroups[r.conc]) concGroups[r.conc] = [];
+                concGroups[r.conc].push(r.tput_per_gpu);
+            });
+
+            const labels = Object.keys(concGroups).sort((a, b) => a - b);
+            const avgTput = labels.map(c => {
+                const vals = concGroups[c];
+                return vals.reduce((a, b) => a + b, 0) / vals.length;
+            });
+
+            charts.conc = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels.map(c => `Conc=${c}`),
+                    datasets: [{
+                        label: 'Avg Throughput per GPU',
+                        data: avgTput,
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Tokens/sec/GPU' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTable(results) {
+            const tbody = document.getElementById('resultsBody');
+            if (results.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #999;">No results match the filters</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = results
+                .sort((a, b) => b.tput_per_gpu - a.tput_per_gpu)
+                .map(r => `
+                    <tr>
+                        <td>${r.hw}</td>
+                        <td>${r.tp}</td>
+                        <td>${r.conc}</td>
+                        <td>${r.precision}</td>
+                        <td><strong>${r.tput_per_gpu.toFixed(1)}</strong></td>
+                        <td>${r.p99_ttft.toFixed(3)}s</td>
+                        <td>${r.median_intvty.toFixed(1)}</td>
+                        <td>${r.mean_e2el.toFixed(2)}s</td>
+                    </tr>
+                `).join('');
+        }
+
+        // Add event listeners
+        document.getElementById('hwFilter').addEventListener('change', updateDashboard);
+        document.getElementById('precisionFilter').addEventListener('change', updateDashboard);
+        document.getElementById('tpFilter').addEventListener('change', updateDashboard);
+
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+</html>

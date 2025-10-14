@@ -1,0 +1,32 @@
+[
+  {
+    "hw": "gaudi25",
+    "tp": 8,
+    "conc": 32,
+    "model": "meta-llama/Llama-3.3-70B-Instruct",
+    "framework": "vllm",
+    "precision": "bf16",
+    "tput_per_gpu": 327.05,
+    "mean_ttft": 0.310,
+    "median_ttft": 0.070,
+    "std_ttft": 0.716,
+    "p99_ttft": 2.542,
+    "mean_tpot": 0.023,
+    "mean_intvty": 42.92,
+    "median_intvty": 42.95,
+    "std_tpot": 0.0004,
+    "std_intvty": 2601.71,
+    "p99_tpot": 0.024,
+    "p99_intvty": 41.74,
+    "mean_itl": 0.023,
+    "median_itl": 0.022,
+    "std_itl": 0.008,
+    "p99_itl": 0.053,
+    "mean_e2el": 21.81,
+    "median_e2el": 21.82,
+    "std_e2el": 1.59,
+    "p99_e2el": 25.94,
+    "timestamp": "2025-10-13T05:30:00Z",
+    "run_id": "12345"
+  }
+]
