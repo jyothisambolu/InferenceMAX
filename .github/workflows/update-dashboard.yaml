@@ -1,0 +1,113 @@
+name: Update Dashboard
+
+on:
+  workflow_run:
+    workflows: ["Test - Gaudi3 70B Only"]  # Trigger after benchmark completes
+    types:
+      - completed
+  workflow_dispatch:  # Manual trigger
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  collect-results:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages  # Check out the gh-pages branch
+          
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          
+      - name: Update results database
+        run: |
+          # Create results directory if it doesn't exist
+          mkdir -p dashboard
+          
+          # Initialize results.json if it doesn't exist
+          if [ ! -f dashboard/results.json ]; then
+            echo "[]" > dashboard/results.json
+          fi
+          
+          # Process all new benchmark results
+          python3 << 'EOF'
+          import json
+          import os
+          from pathlib import Path
+          from datetime import datetime
+          
+          # Load existing results
+          results_file = Path('dashboard/results.json')
+          if results_file.exists():
+              with open(results_file) as f:
+                  all_results = json.load(f)
+          else:
+              all_results = []
+          
+          # Process new artifacts
+          artifacts_dir = Path('artifacts')
+          if artifacts_dir.exists():
+              for artifact_dir in artifacts_dir.iterdir():
+                  if artifact_dir.is_dir():
+                      for json_file in artifact_dir.glob('agg_*.json'):
+                          print(f"Processing {json_file}")
+                          try:
+                              with open(json_file) as f:
+                                  new_result = json.load(f)
+                              
+                              # Add timestamp
+                              new_result['timestamp'] = datetime.now().isoformat()
+                              new_result['run_id'] = os.environ.get('GITHUB_RUN_ID', 'unknown')
+                              
+                              # Check if this config already exists (avoid duplicates)
+                              exists = False
+                              for existing in all_results:
+                                  if (existing.get('hw') == new_result.get('hw') and
+                                      existing.get('tp') == new_result.get('tp') and
+                                      existing.get('conc') == new_result.get('conc') and
+                                      existing.get('precision') == new_result.get('precision')):
+                                      # Update existing entry
+                                      existing.update(new_result)
+                                      exists = True
+                                      print(f"  Updated existing entry")
+                                      break
+                              
+                              if not exists:
+                                  all_results.append(new_result)
+                                  print(f"  Added new entry")
+                          
+                          except Exception as e:
+                              print(f"  Error processing {json_file}: {e}")
+          
+          # Save updated results
+          with open(results_file, 'w') as f:
+              json.dump(all_results, f, indent=2)
+          
+          print(f"\nTotal results in database: {len(all_results)}")
+          EOF
+          
+      - name: Copy dashboard files
+        run: |
+          # Ensure dashboard directory has the HTML file
+          if [ ! -f dashboard/index.html ]; then
+            # Copy from repo if it exists
+            if [ -f index.html ]; then
+              cp index.html dashboard/
+            fi
+          fi
+          
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add dashboard/
+          git commit -m "Update dashboard with new benchmark results" || echo "No changes to commit"
+          git push origin gh-pages || echo "Nothing to push"
