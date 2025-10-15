@@ -1,0 +1,197 @@
+name: Update Dashboard
+
+on:
+  workflow_run:
+    workflows: ["Test - Gaudi3 70B Only"]
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  collect-results:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Download artifacts from completed workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Create artifacts directory
+            if (!fs.existsSync('artifacts')) {
+              fs.mkdirSync('artifacts', { recursive: true });
+            }
+            
+            let runId;
+            if (context.eventName === 'workflow_run') {
+              runId = context.payload.workflow_run.id;
+            } else {
+              // For manual dispatch, get the latest successful run
+              const runs = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'test-gaudi3-70b-only.yml',
+                status: 'success',
+                per_page: 1
+              });
+              runId = runs.data.workflow_runs[0]?.id;
+            }
+            
+            if (!runId) {
+              console.log('No workflow run found');
+              return;
+            }
+            
+            console.log(`Fetching artifacts from run ${runId}`);
+            
+            // List artifacts from the run
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: runId,
+            });
+            
+            console.log(`Found ${artifacts.data.artifacts.length} artifacts`);
+            
+            // Download each artifact
+            for (const artifact of artifacts.data.artifacts) {
+              console.log(`Downloading artifact: ${artifact.name}`);
+              
+              const download = await github.rest.actions.downloadArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: artifact.id,
+                archive_format: 'zip',
+              });
+              
+              const artifactPath = path.join('artifacts', `${artifact.name}.zip`);
+              fs.writeFileSync(artifactPath, Buffer.from(download.data));
+              console.log(`Saved to ${artifactPath}`);
+            }
+            
+      - name: Extract and process artifacts
+        run: |
+          # Install unzip if needed
+          sudo apt-get update && sudo apt-get install -y unzip jq
+          
+          # Extract all zip files
+          cd artifacts
+          for zip in *.zip; do
+            if [ -f "$zip" ]; then
+              echo "Extracting $zip"
+              unzip -o "$zip" || true
+              rm "$zip"
+            fi
+          done
+          cd ..
+          
+          # List what we have
+          echo "=== Downloaded files ==="
+          find artifacts -name "*.json" -type f
+          
+      - name: Update results database
+        run: |
+          # Ensure dashboard directory exists
+          mkdir -p dashboard
+          
+          # Initialize results.json if it doesn't exist
+          if [ ! -f dashboard/results.json ]; then
+            echo "[]" > dashboard/results.json
+          fi
+          
+          # Process all new benchmark results
+          python3 << 'PYTHON'
+          import json
+          import os
+          from pathlib import Path
+          from datetime import datetime
+          
+          # Load existing results
+          results_file = Path('dashboard/results.json')
+          try:
+              with open(results_file) as f:
+                  all_results = json.load(f)
+              print(f"Loaded {len(all_results)} existing results")
+          except:
+              all_results = []
+          
+          # Process new artifacts
+          artifacts_dir = Path('artifacts')
+          new_count = 0
+          updated_count = 0
+          
+          if artifacts_dir.exists():
+              for json_file in artifacts_dir.rglob('agg_*.json'):
+                  print(f"\nProcessing {json_file}")
+                  try:
+                      with open(json_file) as f:
+                          new_result = json.load(f)
+                      
+                      # Add timestamp if missing
+                      if 'timestamp' not in new_result:
+                          new_result['timestamp'] = datetime.now().isoformat()
+                      
+                      # Add run ID
+                      new_result['run_id'] = os.environ.get('GITHUB_RUN_ID', 'unknown')
+                      
+                      # Check if this exact config already exists
+                      exists = False
+                      for i, existing in enumerate(all_results):
+                          if (existing.get('hw') == new_result.get('hw') and
+                              existing.get('tp') == new_result.get('tp') and
+                              existing.get('conc') == new_result.get('conc') and
+                              existing.get('precision') == new_result.get('precision') and
+                              existing.get('model') == new_result.get('model')):
+                              # Update existing entry with newer data
+                              all_results[i] = new_result
+                              exists = True
+                              updated_count += 1
+                              print(f"  ✓ Updated: {new_result.get('hw')} TP{new_result.get('tp')} C{new_result.get('conc')} {new_result.get('precision')}")
+                              break
+                      
+                      if not exists:
+                          all_results.append(new_result)
+                          new_count += 1
+                          print(f"  ✓ Added: {new_result.get('hw')} TP{new_result.get('tp')} C{new_result.get('conc')} {new_result.get('precision')}")
+                  
+                  except Exception as e:
+                      print(f"  ✗ Error processing {json_file}: {e}")
+          
+          # Save updated results
+          with open(results_file, 'w') as f:
+              json.dump(all_results, f, indent=2)
+          
+          print(f"\n{'='*50}")
+          print(f" Summary:")
+          print(f"   New results added: {new_count}")
+          print(f"   Existing updated: {updated_count}")
+          print(f"   Total in database: {len(all_results)}")
+          print(f"{'='*50}")
+          PYTHON
+          
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add dashboard/results.json
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update dashboard with new benchmark results [skip ci]"
+            git push origin gh-pages
+            echo "✅ Dashboard updated!"
+          fi
