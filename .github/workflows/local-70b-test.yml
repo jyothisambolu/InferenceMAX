@@ -1,0 +1,59 @@
+name: Local 70B Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      exp-name:
+        description: 'Experiment name'
+        required: true
+        default: 'local-test'
+      isl:
+        description: 'Input sequence length'
+        required: true
+        default: '1024'
+      osl:
+        description: 'Output sequence length'
+        required: true
+        default: '1024'
+      max-model-len:
+        description: 'Maximum model length'
+        required: true
+        default: '2048'
+      random-range-ratio:
+        description: 'Random range ratio'
+        required: true
+        default: '0.8'
+      target_runner:
+        description: 'Which runner to test'
+        required: true
+        type: choice
+        options:
+        - h100
+        - h200
+        - b200
+        - mi300x
+        - mi325x
+        - mi355x
+        - gaudi3
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  local-70b-test:
+    uses: ./.github/workflows/70b-tmpl.yml
+    secrets: inherit
+    with:
+      exp-name: ${{ inputs.exp-name }}
+      isl: ${{ inputs.isl }}
+      osl: ${{ inputs.osl }}
+      max-model-len: ${{ inputs.max-model-len }}
+      random-range-ratio: ${{ inputs.random-range-ratio }}
+      use_h100: ${{ inputs.target_runner == 'h100' }}
+      use_h200: ${{ inputs.target_runner == 'h200' }}
+      use_b200: ${{ inputs.target_runner == 'b200' }}
+      use_mi300x: ${{ inputs.target_runner == 'mi300x' }}
+      use_mi325x: ${{ inputs.target_runner == 'mi325x' }}
+      use_mi355x: ${{ inputs.target_runner == 'mi355x' }}
+      use_gaudi3: ${{ inputs.target_runner == 'gaudi3' }}
