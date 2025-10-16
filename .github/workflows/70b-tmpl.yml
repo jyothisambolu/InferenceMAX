@@ -186,7 +186,7 @@ jobs:
     uses: ./.github/workflows/benchmark-tmpl.yml
     secrets: inherit
     with:
-      runner: gaudi25
+      runner: self-hosted
       image: 'vault.habana.ai/gaudi-docker/1.22.0/ubuntu24.04/habanalabs/vllm-installer-2.7.1:latest'
       model: 'meta-llama/Llama-3.3-70B-Instruct'
       framework: 'vllm'
