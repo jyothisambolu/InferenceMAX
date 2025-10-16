@@ -1,4 +1,4 @@
-name: Test - Gaudi3 70B Only
+name: Test - Local Gaudi3 70B Only
 
 on:
   workflow_dispatch:
@@ -8,11 +8,11 @@ permissions:
   contents: read
 
 jobs:
-  gaudi3-70b-test:
+  local-gaudi3-70b-test:
     uses: ./.github/workflows/70b-tmpl.yml
     secrets: inherit
     with:
-      exp-name: '70b_1k1k'  # ← Changed from 'gaudi3-test-70b' to '70b_1k1k'
+      exp-name: '70b_1k1k_local'  # ← Changed from 'gaudi3-test-70b' to '70b_1k1k'
       isl: 1024
       osl: 1024
       max-model-len: 2048
