@@ -1,4 +1,4 @@
-name: Test - Local Gaudi3 70B
+name: Test - Local Gaudi3 DSR1
 
 concurrency:
   group: benchmark-lock

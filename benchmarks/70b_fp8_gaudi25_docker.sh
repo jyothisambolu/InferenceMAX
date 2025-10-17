@@ -11,7 +11,10 @@
 
 pip install -q datasets pandas
 
-cat > config.yaml << EOF
+mkdir -p /tmp/vllm_config
+CONFIG_FILE="/tmp/vllm_config/config.yaml"
+
+cat > $CONFIG_FILE << EOF
 kv-cache-dtype: fp8_inc
 async-scheduling: true
 no-enable-prefix-caching: true
