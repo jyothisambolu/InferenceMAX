@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 #HF_HUB_CACHE_MOUNT="/home/ubuntu/hf_hub_cache/"
-HF_HUB_CACHE_MOUNT="/home/ubuntu/hf_hub_cache/"
+HF_HUB_CACHE_MOUNT="/home/jsambolu/hf_hub_cache/"
 PORT=8888
 
 server_name="bmk-server"
@@ -17,7 +17,7 @@ docker run --rm -d --network=host --name=$server_name \
 -e HABANA_VISIBLE_DEVICES=all \
 --entrypoint=/bin/bash \
 $IMAGE \
-/work/benchmarks/"${EXP_NAME%%_*}_${PRECISION}_gaudi25_docker.sh"
+/work/benchmarks/"${EXP_NAME%%_*}_${PRECISION}_gaudi3_vm_docker.sh"
 
 set +x
 while IFS= read -r line; do
